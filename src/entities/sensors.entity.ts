@@ -25,7 +25,7 @@ export class Sensor {
   @Column({ nullable: true })
   camera_data: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: "user_ID" })
   user: User;  
 }
