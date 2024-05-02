@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/database';
-import { UsersModule } from './users/users.module';
-import { SensorsModule } from './sensors/sensors.module';
+import { UsersModule } from './modules/users/users.module';
+import { SensorsModule } from './modules/sensors/sensors.module';
 
 
 @Module({
