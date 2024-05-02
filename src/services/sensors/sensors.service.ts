@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateSensorDto } from 'src/helper/dto/sensors/create-sensor.dto';
-import { UpdateSensorDto } from 'src/helper/dto/sensors/update-sensor.dto';
+import { CreateSensorDto } from 'src/helpers/dto/sensors/create-sensor.dto';
+import { UpdateSensorDto } from 'src/helpers/dto/sensors/update-sensor.dto';
 import { Repository } from 'typeorm';
 import { Sensor } from 'src/entities/sensors.entity';
 import { InjectRepository } from '@nestjs/typeorm';
