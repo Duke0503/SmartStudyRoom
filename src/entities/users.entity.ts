@@ -3,7 +3,8 @@ import {
   Column, 
   PrimaryGeneratedColumn, 
   UpdateDateColumn, 
-  BeforeInsert 
+  BeforeInsert, 
+  BeforeUpdate
 } from "typeorm";
 import * as bcrypt from 'bcrypt'
 @Entity('Users') 
@@ -28,7 +29,7 @@ export class User {
   email: string
 
   @Column({ nullable: true })
-  supervisor_id: number;
+  supervisor: string;
 
   @Column()
   @UpdateDateColumn()
@@ -43,6 +44,13 @@ export class User {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
+  @BeforeUpdate()
+  async hashUpdatedPassword() {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+  }
+  
   async validationPassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }

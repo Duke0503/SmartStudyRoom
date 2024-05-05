@@ -30,9 +30,4 @@ export class AuthController {
     return await this.authService.signIn(signInDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }
