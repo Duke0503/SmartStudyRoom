@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/database';
 import { UsersModule } from './modules/users/users.module';
 import { SensorsModule } from './modules/sensors/sensors.module';
-
+import { DevicesModule} from './modules/devices/devices.module'
 
 @Module({
   imports: [    
@@ -14,6 +14,7 @@ import { SensorsModule } from './modules/sensors/sensors.module';
     TypeOrmModule.forRootAsync(config),
     UsersModule,
     SensorsModule,
+    DevicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
