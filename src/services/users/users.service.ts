@@ -14,12 +14,6 @@ export class UsersService {
     private readonly usersRepository: Repository<User>
   ){}
 
-  async create(createUserDto: CreateUserDto) {
-    const user = this.usersRepository.create(createUserDto);
-
-    return await this.usersRepository.save(user);
-  }
-
   // Sign Up
   async signUp(signupDto: SignUpDto) {
     const user = this.usersRepository.create(signupDto);
@@ -27,16 +21,6 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
   // End Sign Up
-
-  async findAll() {
-    return await this.usersRepository.find();
-  }
-
-  async findOne(ID: number) {
-    return await this.usersRepository.findOne( {
-      where: {ID}
-    });
-  }
 
   // Log In
   async findByPhone(phone_number: string): Promise<User | undefined> {
@@ -48,8 +32,9 @@ export class UsersService {
   }
   // End Log In
 
-  async update(ID: number, updateUserDto: UpdateUserDto) {
-    const user = await this.findOne(ID);
+  // Edit Profile
+  async updateProfile(username: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findByPhone(username);
 
     if (!user) {
       throw new NotFoundException();
@@ -59,15 +44,5 @@ export class UsersService {
 
     return await this.usersRepository.save(user);
   }
-
-  async remove(ID: number) {
-
-    const user = await this.findOne(ID);
-
-    if (!user) {
-      throw new NotFoundException();
-    }
-    
-    return await this.usersRepository.remove(user);
-  }
+  // End Edit Profile
 }
