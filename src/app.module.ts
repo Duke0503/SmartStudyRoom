@@ -7,14 +7,18 @@ import { config } from './config/database';
 import { UsersModule } from './modules/users/users.module';
 import { SensorsModule } from './modules/sensors/sensors.module';
 import { DevicesModule} from './modules/devices/devices.module'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [    
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync(config),
     UsersModule,
     SensorsModule,
     DevicesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

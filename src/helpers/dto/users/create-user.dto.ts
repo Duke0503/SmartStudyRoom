@@ -1,11 +1,17 @@
+import { IsEmail, IsPhoneNumber } from "class-validator";
 export class CreateUserDto {
+
   name: string;
 
-  user_name: string;
+  @IsPhoneNumber()
+  phone_number: string;
 
   password: string;
 
-  supervisor_id: number;
+  @IsEmail()
+  email: string;
+  
+  supervisor: string;
 
-  type: string;
+  roles: string;
 }
