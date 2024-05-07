@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { SensorsModule } from './modules/sensors/sensors.module';
 import { DevicesModule} from './modules/devices/devices.module'
 import { AuthModule } from './auth/auth.module';
+import { SchedulesModule } from './modules/schedules/schedules.module';
 
 @Module({
   imports: [    
@@ -19,8 +20,9 @@ import { AuthModule } from './auth/auth.module';
     SensorsModule,
     DevicesModule,
     AuthModule,
+    SchedulesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
