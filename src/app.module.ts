@@ -4,20 +4,25 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/database';
-import { DataSource } from 'typeorm';
-import { UsersModule } from './users/users.module';
-
+import { UsersModule } from './modules/users/users.module';
+import { SensorsModule } from './modules/sensors/sensors.module';
+import { DevicesModule} from './modules/devices/devices.module'
+import { AuthModule } from './auth/auth.module';
+import { SchedulesModule } from './modules/schedules/schedules.module';
 
 @Module({
   imports: [    
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync(config),
-    // TypeOrmModule.forRoot({
-    //   autoLoadEntities: true,
-    // }),
     UsersModule,
+    SensorsModule,
+    DevicesModule,
+    AuthModule,
+    SchedulesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
