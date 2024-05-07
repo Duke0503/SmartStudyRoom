@@ -6,14 +6,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/database';
 import { UsersModule } from './modules/users/users.module';
 import { SensorsModule } from './modules/sensors/sensors.module';
+import { DevicesModule} from './modules/devices/devices.module'
+import { AuthModule } from './auth/auth.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true, }),
+  imports: [    
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync(config),
     UsersModule,
     SensorsModule,
+    DevicesModule,
+    AuthModule,
     SchedulesModule,
   ],
   controllers: [AppController],
