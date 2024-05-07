@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./users.entity";
 
-@Entity('Schedules') 
+@Entity('Schedules')
 
 export class Schedule {
   @PrimaryGeneratedColumn()
@@ -25,7 +25,7 @@ export class Schedule {
   @Column({ nullable: true })
   break_time: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: "user_ID" })
-  user: User;  
+  user: User;
 }
