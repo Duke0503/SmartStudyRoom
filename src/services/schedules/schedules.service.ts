@@ -33,7 +33,7 @@ export class SchedulesService {
     async createSchedule(createScheduleDto: CreateScheduleDto, user_id: number): Promise<String> {
         try {
             const schedule = this.schedulesRepository.create(createScheduleDto);
-            const user = await this.usersService.findOne(user_id)
+            const user = await this.usersService.findUserbyId(user_id)
             schedule.user = user;
             await this.schedulesRepository.save(schedule);
             return "Create schedule successfully"
