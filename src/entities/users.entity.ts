@@ -4,9 +4,11 @@ import {
   PrimaryGeneratedColumn, 
   UpdateDateColumn, 
   BeforeInsert, 
-  BeforeUpdate
+  BeforeUpdate,
+  CreateDateColumn
 } from "typeorm";
 import * as bcrypt from 'bcrypt'
+
 @Entity('Users') 
 
 export class User {
@@ -16,8 +18,8 @@ export class User {
   @Column()
   name: string;
   
-  @Column()
-  phone_number: string;
+  @Column({ unique: true })
+  email: string;
 
   @Column()
   password: string;
@@ -26,13 +28,20 @@ export class User {
   roles: string
 
   @Column({ nullable: true })
-  email: string
-
-  @Column({ nullable: true })
   supervisor: string;
 
+  @Column({ default: false, nullable: true })
+  isVerified: boolean;
+
+  @Column({ nullable: true })
+  emailToken: string;
+
   @Column()
-  @UpdateDateColumn()
+  @CreateDateColumn()
+  timestamp: Date;
+  
+  @Column()
+  @CreateDateColumn()
   createAt: Date;
 
   @Column()
@@ -41,18 +50,16 @@ export class User {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
   }
 
   @BeforeUpdate()
   async hashUpdatedPassword() {
     if (this.password) {
-      this.password = await bcrypt.hash(this.password, 10);
+      this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
     }
   }
   
-  async validationPassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
-  }
+
   
 }

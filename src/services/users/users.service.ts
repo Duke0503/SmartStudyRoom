@@ -1,40 +1,43 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from '../../helpers/dto/users/create-user.dto';
-import { UpdateUserDto } from '../../helpers/dto/users/update-user.dto';
-import { SignUpDto } from 'src/helpers/dto/auth/sign-up.dto';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from '../../common/dto/update-user.dto';
+import { SignUpDto } from 'src/common/dto/sign-up.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class UsersService {
   
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
+    private readonly usersRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ){}
 
   // Sign Up
-  async signUp(signupDto: SignUpDto) {
+  async signUp(signupDto: SignUpDto): Promise<User> {
     const user = this.usersRepository.create(signupDto);
 
-    return await this.usersRepository.save(user);
+    await this.usersRepository.save(user);
+
+    return user;
   }
   // End Sign Up
 
-  // Log In
-  async findByPhone(phone_number: string): Promise<User | undefined> {
+  // Find User By Email
+  async findByEmail(email: string): Promise<User | undefined> {
     return await this.usersRepository.findOne({
       where: {
-        phone_number: phone_number,
+        email: email,
       }
     })
   }
-  // End Log In
-
+  // End User By Email
+  
   // Edit Profile
   async updateProfile(username: string, updateUserDto: UpdateUserDto) {
-    const user = await this.findByPhone(username);
+    const user = await this.findByEmail(username);
 
     if (!user) {
       throw new NotFoundException();
@@ -42,7 +45,46 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
 
-    return await this.usersRepository.save(user);
+    const userEdit =  await this.usersRepository.save(user);
+
+    delete(userEdit.password);
+
+    return userEdit;
   }
   // End Edit Profile
+
+  // Check Password
+  async checkPassword(email: string, password: string): Promise<boolean> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: email,
+      }
+    })
+    if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+
+    if(password !== user.password) {
+      return false
+    }
+
+    return true;
+  }
+  // End Check Password
+
+  // Set Password
+  async setPassword(email: string, newPassword: string): Promise<boolean> { 
+    var user = await this.usersRepository.findOne({ 
+      where: {
+        email: email
+      }
+    });
+    if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+    
+    user.password = newPassword;
+
+    await this.usersRepository.save(user);
+    
+    return true;
+  }
+  // End Set Password
+
 }
