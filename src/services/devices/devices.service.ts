@@ -24,7 +24,7 @@ export class DevicesService {
   async createNewDevice(createDeviceDto: CreateDeviceDto, user_id: number): Promise<String> {
     try {
       const device = this.devicesRepository.create(createDeviceDto)
-      const user = await this.userService.findOne(user_id)
+      const user = await this.userService.findUserbyId(user_id)
       device.user = user;
       await this.devicesRepository.save(device)
       return "Create Success"

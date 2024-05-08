@@ -86,5 +86,7 @@ export class UsersService {
     return true;
   }
   // End Set Password
-
+  async findUserbyId(ID: number) {
+    return await this.usersRepository.findOne({ where: {ID: ID}})
+  }
 }

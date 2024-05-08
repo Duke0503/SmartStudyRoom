@@ -14,25 +14,25 @@ export class SensorsService {
     private readonly userService: UsersService
   ){}
 
-  // async getSensorByUserId(user_ID: number): Promise<Sensor[]> {
-  //   const sensors = this.sensorsRepository.find({ where: { user: { ID: user_ID } } });
-  //   if (sensors) {
-  //     return sensors
-  //   } else {
-  //     throw new NotFoundException(`Can not get sensor`)
-  //   }
-  // }
-  // async createNewSensor(createSensorDto: CreateSensorDto, user_id: number): Promise<String> {
-  //   try {
-  //     const sensor = this.sensorsRepository.create(createSensorDto)
-  //     const user = await this.userService.findOne(user_id)
-  //     sensor.user = user;
-  //     await this.sensorsRepository.save(sensor)
-  //     return "Create Success"
-  //   } catch {
-  //     throw new NotFoundException(`Can not create new sensor`)
-  //   }
-  // }
+  async getSensorByUserId(user_ID: number): Promise<Sensor[]> {
+    const sensors = this.sensorsRepository.find({ where: { user: { ID: user_ID } } });
+    if (sensors) {
+      return sensors
+    } else {
+      throw new NotFoundException(`Can not get sensor`)
+    }
+  }
+  async createNewSensor(createSensorDto: CreateSensorDto, user_id: number): Promise<String> {
+    try {
+      const sensor = this.sensorsRepository.create(createSensorDto)
+      const user = await this.userService.findUserbyId(user_id)
+      sensor.user = user;
+      await this.sensorsRepository.save(sensor)
+      return "Create Success"
+    } catch {
+      throw new NotFoundException(`Can not create new sensor`)
+    }
+  }
   async updateSensor(updateSensorDto: UpdateSensorDto, sensor_id: number): Promise<String> {
     try {
       const sensor = await this.sensorsRepository.findOne({ where: {ID: sensor_id}});
