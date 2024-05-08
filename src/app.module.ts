@@ -5,18 +5,16 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/database';
 import { UsersModule } from './modules/users/users.module';
-import { SensorsModule } from './modules/sensors/sensors.module';
-import { AuthModule } from './auth/auth.module';
-
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [    
     ConfigModule.forRoot({
+      envFilePath: '.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(config),
     UsersModule,
-    SensorsModule,
     AuthModule,
   ],
   controllers: [AppController],
