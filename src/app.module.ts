@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
 import { HomeModule } from './modules/home/home.module';
 import { DevicesModule} from './modules/devices/devices.module'
+import { MqttModule } from './modules/mqtt/mqtt.module';
 
 
 @Module({
@@ -24,9 +25,13 @@ import { DevicesModule} from './modules/devices/devices.module'
     DevicesModule,
     AuthModule,
     SchedulesModule,
+<<<<<<< HEAD
     HomeModule,
+=======
+    MqttModule,
+>>>>>>> 3f350a7e6dee527217d8e57acbb72e7be5bf732a
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
