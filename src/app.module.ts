@@ -9,6 +9,7 @@ import { SensorsModule } from './modules/sensors/sensors.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
 import { DevicesModule} from './modules/devices/devices.module'
+import { MqttModule } from './modules/mqtt/mqtt.module';
 
 
 @Module({
@@ -23,8 +24,9 @@ import { DevicesModule} from './modules/devices/devices.module'
     DevicesModule,
     AuthModule,
     SchedulesModule,
+    MqttModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
