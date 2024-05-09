@@ -9,6 +9,7 @@ import { SensorsModule } from './modules/sensors/sensors.module';
 import { DevicesModule} from './modules/devices/devices.module'
 import { AuthModule } from './auth/auth.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
+import { HomeModule } from './modules/home/home.module';
 
 @Module({
   imports: [    
@@ -21,6 +22,7 @@ import { SchedulesModule } from './modules/schedules/schedules.module';
     DevicesModule,
     AuthModule,
     SchedulesModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
