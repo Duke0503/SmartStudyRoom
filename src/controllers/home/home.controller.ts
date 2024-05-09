@@ -1,4 +1,4 @@
-import{Controller, Get, Post, Param} from '@nestjs/common';
+import{Controller, Get, Post, Param, Res} from '@nestjs/common';
 import { HomeService } from 'src/services/home/home.service';
 import { Schedule } from 'src/entities/schedules.entity';
 import { SchedulesService } from 'src/services/schedules/schedules.service';
@@ -14,27 +14,17 @@ export class HomeController{
     //     return this.homeService
     // }
 
-
-
-    // @Get('schedules')
-    // getchedules() {
-    //     return this.homeService;
-    // }
-
-    // @Get('devices')
-    // getDevice() {
-    //     return this.homeService
-    // }
-
-    // @Get('users')
-    // getUserProfile() {
-    //     return this.homeService
-    // }
-
     @Get('notification')
     getNotification() {
         return this.homeService.getAllNotifications();
     }
+
+    
+    // @Get()
+    // redirect(@Res() res) {
+    //     return res.redirect('/books/greet');
+    // }
+    
 
     @Get('schedules/getallschedule')
     getAllSchedules() {

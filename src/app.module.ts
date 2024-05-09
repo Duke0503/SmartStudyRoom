@@ -8,12 +8,9 @@ import { UsersModule } from './modules/users/users.module';
 import { SensorsModule } from './modules/sensors/sensors.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
-<<<<<<< HEAD
 import { HomeModule } from './modules/home/home.module';
-=======
 import { DevicesModule} from './modules/devices/devices.module'
 
->>>>>>> 1a4774b3f32118d49f15ff268e738f29d73a1b0e
 
 @Module({
   imports: [    

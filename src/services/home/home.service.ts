@@ -1,21 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Notification } from 'src/entities/home.entity';
+import { Schedule } from 'src/entities/schedules.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersService } from '../users/users.service';
-import { SchedulesService } from 'src/services/schedules/schedules.service';
-import { DevicesService } from 'src/services/devices/devices.service';
-import { SensorsService } from 'src/services/sensors/sensors.service';
+
 
 @Injectable()
 export class HomeService {
     constructor(
         @InjectRepository(Notification)
         private readonly notificationRepository: Repository<Notification>,
-        private readonly schedulesService: SchedulesService,
-        private readonly sensorsService: SensorsService,
-        private readonly devicesService: DevicesService,
-        private readonly usersService: UsersService
+        // private readonly schedulesRepository: Repository<Schedule>,
     ) {}
 
     async getAllNotifications(): Promise<Notification[]> {
@@ -26,6 +21,21 @@ export class HomeService {
         return notifications;
     }
 
+    // async getAllSchedules(): Promise<Schedule[]> {
+    //     const schedules = await this.schedulesRepository.find();
+    //     if (!schedules) {
+    //         throw new NotFoundException();
+    //     }
+    //     return schedules;
+    // }
+
+    // async getSchedulesByUserId(userId: number): Promise<Schedule[]> {
+    //     const schedules = await this.schedulesRepository.find({ where: { user: { ID: userId } } });
+    //     if (!schedules) {
+    //         throw new NotFoundException();
+    //     }
+    //     return schedules;
+    // }
     
 
 
