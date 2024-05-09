@@ -1,33 +1,47 @@
 import { 
   Controller, 
-  Get, 
-  Post, 
+  Get, Post, Patch, Delete,
   Body, 
-  Patch, 
-  Param, 
-  Delete,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from 'src/services/users/users.service';
-import { CreateUserDto } from '../../helpers/dto/users/create-user.dto';
-import { UpdateUserDto } from '../../helpers/dto/users/update-user.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { UpdateUserDto } from '../../common/dto/update-user.dto';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { UpdatePassword } from 'src/common/dto/update-password.dto';
+import { ResponseError } from 'src/common/dto/response.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+  ) {}
 
+  // GET : users/profile
   @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
   }
 
+  // PATCH : users/edit/profile
   @UseGuards(AuthGuard)
-  @Patch('edit')
+  @Patch('edit/profile')
   editProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateProfile(req.phone_number, updateUserDto);
+    return this.usersService.updateProfile(req.user.email, updateUserDto);
+  }
+
+  // PATCH : users/edit/password
+  @UseGuards(AuthGuard)
+  @Patch('edit/password')
+  async editPassword(@Request() req, @Body() updatePassword: UpdatePassword) {
+    var isValidPassword = await this.usersService.checkPassword(req.user.email, updatePassword.current_password);
+
+    if (isValidPassword) {
+      this.usersService.setPassword(req.user.email, updatePassword.new_password);
+    } else {
+      return new ResponseError("RESET_PASSWORD.WRONG_CURRENT_PASSWORD");
+    }
   }
 
 }

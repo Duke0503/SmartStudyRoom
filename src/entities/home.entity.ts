@@ -2,6 +2,7 @@ import{Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from "type
 // import{User} from "./users.entity";
 
 @Entity('Users') 
+
 export class User {
     @PrimaryGeneratedColumn()
     ID: number;
@@ -18,6 +19,7 @@ export class User {
 }
 
 @Entity('Notifications')
+
 export class Notification{
     @PrimaryGeneratedColumn()
     ID: number;
@@ -46,6 +48,7 @@ export class Notification{
 }
 
 @Entity('Schedules')
+
 export class Schedule {
   @PrimaryGeneratedColumn()
   ID: number;
@@ -71,4 +74,33 @@ export class Schedule {
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: "user_ID" })
   user: User;
+}
+
+@Entity('Sensors')
+
+export class Sensor {
+  @PrimaryGeneratedColumn()
+  ID: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  type: string;
+
+  @Column({ nullable: true })
+  sound_data: string;
+
+  @Column({ nullable: true })
+  temp_data: string;
+
+  @Column({ nullable: true })
+  light_data: string;
+
+  @Column({ nullable: true })
+  camera_data: string;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn({ name: "user_ID" })
+  user: User;  
 }

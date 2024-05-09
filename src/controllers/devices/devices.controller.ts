@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { DevicesService } from 'src/services/devices/devices.service';
-import { CreateDeviceDto } from 'src/helpers/dto/devices/create-device.dto';
-import { UpdateDeviceDto } from 'src/helpers/dto/devices/update-device.dto';
+import { CreateDeviceDto } from 'src/common/dto/create-device.dto';
+import { UpdateDeviceDto } from 'src/common/dto/update-device.dto';
 import { Device } from 'src/entities/devices.entity';
 
 @Controller('devices')

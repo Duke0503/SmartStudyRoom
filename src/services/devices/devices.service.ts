@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDeviceDto } from 'src/helpers/dto/devices/create-device.dto';
-import { UpdateDeviceDto } from 'src/helpers/dto/devices/update-device.dto';
+import { CreateDeviceDto } from 'src/common/dto/create-device.dto';
+import { UpdateDeviceDto } from 'src/common/dto/update-device.dto';
 import { Repository } from 'typeorm';
 import { Device } from 'src/entities/devices.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,7 +24,7 @@ export class DevicesService {
   async createNewDevice(createDeviceDto: CreateDeviceDto, user_id: number): Promise<String> {
     try {
       const device = this.devicesRepository.create(createDeviceDto)
-      const user = await this.userService.findOne(user_id)
+      const user = await this.userService.findUserbyId(user_id)
       device.user = user;
       await this.devicesRepository.save(device)
       return "Create Success"

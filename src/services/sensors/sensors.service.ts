@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateSensorDto } from 'src/helpers/dto/sensors/create-sensor.dto';
-import { UpdateSensorDto } from 'src/helpers/dto/sensors/update-sensor.dto';
+import { CreateSensorDto } from 'src/common/dto/create-sensor.dto';
+import { UpdateSensorDto } from 'src/common/dto/update-sensor.dto';
 import { Repository } from 'typeorm';
 import { Sensor } from 'src/entities/sensors.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,7 +25,7 @@ export class SensorsService {
   async createNewSensor(createSensorDto: CreateSensorDto, user_id: number): Promise<String> {
     try {
       const sensor = this.sensorsRepository.create(createSensorDto)
-      const user = await this.userService.findOne(user_id)
+      const user = await this.userService.findUserbyId(user_id)
       sensor.user = user;
       await this.sensorsRepository.save(sensor)
       return "Create Success"
