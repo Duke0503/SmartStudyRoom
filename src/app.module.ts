@@ -25,11 +25,8 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     DevicesModule,
     AuthModule,
     SchedulesModule,
-<<<<<<< HEAD
     HomeModule,
-=======
     MqttModule,
->>>>>>> 3f350a7e6dee527217d8e57acbb72e7be5bf732a
   ],
   controllers: [AppController],
   providers: [AppService],
