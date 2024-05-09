@@ -1,0 +1,34 @@
+{
+    "components": {
+        "Calendar": {
+            "meta": {},
+            "appearances": {
+                "default": {
+                    "mapping": {
+                        "borderColor": "transparent"
+                    }
+                }
+            }
+        },
+        "CalendarCell": {
+            "meta": {},
+            "appearances": {
+                "default": {
+                    "mapping": {
+                        "contentBorderRadius": 25,
+                        "state": {
+                            "selected": {
+                                "contentBackgroundColor": "#4178D4",
+                                "contentBorderColor": "transparent"
+                            },
+                            "today": {
+                                "contentBackgroundColor": "transparent",
+                                "contentBorderColor": "transparent"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
