@@ -6,7 +6,7 @@ const users_entity_1 = require("../entities/users.entity");
 const devices_entity_1 = require("../entities/devices.entity");
 const schedules_entity_1 = require("../entities/schedules.entity");
 const sensors_entity_1 = require("../entities/sensors.entity");
-const notifications_entity_1 = require("../entities/notifications.entity");
+const home_entity_1 = require("../entities/home.entity");
 class TypeOrmConfig {
     static getOrmConfig(configService) {
         return {
@@ -21,7 +21,7 @@ class TypeOrmConfig {
                 devices_entity_1.Device,
                 schedules_entity_1.Schedule,
                 sensors_entity_1.Sensor,
-                notifications_entity_1.Notification,
+                home_entity_1.Notification,
             ],
             synchronize: true,
         };
