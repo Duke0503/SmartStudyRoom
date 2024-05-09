@@ -4,7 +4,7 @@ import { User } from 'src/entities/users.entity';
 import { Device } from 'src/entities/devices.entity';
 import { Schedule } from 'src/entities/schedules.entity';
 import { Sensor } from 'src/entities/sensors.entity';
-import { Notification } from 'src/entities/notifications.entity';
+import { Notification } from 'src/entities/home.entity';
 
 export default class TypeOrmConfig {
   static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
