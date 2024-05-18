@@ -4,7 +4,8 @@ import { SignUpDto } from 'src/common/dto/sign-up.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,7 @@ export class UsersService {
 
   // Sign Up
   async signUp(signupDto: SignUpDto): Promise<User> {
+    signupDto.password = bcrypt.hashSync(signupDto.password, Number(process.env.BCRYPT_SALT_ROUND));
     const user = this.usersRepository.create(signupDto);
 
     await this.usersRepository.save(user);

@@ -1,6 +1,6 @@
 import { Register } from "./Register";
 import React, { useState, useEffect } from "react";
-import { useLazyGetUserQuery } from "@/Services";
+// import { useLazyGetUserQuery } from "@/Services";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/Navigation";

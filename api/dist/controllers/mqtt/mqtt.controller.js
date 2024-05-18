@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MqttController = void 0;
 const common_1 = require("@nestjs/common");
 const schedule_1 = require("@nestjs/schedule");
-const mqtt_service_1 = require("src/services/mqtt/mqtt.service");
+const mqtt_service_1 = require("../../services/mqtt/mqtt.service");
 let MqttController = class MqttController {
     constructor(mqttService) {
         this.mqttService = mqttService;
@@ -31,6 +30,6 @@ __decorate([
 ], MqttController.prototype, "publish", null);
 exports.MqttController = MqttController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof mqtt_service_1.MqttService !== "undefined" && mqtt_service_1.MqttService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [mqtt_service_1.MqttService])
 ], MqttController);
 //# sourceMappingURL=mqtt.controller.js.map

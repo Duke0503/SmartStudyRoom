@@ -21,6 +21,9 @@ export declare class AuthService {
     sendEmailVerification(email: string): Promise<boolean>;
     verifyEmail(token: string): Promise<boolean>;
     validateLogin(email: string, password: string): Promise<{
-        access_token: string;
+        id: number;
+        token: string;
+        name: string;
+        email: string;
     }>;
 }

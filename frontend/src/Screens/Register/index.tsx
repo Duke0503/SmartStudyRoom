@@ -1,1 +1,1 @@
-import * from "./RegisterContainer";
+export * from "./RegisterContainer";

@@ -11,16 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
-const bcrypt = require("bcrypt");
 let User = class User {
-    async hashPassword() {
-        this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-    }
-    async hashUpdatedPassword() {
-        if (this.password) {
-            this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-        }
-    }
 };
 exports.User = User;
 __decorate([
@@ -70,18 +61,6 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "updateAt", void 0);
-__decorate([
-    (0, typeorm_1.BeforeInsert)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], User.prototype, "hashPassword", null);
-__decorate([
-    (0, typeorm_1.BeforeUpdate)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], User.prototype, "hashUpdatedPassword", null);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('Users')
 ], User);

@@ -1,1 +1,1 @@
-import * from "./LoginContainer";
+export * from "./LoginContainer";

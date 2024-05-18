@@ -32,24 +32,6 @@ export const Device = (props: IDeviceProps) => {
           
         </View>
       </View>
-      <View style={styles.navigation}>
-        <Pressable style={styles.activeButton} onPress={() => onNavigate(RootScreens.HOME)}>
-          <Entypo name="home" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Trang chủ</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton} onPress={() => onNavigate(RootScreens.SCHEDULE)}>
-          <Entypo name="calendar" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Lịch học</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton}>
-          <Entypo name="light-bulb" size={24} color={colors.secondary_700} />
-          <VSSemiBold textStyles={{color: colors.secondary_700}}>Thiết bị</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton}>
-          <FontAwesome5 name="user" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Tài khoản</VSSemiBold>
-        </Pressable>
-      </View>
     </SafeAreaView>
   );
 }
