@@ -5,7 +5,7 @@ import { i18n, Language } from "@/Localization";
 import { store, persistor } from "@/Store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ApplicationNavigator } from "./Navigation";
+import { BottomNavigator } from "./Navigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "@gluestack-ui/themed-native-base";
 import * as eva from '@eva-design/eva';
@@ -21,7 +21,7 @@ export default function App() {
       <NativeBaseProvider>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <ApplicationNavigator />
+            <BottomNavigator />
           </PersistGate>
         </Provider>
       </NativeBaseProvider>

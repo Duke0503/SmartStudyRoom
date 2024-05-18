@@ -13,23 +13,35 @@ import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteProfile } from "@/Store/reducers";
 
-export interface IDeviceProps {
+export interface IAccountProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-export const Device = (props: IDeviceProps) => {
+export const Account = (props: IAccountProps) => {
   const { onNavigate } = props;
+
+  const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.profile);
+
+  const handleLogout = () => {
+    dispatch(deleteProfile(user));
+    onNavigate(RootScreens.LOGIN);
+  };
 
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
-          <Title3 textStyles={{color: colors.neutral_900}}>Danh sách thiết bị</Title3>
+          <Title3 textStyles={{color: colors.neutral_900}}>Tài khoản</Title3>
         </View>
         <View style={styles.body}>
-          
+          <Pressable onPress={handleLogout}>
+            <SRegular>Đăng xuất</SRegular>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

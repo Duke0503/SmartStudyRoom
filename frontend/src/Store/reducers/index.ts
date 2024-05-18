@@ -1,2 +1,2 @@
-export * from "./home";
-export * from "./theme";
+export * from "./profile";
+export * from "./schedules";

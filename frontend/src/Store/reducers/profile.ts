@@ -4,40 +4,34 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: { 
     token: "",
-        id: "",
-        username: "",
-        email: "",
-        firstName: "",
-        lastName: "",
+    id: "",
+    email: "",
+    name: "",
   },
   reducers: {
     addUser: (state, action) => {
       state.id = action.payload.id;
       state.token = action.payload.token;
-      state.username = action.payload.username;
+      state.name = action.payload.name;
       state.email = action.payload.email;
       // state = action.payload;
-  },
-  updateName: (state, action) => {
-    state.firstName = action.payload.firstName;
-    state.lastName = action.payload.lastName;
-    // state = action.payload;
-  },
-  deleteProfile: (state, action) => {
-    state.id = "";
-    state.token = "";
-    state.username = "";
-    state.email = "";
-    state.firstName = "";
-    state.lastName = "";
-    // state = action.payload;
-  },
-  updateUser: (state, action) => {
-    state.email = action.payload.email;
-    state.firstName = action.payload.firstName;
-    state.lastName = action.payload.lastName;
-    // state = action.payload;
-  },
+    },
+    updateName: (state, action) => {
+      state.name = action.payload.name;
+      // state = action.payload;
+    },
+    deleteProfile: (state, action) => {
+      state.id = "";
+      state.token = "";
+      state.email = "";
+      state.name = "";
+      // state = action.payload;
+    },
+    updateUser: (state, action) => {
+      state.email = action.payload.email;
+      state.name = action.payload.name;
+      // state = action.payload;
+    },
   },
 });
 

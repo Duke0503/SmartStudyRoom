@@ -19,7 +19,6 @@ const auth_module_1 = require("./modules/auth/auth.module");
 const schedules_module_1 = require("./modules/schedules/schedules.module");
 const home_module_1 = require("./modules/home/home.module");
 const devices_module_1 = require("./modules/devices/devices.module");
-const mqtt_module_1 = require("./modules/mqtt/mqtt.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,7 +36,6 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             schedules_module_1.SchedulesModule,
             home_module_1.HomeModule,
-            mqtt_module_1.MqttModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

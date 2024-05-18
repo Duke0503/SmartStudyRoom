@@ -2,10 +2,8 @@ import { i18n, LocalizationKey } from "@/Localization";
 import React from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
-// import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { HomeScreenNavigatorProps } from "./HomeContainer";
 import { RootScreens } from "..";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
@@ -51,24 +49,6 @@ export const Home = (props: IHomeProps) => {
             <LSemiBold>Thông số môi trường học tập</LSemiBold>
           </View>
         </View>
-      </View>
-      <View style={styles.navigation}>
-        <Pressable style={styles.activeButton}>
-          <Entypo name="home" size={24} color={colors.secondary_700} />
-          <VSSemiBold textStyles={{color: colors.secondary_700}}>Trang chủ</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton} onPress={() => onNavigate(RootScreens.SCHEDULE)}>
-          <Entypo name="calendar" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Lịch học</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton} onPress={() => onNavigate(RootScreens.DEVICE)}>
-          <Entypo name="light-bulb" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Thiết bị</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.inactiveButton}>
-          <FontAwesome5 name="user" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Tài khoản</VSSemiBold>
-        </Pressable>
       </View>
     </SafeAreaView>
   );

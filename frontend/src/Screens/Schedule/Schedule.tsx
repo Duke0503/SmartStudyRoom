@@ -1,16 +1,18 @@
-// import { i18n, LocalizationKey } from "@/Localization";
-import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
-// import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { ScheduleScreenNavigatorProps } from "./ScheduleContainer";
 import { RootScreens } from "..";
 import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import Title3 from "@/Components/texts/Title3";
 import { Calendar, NativeDateService, I18nConfig, Text } from '@ui-kitten/components';
+import VSRegular from "@/Components/texts/VSRegular";
+import SRegular from "@/Components/texts/SRegular";
+import { useDispatch, useSelector } from "react-redux";
+import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
+import { updateSchedulesList } from "@/Store/reducers/schedules";
 
 export interface IScheduleProps {
   onNavigate: (string: RootScreens) => void;
@@ -46,47 +48,66 @@ export const Schedule = (props: IScheduleProps) => {
   const { onNavigate } = props;
   const [date, setDate] = useState(new Date());
 
-  return (
-    <SafeAreaView>
-      <StatusBar style="auto"></StatusBar>
-      <View style={styles.container}>
-        <View style={styles.title}>
-          <Title3>Quản lý lịch học</Title3>
-        </View>
-        <View style={styles.body}>
-          <Calendar
-            dateService={localeDateService}
-            date={date}
-            onSelect={nextDate => setDate(nextDate)}
-          />
+  const dispatch = useDispatch();
+  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetAllScheduleQuery();
+  const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
-          <Text category='h6'>
-            Selected date:
-            {' '}
-            {date.toLocaleDateString()}
-          </Text>
+  const handleFetch = async () => {
+    await fetchOne();
+  }
+
+  useEffect(() => {
+    handleFetch();
+    if (isSuccess) {
+      console.log(data);
+      dispatch(updateSchedulesList(data));
+    }
+  }, [isSuccess]);
+
+  console.log(schedulesList)
+
+  if(isFetching){
+    return <View></View>
+  } else {
+    return (
+      <SafeAreaView>
+        <StatusBar style="auto"></StatusBar>
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <Title3>Quản lý lịch học</Title3>
+          </View>
+          <View style={styles.body}>
+            <Calendar
+              dateService={localeDateService}
+              date={date}
+              onSelect={nextDate => setDate(nextDate)}
+            />
+            {/* <Text category='h6'>
+              Selected date:
+              {' '}
+              {date.toLocaleDateString()}
+            </Text> */}
+            <View>
+              <Pressable style={styles.button}>
+                <Entypo name="plus" size={24} color={"white"}></Entypo>
+                <SRegular textStyles={{color: "white"}}>Thêm lịch học</SRegular>
+              </Pressable>
+                {schedulesList.length == 0? 
+                <SRegular>Không có dữ liệu</SRegular>: 
+                <ScrollView  style={styles.schedule}>
+                  {schedulesList.map((schedule: any) => {
+                    return (
+                    <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                      <SRegular>{schedule.title}</SRegular>
+                    </Pressable>)
+                  })}
+                </ScrollView>}
+            </View>
+          </View>
         </View>
-      </View>
-      <View style={styles.navigation}>
-        <Pressable style={styles.button} onPress={() => onNavigate(RootScreens.HOME)}>
-          <Entypo name="home" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Trang chủ</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button}>
-          <Entypo name="calendar" size={24} color={colors.secondary_700} />
-          <VSSemiBold textStyles={{color: colors.secondary_700}}>Lịch học</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => onNavigate(RootScreens.DEVICE)}>
-          <Entypo name="light-bulb" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Thiết bị</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button}>
-          <FontAwesome5 name="user" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Tài khoản</VSSemiBold>
-        </Pressable>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -109,19 +130,27 @@ const styles = StyleSheet.create({
     height: "93%"
   },
 
-  navigation: {
-    flexDirection: "row",
+  schedule: {
     width: "100%",
-    height: "10%",
-    borderTopWidth: 1,
-    borderTopColor: colors.neutral_300,
-    justifyContent: "center"
+    height: "50%",
   },
 
   button: {
-    width: "25%",
-    height: "100%",
+    padding: "2%",
+    alignSelf: "flex-end",
+    flexDirection: "row",
     alignItems: "center",
+    backgroundColor: colors.secondary_500,
+    borderRadius: 15
+  },
+
+  session: {
+    width: "100%",
+    height: 100,
+    marginVertical: "2%",
+    borderRadius: 15,
     justifyContent: "center",
-  }
+    alignItems: "center",
+    backgroundColor: "white"
+  },
 });
