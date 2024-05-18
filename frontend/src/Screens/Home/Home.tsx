@@ -26,7 +26,7 @@ export const Home = (props: IHomeProps) => {
       <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
-          <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, Đức</Title3>
+          <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, Đức ngu</Title3>
           <VSRegular textStyles={{color: colors.neutral_500}}>Đây là hoạt động ngày hôm nay của bạn</VSRegular>
         </View>
         <View style={styles.body}>

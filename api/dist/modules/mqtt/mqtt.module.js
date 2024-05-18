@@ -10,7 +10,7 @@ exports.MqttModule = void 0;
 const common_1 = require("@nestjs/common");
 const schedule_1 = require("@nestjs/schedule");
 const mqtt_controller_1 = require("../../controllers/mqtt/mqtt.controller");
-const mqtt_service_1 = require("src/services/mqtt/mqtt.service");
+const mqtt_service_1 = require("../../services/mqtt/mqtt.service");
 let MqttModule = class MqttModule {
 };
 exports.MqttModule = MqttModule;
