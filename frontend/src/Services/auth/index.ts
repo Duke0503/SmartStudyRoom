@@ -14,9 +14,19 @@ const authApi = API.injectEndpoints({
         },
       }),
     }),
+    loginUser: build.mutation({
+      query: ({email, password}) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body: {
+          "email": email, 
+          "password": password,
+        },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
 
-export const { useRegisterUserMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation } = authApi;

@@ -12,7 +12,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { homeReducers, themeReducers } from "./reducers";
+// import { homeReducers, themeReducers } from "./reducers";
 import { profileReducers } from "./reducers/profile";
 // import {authReducer} from './reducers/auth';
 const reducers = combineReducers({

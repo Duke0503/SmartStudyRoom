@@ -18,12 +18,14 @@ const typeorm_1 = require("typeorm");
 const users_entity_1 = require("../../entities/users.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     constructor(usersRepository, configService) {
         this.usersRepository = usersRepository;
         this.configService = configService;
     }
     async signUp(signupDto) {
+        signupDto.password = bcrypt.hashSync(signupDto.password, Number(process.env.BCRYPT_SALT_ROUND));
         const user = this.usersRepository.create(signupDto);
         await this.usersRepository.save(user);
         return user;

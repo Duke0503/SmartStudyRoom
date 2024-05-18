@@ -10,6 +10,4 @@ export declare class User {
     timestamp: Date;
     createAt: Date;
     updateAt: Date;
-    hashPassword(): Promise<void>;
-    hashUpdatedPassword(): Promise<void>;
 }

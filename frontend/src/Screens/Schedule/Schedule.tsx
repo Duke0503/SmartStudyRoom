@@ -1,6 +1,6 @@
 // import { i18n, LocalizationKey } from "@/Localization";
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 // import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +11,8 @@ import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import Title3 from "@/Components/texts/Title3";
 import { Calendar, NativeDateService, I18nConfig, Text } from '@ui-kitten/components';
+import VSRegular from "@/Components/texts/VSRegular";
+import SRegular from "@/Components/texts/SRegular";
 
 export interface IScheduleProps {
   onNavigate: (string: RootScreens) => void;
@@ -59,31 +61,21 @@ export const Schedule = (props: IScheduleProps) => {
             date={date}
             onSelect={nextDate => setDate(nextDate)}
           />
-
-          <Text category='h6'>
+          {/* <Text category='h6'>
             Selected date:
             {' '}
             {date.toLocaleDateString()}
-          </Text>
+          </Text> */}
+          <View>
+            <Pressable style={styles.button}>
+              <Entypo name="plus" size={24} color={"white"}></Entypo>
+              <SRegular textStyles={{color: "white"}}>Thêm lịch học</SRegular>
+            </Pressable>
+            <ScrollView>
+              <SRegular>Không có dữ liệu</SRegular>
+            </ScrollView>
+          </View>
         </View>
-      </View>
-      <View style={styles.navigation}>
-        <Pressable style={styles.button} onPress={() => onNavigate(RootScreens.HOME)}>
-          <Entypo name="home" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Trang chủ</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button}>
-          <Entypo name="calendar" size={24} color={colors.secondary_700} />
-          <VSSemiBold textStyles={{color: colors.secondary_700}}>Lịch học</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => onNavigate(RootScreens.DEVICE)}>
-          <Entypo name="light-bulb" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Thiết bị</VSSemiBold>
-        </Pressable>
-        <Pressable style={styles.button}>
-          <FontAwesome5 name="user" size={24} color={colors.neutral_300} />
-          <VSSemiBold textStyles={{color: colors.neutral_300}}>Tài khoản</VSSemiBold>
-        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -109,19 +101,12 @@ const styles = StyleSheet.create({
     height: "93%"
   },
 
-  navigation: {
-    flexDirection: "row",
-    width: "100%",
-    height: "10%",
-    borderTopWidth: 1,
-    borderTopColor: colors.neutral_300,
-    justifyContent: "center"
-  },
-
   button: {
-    width: "25%",
-    height: "100%",
+    padding: "2%",
+    alignSelf: "flex-end",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: colors.secondary_500,
+    borderRadius: 15
   }
 });

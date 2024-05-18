@@ -11,11 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomeController = void 0;
 const common_1 = require("@nestjs/common");
-const home_service_1 = require("src/services/home/home.service");
+const home_service_1 = require("../../services/home/home.service");
 const schedules_service_1 = require("../../services/schedules/schedules.service");
 let HomeController = class HomeController {
     constructor(homeService, schedulesService) {
@@ -54,6 +53,7 @@ __decorate([
 ], HomeController.prototype, "getScheduleById", null);
 exports.HomeController = HomeController = __decorate([
     (0, common_1.Controller)('home'),
-    __metadata("design:paramtypes", [typeof (_a = typeof home_service_1.HomeService !== "undefined" && home_service_1.HomeService) === "function" ? _a : Object, schedules_service_1.SchedulesService])
+    __metadata("design:paramtypes", [home_service_1.HomeService,
+        schedules_service_1.SchedulesService])
 ], HomeController);
 //# sourceMappingURL=home.controller.js.map

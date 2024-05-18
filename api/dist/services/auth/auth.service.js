@@ -23,6 +23,7 @@ const dateTimeUltility_1 = require("../../common/utils/dateTimeUltility");
 const nodemailer = require("nodemailer");
 const config_1 = require("@nestjs/config");
 const codeGenerator_1 = require("../../common/utils/codeGenerator");
+const bcrypt = require("bcrypt");
 let AuthService = class AuthService {
     constructor(usersRepository, usersService, jwtService, configService) {
         this.usersRepository = usersRepository;
@@ -191,14 +192,18 @@ let AuthService = class AuthService {
             throw new common_1.HttpException('LOGIN.USER_NOT_FOUND', common_1.HttpStatus.NOT_FOUND);
         if (!user.isVerified)
             throw new common_1.HttpException('LOGIN.EMAIL_NOT_VERIFIED', common_1.HttpStatus.FORBIDDEN);
-        if (user.password == password) {
+        console.log();
+        if (!bcrypt.compareSync(password, user.password)) {
             throw new common_1.UnauthorizedException();
         }
         const payload = {
             user: user
         };
         return {
-            access_token: await this.jwtService.signAsync(payload),
+            id: user.ID,
+            token: await this.jwtService.signAsync(payload),
+            name: user.name,
+            email: user.email
         };
     }
 };

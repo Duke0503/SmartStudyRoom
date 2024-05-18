@@ -1,11 +1,9 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
-// import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
-// import { HomeScreenNavigatorProps } from "./HomeContainer";
 import { RootScreens } from "..";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
@@ -15,7 +13,6 @@ import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
 import { useRegisterUserMutation } from "@/Services";
-import { useDispatch, useSelector } from "react-redux";
 
 export interface IRegisterProps {
   onNavigate: (string: RootScreens) => void;
@@ -28,17 +25,15 @@ export const Register = (props: IRegisterProps) => {
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
 
-  const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.profile);
-
   const [signup, signUpResult] = useRegisterUserMutation();
 
   const handleSignUp = async () => {
     try {
       const response = await signup({ name, email, password }).unwrap();
-      
-      if (response.success) {
-        onNavigate(RootScreens.LOGIN);
+
+      console.log(response);
+      if (response) {
+        onNavigate(RootScreens.HOME);
       } else {
         console.error('Signup failed');
       }
@@ -46,13 +41,6 @@ export const Register = (props: IRegisterProps) => {
       console.error('An error occurred:', err);
     }
   };
-
-  useEffect(() => {
-    if (user.token !== undefined && user.token !== "") {
-      onNavigate(RootScreens.HOME);
-    }
-    }, []
-  );
 
   return (
     <SafeAreaView>

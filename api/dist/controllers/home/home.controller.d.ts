@@ -5,7 +5,7 @@ export declare class HomeController {
     private readonly homeService;
     private readonly schedulesService;
     constructor(homeService: HomeService, schedulesService: SchedulesService);
-    getNotification(): any;
+    getNotification(): Promise<import("../../entities/home.entity").Notification[]>;
     getAllSchedules(): Promise<Schedule[]>;
     getScheduleById(user_id: number): Promise<Schedule[]>;
 }

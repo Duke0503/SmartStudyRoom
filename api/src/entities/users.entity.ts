@@ -48,17 +48,17 @@ export class User {
   @UpdateDateColumn()
   updateAt: Date;
 
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-  }
+  // @BeforeInsert()
+  // async hashPassword() {
+  //   this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
+  // }
 
-  @BeforeUpdate()
-  async hashUpdatedPassword() {
-    if (this.password) {
-      this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-    }
-  }
+  // @BeforeUpdate()
+  // async hashUpdatedPassword() {
+  //   if (this.password) {
+  //     this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
+  //   }
+  // }
   
 
   

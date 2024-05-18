@@ -10,7 +10,7 @@ import { getExpiry, isTokenExpired } from 'src/common/utils/dateTimeUltility';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config'
 import { generateOTP } from 'src/common/utils/codeGenerator';
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt';
 import { timestamp } from 'rxjs';
 
 @Injectable()
@@ -236,7 +236,9 @@ export class AuthService {
     if (!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
     if (!user.isVerified) throw new HttpException('LOGIN.EMAIL_NOT_VERIFIED', HttpStatus.FORBIDDEN);
 
-    if(user.password == password) {
+    console.log();
+
+    if(!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException();
     }
 
@@ -245,7 +247,10 @@ export class AuthService {
     }
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      id: user.ID,
+      token: await this.jwtService.signAsync(payload),
+      name: user.name,
+      email: user.email
     };
   }
   // End Validate Login
