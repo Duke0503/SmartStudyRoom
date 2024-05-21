@@ -36,6 +36,15 @@ export class User {
   @Column({ nullable: true })
   emailToken: string;
 
+  @Column({ nullable: true })
+  phone_number: string;
+
+  @Column({ type: 'date', nullable: true })
+  birthday: Date;
+
+  @Column({ nullable: true })
+  gender: string;
+  
   @Column()
   @CreateDateColumn()
   timestamp: Date;
@@ -47,19 +56,5 @@ export class User {
   @Column()
   @UpdateDateColumn()
   updateAt: Date;
-
-  // @BeforeInsert()
-  // async hashPassword() {
-  //   this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-  // }
-
-  // @BeforeUpdate()
-  // async hashUpdatedPassword() {
-  //   if (this.password) {
-  //     this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT_ROUND));
-  //   }
-  // }
-  
-
   
 }
