@@ -35,6 +35,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Patch('edit/password')
   async editPassword(@Request() req, @Body() updatePassword: UpdatePassword) {
+
     var isValidPassword = await this.usersService.checkPassword(req.user.email, updatePassword.current_password);
 
     if (isValidPassword) {

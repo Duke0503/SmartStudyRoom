@@ -7,7 +7,7 @@ import { CreateMqttRequest } from 'src/common/dto/create-mqtt-request.dto';
 export class MqttController {
   constructor(private readonly mqttService: MqttService) {}
 
-  @Cron('*/3 * * * * *')
+  @Cron('*/300 * * * * *')
   publish() {
     this.mqttService.publish("DADN/iot/lamp", "53");
   }

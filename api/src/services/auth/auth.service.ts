@@ -229,14 +229,13 @@ export class AuthService {
   async validateLogin(email: string, password: string) {
     const user = await this.usersRepository.findOne({
       where: {
-        email: email
+        email: email,
       }
     });
 
+
     if (!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
     if (!user.isVerified) throw new HttpException('LOGIN.EMAIL_NOT_VERIFIED', HttpStatus.FORBIDDEN);
-
-    console.log();
 
     if(!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException();
@@ -250,7 +249,12 @@ export class AuthService {
       id: user.ID,
       token: await this.jwtService.signAsync(payload),
       name: user.name,
-      email: user.email
+      email: user.email,
+      birthday: user.birthday,
+      phone_number: user.phone_number,
+      gender: user.gender,
+      roles: user.roles,
+      supervisor: user.supervisor,
     };
   }
   // End Validate Login
