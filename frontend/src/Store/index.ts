@@ -12,15 +12,16 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-// import { homeReducers, themeReducers } from "./reducers";
+
+import { schedulesReducers } from "./reducers";
 import { profileReducers } from "./reducers/profile";
-// import {authReducer} from './reducers/auth';
+import { Schedule } from "@/Screens/Schedule/Schedule";
+
+
 const reducers = combineReducers({
-  //api: API.reducer,
-  //api: WEATHER_API.reducer,
   profile: profileReducers,
-  [API.reducerPath]: API.reducer,
-  // auth: authReducer,
+  schedules: schedulesReducers,
+  [API.reducerPath]: API.reducer
 });
 
 const persistConfig = {
