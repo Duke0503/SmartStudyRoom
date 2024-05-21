@@ -7,4 +7,11 @@ export class UpdateUserDto {
   supervisor: string;
 
   roles: string;
+
+  @IsPhoneNumber()
+  phone_number: string;
+
+  gender: string;
+
+  birthday: Date;
 }

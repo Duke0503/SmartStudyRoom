@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UpdateUserDto } from '../../common/dto/update-user.dto';
 import { SignUpDto } from 'src/common/dto/sign-up.dto';
 import { Repository } from 'typeorm';
@@ -64,8 +64,8 @@ export class UsersService {
     })
     if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 
-    if(password !== user.password) {
-      return false
+    if(!bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException();
     }
 
     return true;
@@ -81,7 +81,7 @@ export class UsersService {
     });
     if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
     
-    user.password = newPassword;
+    user.password = bcrypt.hashSync(newPassword, Number(process.env.BCRYPT_SALT_ROUND));
 
     await this.usersRepository.save(user);
     

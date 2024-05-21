@@ -35,10 +35,19 @@ export const Login = (props: ILoginProps) => {
     try {
       const response = await login({ email, password }).unwrap();
 
-      console.log(response);
       if (response.success) {
         await AsyncStorage.setItem('token', response.data.token);
-        dispatch(addUser({token: response.data.token, name: response.data.name, email: response.data.email, id: response.data.id}));
+        dispatch(addUser({
+          token: response.data.token, 
+          name: response.data.name, 
+          email: response.data.email, 
+          id: response.data.id,
+          birthday: response.data.birthday,
+          phone_number: response.data.phone_number,
+          gender: response.data.gender,
+          roles: response.data.roles,
+          supervisor: response.data.supervisor,
+        }));
         onNavigate(RootScreens.HOME);
       } else {
         console.error('Login failed');
