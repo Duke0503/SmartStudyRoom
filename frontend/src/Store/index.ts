@@ -15,7 +15,6 @@ import {
 
 import { schedulesReducers } from "./reducers";
 import { profileReducers } from "./reducers/profile";
-import { Schedule } from "@/Screens/Schedule/Schedule";
 
 
 const reducers = combineReducers({
