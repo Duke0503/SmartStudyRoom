@@ -2,8 +2,10 @@ import { i18n, LocalizationKey } from "@/Localization";
 import React from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
+// import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { HomeScreenNavigatorProps } from "./HomeContainer";
 import { RootScreens } from "..";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
@@ -11,6 +13,7 @@ import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
+import { useSelector } from "react-redux";
 
 export interface IHomeProps {
   onNavigate: (string: RootScreens) => void;
@@ -19,12 +22,14 @@ export interface IHomeProps {
 export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
+  const user = useSelector((state: any) => state.profile);
+
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
-          <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, Đức ngu</Title3>
+          <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, {user.name}</Title3>
           <VSRegular textStyles={{color: colors.neutral_500}}>Đây là hoạt động ngày hôm nay của bạn</VSRegular>
         </View>
         <View style={styles.body}>
@@ -50,6 +55,24 @@ export const Home = (props: IHomeProps) => {
           </View>
         </View>
       </View>
+      {/* <View style={styles.navigation}>
+        <Pressable style={styles.activeButton}>
+          <Entypo name="home" size={24} color={colors.secondary_700} />
+          <VSSemiBold textStyles={{color: colors.secondary_700}}>Trang chủ</VSSemiBold>
+        </Pressable>
+        <Pressable style={styles.inactiveButton} onPress={() => onNavigate(RootScreens.SCHEDULE)}>
+          <Entypo name="calendar" size={24} color={colors.neutral_300} />
+          <VSSemiBold textStyles={{color: colors.neutral_300}}>Lịch học</VSSemiBold>
+        </Pressable>
+        <Pressable style={styles.inactiveButton} onPress={() => onNavigate(RootScreens.DEVICE)}>
+          <Entypo name="light-bulb" size={24} color={colors.neutral_300} />
+          <VSSemiBold textStyles={{color: colors.neutral_300}}>Thiết bị</VSSemiBold>
+        </Pressable>
+        <Pressable style={styles.inactiveButton}>
+          <FontAwesome5 name="user" size={24} color={colors.neutral_300} />
+          <VSSemiBold textStyles={{color: colors.neutral_300}}>Tài khoản</VSSemiBold>
+        </Pressable>
+      </View> */}
     </SafeAreaView>
   );
 }
