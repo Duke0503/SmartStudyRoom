@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native";
@@ -11,6 +11,19 @@ import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
+import { useDispatch, useSelector } from "react-redux";
+import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
+import { updateSchedulesList } from "@/Store/reducers";
+import moment from 'moment-timezone';
+import 'moment/locale/vi';
+moment().tz("Asia/Ho_Chi_Minh").format();
+moment().locale('vi');
+moment.updateLocale('vi', {
+  week : {
+      dow : 1
+   }
+});
+
 
 export interface IHomeProps {
   onNavigate: (string: RootScreens) => void;
@@ -18,6 +31,21 @@ export interface IHomeProps {
 
 export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
+
+  const dispatch = useDispatch();
+  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetAllScheduleQuery();
+  const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
+
+  const handleFetch = async () => {
+    await fetchOne();
+  }
+
+  useEffect(() => {
+    handleFetch();
+    if (isSuccess) {
+      dispatch(updateSchedulesList(data));
+    }
+  }, [isSuccess]);
 
   return (
     <SafeAreaView>
@@ -30,20 +58,29 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-            <ScrollView style={styles.sessionList}>
-              <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
-                <SRegular>Phiên học 1</SRegular>
-              </Pressable>
-              <Pressable style={styles.session}>
-                <SRegular>Phiên học 2</SRegular>
-              </Pressable>
-              <Pressable style={styles.session}>
-                <SRegular>Phiên học 3</SRegular>
-              </Pressable>
-              <Pressable style={styles.session}>
-                <SRegular>Phiên học 4</SRegular>
-              </Pressable>
-            </ScrollView>
+              {schedulesList.length == 0? 
+                <View style={{padding: "5%", alignSelf: "center"}}>
+                  <SRegular>Không có dữ liệu</SRegular>
+                </View>: 
+                <ScrollView  style={styles.schedule}>
+                  {schedulesList.map((schedule: any) => {
+                    let count = 0;
+                    if (moment(schedule.date).format("DD-MM-YYYY") === moment().format("DD-MM-YYYY")) {
+                      count++;
+                      return (
+                        <Pressable id={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                          <SRegular>{schedule.title}</SRegular>
+                        </Pressable>)
+                    } else {
+                      return (
+                        <View style={{padding: "5%", alignSelf: "center"}}>
+                          <SRegular>Không có dữ liệu</SRegular>
+                        </View>
+                      )
+                    }
+                  })}
+                </ScrollView>
+              }
           </View>
           <View style={styles.statistic}>
             <LSemiBold>Thông số môi trường học tập</LSemiBold>
