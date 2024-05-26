@@ -53,7 +53,7 @@ export const Schedule = (props: IScheduleProps) => {
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
   const handleFetch = async () => {
-    await fetchOne();
+    await fetchOne({}); // Provide an empty object as an argument
   }
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export const Schedule = (props: IScheduleProps) => {
     }
   }, [isSuccess]);
 
-  console.log(schedulesList)
+  console.log("scheduleList in schedule screen: ",schedulesList)
 
   if(isFetching){
     return <View></View>
@@ -98,7 +98,7 @@ export const Schedule = (props: IScheduleProps) => {
                   {schedulesList.map((schedule: any) => {
                     return (
                     <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
-                      <SRegular>{schedule.title}</SRegular>
+                      <SRegular key={schedule.id}>{schedule.title}</SRegular>
                     </Pressable>)
                   })}
                 </ScrollView>}

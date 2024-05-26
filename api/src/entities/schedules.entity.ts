@@ -19,7 +19,7 @@ export class Schedule {
   @Column()
   finish_time: string;
 
-  @Column()
+  @Column({ type: 'date', nullable: true })
   date: Date;
 
   @Column({ nullable: true })

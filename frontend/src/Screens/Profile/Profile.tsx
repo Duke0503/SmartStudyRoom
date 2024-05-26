@@ -29,7 +29,12 @@ export const Profile = (props: IProfileProps) => {
 
   const handleUpdate = async () => {
     try {
-      await updateProfile({ body: { name, birthday, phone_number, gender } }).unwrap();
+      await updateProfile({ body: {
+        name: name,
+        birthday: birthday,
+        phone_number: phone_number,
+        gender: gender
+        } }).unwrap();
       dispatch(updateUser({ name, birthday, phone_number, gender }));
       setSuccessModalVisible(true);
     } catch (error) {
