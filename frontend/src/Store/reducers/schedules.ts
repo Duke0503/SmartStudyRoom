@@ -8,7 +8,6 @@ const schedulesSlice = createSlice({
   reducers: {
     updateSchedulesList: (state, action) => {
         state.scheduelesList = action.payload
-
         // state.schedulesList =  action.payload;
       }
   },

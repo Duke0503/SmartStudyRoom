@@ -11,8 +11,15 @@ import { Calendar, NativeDateService, I18nConfig, Text } from '@ui-kitten/compon
 import VSRegular from "@/Components/texts/VSRegular";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
-import { updateSchedulesList } from "@/Store/reducers/schedules";
+import moment from 'moment-timezone';
+import 'moment/locale/vi';
+moment().tz("Asia/Ho_Chi_Minh").format();
+moment().locale('vi');
+moment.updateLocale('vi', {
+  week : {
+      dow : 1
+   }
+});
 
 export interface IScheduleProps {
   onNavigate: (string: RootScreens) => void;
@@ -25,20 +32,7 @@ const i18n: I18nConfig = {
   },
   monthNames: {
     short: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-    long: [
-      'Tháng 1',
-      'Tháng 2',
-      'Tháng 3',
-      'Tháng 4',
-      'Tháng 5',
-      'Tháng 6',
-      'Tháng 7',
-      'Tháng 8',
-      'Tháng 9',
-      'Tháng 10',
-      'Tháng 11',
-      'Tháng 12',
-    ],
+    long: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
   },
 };
 
@@ -49,9 +43,9 @@ export const Schedule = (props: IScheduleProps) => {
   const [date, setDate] = useState(new Date());
 
   const dispatch = useDispatch();
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetAllScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
+<<<<<<< HEAD
   const handleFetch = async () => {
     await fetchOne({}); // Provide an empty object as an argument
   }
@@ -99,15 +93,53 @@ export const Schedule = (props: IScheduleProps) => {
                     return (
                     <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
                       <SRegular key={schedule.id}>{schedule.title}</SRegular>
+=======
+  return (
+    <SafeAreaView>
+      <StatusBar style="auto"></StatusBar>
+      <View style={styles.container}>
+        <View style={styles.title}>
+          <Title3>Quản lý lịch học</Title3>
+        </View>
+        <View style={styles.body}>
+          <Calendar
+            dateService={localeDateService}
+            date={date}
+            onSelect={nextDate => setDate(nextDate)}
+          />
+          <View style={styles.scheduleList}>
+            <Pressable style={styles.button}>
+              <Entypo name="plus" size={24} color={"white"}></Entypo>
+              <SRegular textStyles={{color: "white"}}>Thêm lịch học</SRegular>
+            </Pressable>
+            {schedulesList.length == 0? 
+            <View style={{padding: "5%", alignSelf: "center"}}>
+              <SRegular>Không có dữ liệu</SRegular>
+            </View>: 
+            <ScrollView  style={styles.schedule}>
+              {schedulesList.map((schedule: any) => {
+                let count = 0;
+                if (moment(schedule.date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
+                  count++;
+                  return (
+                    <Pressable id={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                      <SRegular>{schedule.title}</SRegular>
+>>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
                     </Pressable>)
-                  })}
-                </ScrollView>}
-            </View>
+                } else {
+                  return (
+                    <View style={{padding: "5%", alignSelf: "center"}}>
+                      <SRegular>Không có dữ liệu</SRegular>
+                    </View>
+                  )
+                }
+              })}
+            </ScrollView>}
           </View>
         </View>
-      </SafeAreaView>
-    );
-  }
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -128,6 +160,13 @@ const styles = StyleSheet.create({
   body: {
     width: "100%",
     height: "93%"
+  },
+
+  scheduleList: {
+    width: "100%",
+    height: "100%"
+    // justifyContent: "center",
+    // alignItems: "center"
   },
 
   schedule: {
