@@ -45,55 +45,6 @@ export const Schedule = (props: IScheduleProps) => {
   const dispatch = useDispatch();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
-<<<<<<< HEAD
-  const handleFetch = async () => {
-    await fetchOne({}); // Provide an empty object as an argument
-  }
-
-  useEffect(() => {
-    handleFetch();
-    if (isSuccess) {
-      console.log(data);
-      dispatch(updateSchedulesList(data));
-    }
-  }, [isSuccess]);
-
-  console.log("scheduleList in schedule screen: ",schedulesList)
-
-  if(isFetching){
-    return <View></View>
-  } else {
-    return (
-      <SafeAreaView>
-        <StatusBar style="auto"></StatusBar>
-        <View style={styles.container}>
-          <View style={styles.title}>
-            <Title3>Quản lý lịch học</Title3>
-          </View>
-          <View style={styles.body}>
-            <Calendar
-              dateService={localeDateService}
-              date={date}
-              onSelect={nextDate => setDate(nextDate)}
-            />
-            {/* <Text category='h6'>
-              Selected date:
-              {' '}
-              {date.toLocaleDateString()}
-            </Text> */}
-            <View>
-              <Pressable style={styles.button}>
-                <Entypo name="plus" size={24} color={"white"}></Entypo>
-                <SRegular textStyles={{color: "white"}}>Thêm lịch học</SRegular>
-              </Pressable>
-                {schedulesList.length == 0? 
-                <SRegular>Không có dữ liệu</SRegular>: 
-                <ScrollView  style={styles.schedule}>
-                  {schedulesList.map((schedule: any) => {
-                    return (
-                    <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
-                      <SRegular key={schedule.id}>{schedule.title}</SRegular>
-=======
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
@@ -124,7 +75,6 @@ export const Schedule = (props: IScheduleProps) => {
                   return (
                     <Pressable id={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
                       <SRegular>{schedule.title}</SRegular>
->>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
                     </Pressable>)
                 } else {
                   return (

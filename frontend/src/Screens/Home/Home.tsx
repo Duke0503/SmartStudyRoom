@@ -1,11 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
-<<<<<<< HEAD
-import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, SectionList, ViewProps } from "react-native";
-=======
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
->>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
+import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 // import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native";
@@ -18,14 +13,11 @@ import { colors } from "@/Components/colors";
 import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
-<<<<<<< HEAD
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { useSelector } from "react-redux";
 import { Platform, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
 import { State } from "react-native-gesture-handler";
 import { createSelector } from "@reduxjs/toolkit";
-=======
 import { useDispatch, useSelector } from "react-redux";
 import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
 import { updateSchedulesList } from "@/Store/reducers";
@@ -39,7 +31,6 @@ moment.updateLocale('vi', {
    }
 });
 
->>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
 
 export interface IHomeProps {
   onNavigate: (string: RootScreens) => void;
@@ -48,7 +39,6 @@ export interface IHomeProps {
 export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
-<<<<<<< HEAD
   const user = useSelector((state: any) => state.profile);
 
   var today = new Date().toJSON().slice(0,10);
@@ -75,22 +65,6 @@ export const Home = (props: IHomeProps) => {
   //   }
   // }, [isSuccess]);
   // console.log("sensorList: ",sensorList.name);
-=======
-  const dispatch = useDispatch();
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetAllScheduleQuery();
-  const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
-
-  const handleFetch = async () => {
-    await fetchOne();
-  }
-
-  useEffect(() => {
-    handleFetch();
-    if (isSuccess) {
-      dispatch(updateSchedulesList(data));
-    }
-  }, [isSuccess]);
->>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
 
   return (
     <SafeAreaView>
@@ -107,7 +81,6 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-<<<<<<< HEAD
             {scheduleList.length == 0? 
               <SRegular>Không có lịch học nào</SRegular>: 
               <ScrollView  style={styles.sessionList}>
@@ -146,31 +119,6 @@ export const Home = (props: IHomeProps) => {
                 
               </ScrollView>}
             
-=======
-              {schedulesList.length == 0? 
-                <View style={{padding: "5%", alignSelf: "center"}}>
-                  <SRegular>Không có dữ liệu</SRegular>
-                </View>: 
-                <ScrollView  style={styles.schedule}>
-                  {schedulesList.map((schedule: any) => {
-                    let count = 0;
-                    if (moment(schedule.date).format("DD-MM-YYYY") === moment().format("DD-MM-YYYY")) {
-                      count++;
-                      return (
-                        <Pressable id={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
-                          <SRegular>{schedule.title}</SRegular>
-                        </Pressable>)
-                    } else {
-                      return (
-                        <View style={{padding: "5%", alignSelf: "center"}}>
-                          <SRegular>Không có dữ liệu</SRegular>
-                        </View>
-                      )
-                    }
-                  })}
-                </ScrollView>
-              }
->>>>>>> ac4380a44dc54f7ee5d66faeddae5cdda61971a5
           </View>
           <View style={styles.statistic}>
             <LSemiBold>Thông số môi trường học tập</LSemiBold>
