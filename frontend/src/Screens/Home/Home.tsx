@@ -81,7 +81,7 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-            {scheduleList.length == 0? 
+            {/* {scheduleList.length == 0? 
               <SRegular>Không có lịch học nào</SRegular>: 
               <ScrollView  style={styles.sessionList}>
                 {scheduleList.map((schedule: any) => {
@@ -117,7 +117,7 @@ export const Home = (props: IHomeProps) => {
                   </Pressable>
                 </Block>}
                 
-              </ScrollView>}
+              </ScrollView>} */}
             
           </View>
           <View style={styles.statistic}>
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     flexDirection: "column",
     alignContent: "flex-start",
-    paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight + 10,
   },
 
   title: {
