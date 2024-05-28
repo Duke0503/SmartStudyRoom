@@ -13,7 +13,7 @@ import RegisterContainer from "@/Screens/Register/RegisterContainer";
 import LoginContainer from "@/Screens/Login/LoginContainer";
 import AccountContainer from "@/Screens/Account/AccountContainer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ProfileContainer from "@/Screens/Profile/ProfileContainer";
+import ProfileContainer from "@/Screens/Account/Profile/ProfileContainer";
 import PasswordContainer from "@/Screens/Account/Password/PasswordContainer";
 import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
@@ -32,44 +32,7 @@ export type TabParamList = {
   [RootScreens.SETTING]: undefined;
 }
 
-export type ScheduleList = {
-  [RootScreens.SCHEDULE]: undefined;
-  [RootScreens.SESSION]: undefined;
-}
-
-export type HomeList = {
-  [RootScreens.HOME]: undefined;
-  [RootScreens.SESSION]: undefined;
-}
-
-export type AccoutList = {
-  [RootScreens.ACCOUNT]: undefined;
-  [RootScreens.PROFILE]: undefined;
-  [RootScreens.UPDATE]: undefined;
-  [RootScreens.ABOUTUS]: undefined;
-  [RootScreens.SETTING]: undefined;
-}
 const Tab = createBottomTabNavigator<TabParamList>();
-const Schedule = createNativeStackNavigator<ScheduleList>();
-const Home = createNativeStackNavigator<HomeList>();
-const Account = createNativeStackNavigator<AccoutList>();
-
-// const HomeNavigator = () => {
-//   return (
-//     <Home.Navigator screenOptions={{ 
-//       headerShown: false,
-//       }}>
-//       <Home.Screen
-//         name={RootScreens.HOME}
-//         component={HomeContainer}
-//       ></Home.Screen>
-//       <Home.Screen
-//         name={RootScreens.SESSION}
-//         component={SessionContainer}
-//       ></Home.Screen>
-//     </Home.Navigator>
-//   )
-// }
 
 const BottomNavigator = () => {
   return (

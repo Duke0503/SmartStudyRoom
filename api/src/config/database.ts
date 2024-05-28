@@ -21,6 +21,8 @@ export default class TypeOrmConfig {
 
         database: configService.get('DB_NAME'),
 
+        ssl: true,
+
         entities: [
           User, 
           Device,

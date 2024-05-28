@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Image, SafeAr
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateProfileMutation } from "@/Services/users";
-import { RootScreens } from "..";
+import { RootScreens } from "../..";
 import { colors } from "@/Components/colors";
 import { updateUser } from "@/Store/reducers/profile";
 

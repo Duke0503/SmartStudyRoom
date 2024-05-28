@@ -19,10 +19,12 @@ import Constants from 'expo-constants';
 import { State } from "react-native-gesture-handler";
 import { createSelector } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
 import { updateSchedulesList } from "@/Store/reducers";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import { StatusBar } from "expo-status-bar";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
 
 
   body: {
-    width: "100%",
+    width: "90%",
     height: "93%",
     paddingTop: "3%"
   },
