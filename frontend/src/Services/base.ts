@@ -13,7 +13,7 @@ const baseQuery = fetchBaseQuery({
     const token = await AsyncStorage.getItem('token');
     if (token) {
         headers.set('Authorization', `Bearer ${token}`)
-        console.log(headers)
+        // console.log(headers)
     }
     
     return headers;

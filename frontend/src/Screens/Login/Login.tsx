@@ -66,7 +66,7 @@ export const Login = (props: ILoginProps) => {
 
   return (
     <SafeAreaView>
-      <StatusBar style="auto"></StatusBar>
+      <StatusBar style="auto" backgroundColor="#000000"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
             <Title3>Đăng nhập</Title3>

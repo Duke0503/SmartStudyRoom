@@ -1,9 +1,7 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
-import { SafeAreaView } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { RootScreens } from "..";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
@@ -12,10 +10,12 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { useLazyGetAllScheduleQuery } from "@/Services/schedules";
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
 import { updateSchedulesList } from "@/Store/reducers";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import { StatusBar } from "expo-status-bar";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -33,15 +33,17 @@ export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
   const dispatch = useDispatch();
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetAllScheduleQuery();
+  const user = useSelector((state: any) => state.profile);
+
+  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
-  const handleFetch = async () => {
-    await fetchOne();
+  const handleFetch = async (user_ID: Number) => {
+    await fetchOne(user_ID);
   }
 
   useEffect(() => {
-    handleFetch();
+    handleFetch(user.id);
     if (isSuccess) {
       dispatch(updateSchedulesList(data));
     }
@@ -58,7 +60,7 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-              {schedulesList.length == 0? 
+              {schedulesList.length === 0? 
                 <View style={{padding: "5%", alignSelf: "center"}}>
                   <SRegular>Không có dữ liệu</SRegular>
                 </View>: 
@@ -68,7 +70,7 @@ export const Home = (props: IHomeProps) => {
                     if (moment(schedule.date).format("DD-MM-YYYY") === moment().format("DD-MM-YYYY")) {
                       count++;
                       return (
-                        <Pressable id={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                        <Pressable key={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
                           <SRegular>{schedule.title}</SRegular>
                         </Pressable>)
                     } else {
@@ -94,20 +96,18 @@ export const Home = (props: IHomeProps) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "90%",
-    paddingHorizontal: "5%",
-    paddingTop: "3%",
+    height: "95%",
     flexDirection: "column",
-    alignContent: "flex-start",
+    alignItems: "center",
   },
 
   title: {
-    width: "100%",
+    width: "90%",
     height: "7%",
   },
 
   body: {
-    width: "100%",
+    width: "90%",
     height: "93%",
     paddingTop: "3%"
   },

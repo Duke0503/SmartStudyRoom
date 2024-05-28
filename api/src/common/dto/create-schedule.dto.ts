@@ -3,11 +3,9 @@ export class CreateScheduleDto {
 
   status: string;
 
-  start_time: string;
+  start_time: Date;
 
-  finish_time: string;
-
-  date: Date;
+  finish_time: Date;
 
   break_time: number;
 

@@ -7,11 +7,15 @@ const schedulesSlice = createSlice({
   },
   reducers: {
     updateSchedulesList: (state, action) => {
-        state.scheduelesList = action.payload
-        // state.schedulesList =  action.payload;
-      }
+      console.log("RUN", action.payload)
+      state.scheduelesList = action.payload
+      // state.schedulesList =  action.payload;
+    },
+    addSchedule: (state, action) => {
+      state.scheduelesList.push(action.payload)
+    }
   },
 });
 
-export const { updateSchedulesList } = schedulesSlice.actions;
+export const { updateSchedulesList, addSchedule } = schedulesSlice.actions;
 export const schedulesReducers = schedulesSlice.reducer;

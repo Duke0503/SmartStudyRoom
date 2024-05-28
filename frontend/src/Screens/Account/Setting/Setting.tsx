@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
+import { StatusBar } from "expo-status-bar";
 
 export interface IProfileProps {
   onNavigate: (screen: RootScreens) => void;
@@ -13,6 +14,7 @@ export const Setting = (props: IProfileProps) => {
   
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar style="auto"></StatusBar>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Ionicons name="arrow-back" size={24} color="black" onPress={() => onNavigate(RootScreens.ACCOUNT)} />
