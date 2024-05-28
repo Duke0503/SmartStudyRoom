@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 // import { MainNavigator } from "@/Navigation/Main";
-import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { HomeScreenNavigatorProps } from "./HomeContainer";
 import { RootScreens } from "..";
@@ -24,7 +23,6 @@ import { updateSchedulesList } from "@/Store/reducers";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
-import { StatusBar } from "expo-status-bar";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
