@@ -38,7 +38,7 @@ export class SchedulesService {
             const user = await this.usersService.findUserbyId(user_id);
             schedule.user = user;
             await this.schedulesRepository.save(schedule);
-            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY", schedule);
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY", schedule.ID);
         }
         catch (error) {
             throw new NotFoundException('Cannot create schedule')

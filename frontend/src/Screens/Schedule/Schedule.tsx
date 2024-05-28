@@ -15,7 +15,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
-import { updateSchedulesList } from "@/Store/reducers/schedules";
+import { addSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -51,6 +51,8 @@ export const Schedule = (props: IScheduleProps) => {
   const user = useSelector((state:any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
+  console.log("schedulesList before add: ", schedulesList);
+
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
   
   const handleAddCalendar = () => {
@@ -83,24 +85,24 @@ export const Schedule = (props: IScheduleProps) => {
     try {
       setAddCalendar(false);
 
-      const params = {
-        title: title,
-        status: "Chưa bắt đầu",
-        start_time: startTime,
-        finish_time: finishTime,
-        break_time: breakTime,
-        user_ID: user.id
-      }
-
-      const response = await createSchedule(params).unwrap();
+      const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, break_time: breakTime, user_ID: user.id}).unwrap();
 
       if (response.success) {
-        console.log(response.data)
+        const params = {
+          ID: response.data,
+          title: title,
+          status: "Chưa bắt đầu",
+          start_time: startTime,
+          finish_time: finishTime,
+          break_time: breakTime
+        }
+
+        dispatch(addSchedule(params));
+
         setTitle("");
         setStartTime(new Date());
         setFinishTime(new Date());
         setBreakTime(1);
-        // dispatch(updateSchedulesList(response.data));
       } else {
         console.log("Create Schedule Failed");
       }
@@ -110,7 +112,10 @@ export const Schedule = (props: IScheduleProps) => {
     }
   };
 
-  console.log(schedulesList);
+  const handleNavigateSession = (schedule_ID: Number) => {
+    dispatch(updateCurrentSchedule(schedule_ID));
+    onNavigate(RootScreens.SESSION);
+  }
 
   return (
     <SafeAreaView>
@@ -253,7 +258,7 @@ export const Schedule = (props: IScheduleProps) => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            {schedulesList.length == 0? 
+            {/* {schedulesList.length == 0? 
             <View style={{padding: "5%", alignSelf: "center"}}>
               <SRegular>Không có dữ liệu</SRegular>
             </View>: 
@@ -263,12 +268,12 @@ export const Schedule = (props: IScheduleProps) => {
                 if (moment(schedule.date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                   count++;
                   return (
-                    <Pressable key={schedule.ID} style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                    <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
                       <SRegular>{schedule.title}</SRegular>
                     </Pressable>)
                 }
-              })}
-            </ScrollView>}
+              })} 
+            </ScrollView>} */}
           </View>
         </View>
       </View>
