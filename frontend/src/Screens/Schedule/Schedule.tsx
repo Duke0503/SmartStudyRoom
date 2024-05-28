@@ -51,6 +51,8 @@ export const Schedule = (props: IScheduleProps) => {
   const user = useSelector((state:any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
+  console.log("schedulesList before add: ", schedulesList);
+
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
   
   const handleAddCalendar = () => {
@@ -110,7 +112,7 @@ export const Schedule = (props: IScheduleProps) => {
     }
   };
 
-  console.log(schedulesList);
+  console.log("schedulesList after add: ", schedulesList);
 
   return (
     <SafeAreaView>
@@ -253,7 +255,7 @@ export const Schedule = (props: IScheduleProps) => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            {schedulesList.length == 0? 
+            {/* {schedulesList.length == 0? 
             <View style={{padding: "5%", alignSelf: "center"}}>
               <SRegular>Không có dữ liệu</SRegular>
             </View>: 
@@ -267,8 +269,8 @@ export const Schedule = (props: IScheduleProps) => {
                       <SRegular>{schedule.title}</SRegular>
                     </Pressable>)
                 }
-              })}
-            </ScrollView>}
+              })} 
+            </ScrollView>} */}
           </View>
         </View>
       </View>
