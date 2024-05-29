@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
-import { User } from "./users.entity";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Sensors')
 
@@ -8,10 +7,13 @@ export class Sensor {
   ID: number;
 
   @Column()
-  name: string;
+  id_sensor: string;
+
+  @Column({ nullable: true })
+  ip_address: string;
 
   @Column()
-  type: string;
+  is_active: boolean;
 
   @Column({ nullable: true })
   sound_data: string;
@@ -24,8 +26,4 @@ export class Sensor {
 
   @Column({ nullable: true })
   camera_data: string;
-
-  @ManyToOne(() => User, { nullable: false })
-  @JoinColumn({ name: "user_ID" })
-  user: User;  
 }
