@@ -68,7 +68,7 @@ export const Account = (props: IAccountProps) => {
           <Entypo onPress={handleLogout} name="log-out" size={24} color={colors.neutral_500} />
         </View>
         <ScrollView style={styles.content}>
-          <Pressable style={styles.contentItem } onPress={handleNavigateToProfile} >
+          <Pressable style={styles.contentItem} onPress={handleNavigateToProfile} >
             <FontAwesome5 name="user" size={24} color={colors.secondary_500} />
             <Text style={styles.contentItemText}>Thông tin cá nhân</Text>
             <Entypo name="chevron-right" size={24} color={colors.neutral_500} />
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     marginTop: 20,
-    
+
   },
   header: {
     flexDirection: 'row',
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 15,
     backgroundColor: '#fff',
-    
+
   },
   logo: {
     width: 40,
