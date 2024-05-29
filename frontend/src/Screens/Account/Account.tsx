@@ -56,8 +56,13 @@ export const Account = (props: IAccountProps) => {
           </View>
           <Entypo onPress={handleLogout} name="log-out" size={24} color={colors.neutral_500} />
         </View>
+<<<<<<< HEAD
         <View style={styles.content}>
           <Pressable style={styles.contentItem } onPress={() => onNavigate(RootScreens.PROFILE)} >
+=======
+        <ScrollView style={styles.content}>
+          <Pressable style={styles.contentItem} onPress={handleNavigateToProfile} >
+>>>>>>> e9645886f06bbb2fbdc9cd66206127ed182e5535
             <FontAwesome5 name="user" size={24} color={colors.secondary_500} />
             <SRegular textStyles={{marginLeft: "3%", flex: 1}}>Thông tin cá nhân</SRegular>
             <Entypo name="chevron-right" size={24} color={colors.neutral_500} />
@@ -85,10 +90,17 @@ export const Account = (props: IAccountProps) => {
 
 const styles = StyleSheet.create({
   container: {
+<<<<<<< HEAD
     width: "100%",
     height: "95%",
     flexDirection: "column",
     alignItems: "center"
+=======
+    flex: 1,
+    padding: 20,
+    marginTop: 20,
+
+>>>>>>> e9645886f06bbb2fbdc9cd66206127ed182e5535
   },
 
   header: {
@@ -98,6 +110,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
+<<<<<<< HEAD
+=======
+    backgroundColor: '#fff',
+
+>>>>>>> e9645886f06bbb2fbdc9cd66206127ed182e5535
   },
 
   logo: {
