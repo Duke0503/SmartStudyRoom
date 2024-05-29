@@ -1,7 +1,9 @@
 export class CreateSensorDto {
-  name: string;
+  id_sensor: string;
 
-  type: string;
+  ip_address: string;
+
+  is_active: boolean;
 
   sound_data: string;
 
@@ -10,6 +12,4 @@ export class CreateSensorDto {
   light_data: string;
 
   camera_data: string;
-
-  user_ID: number;
 }
