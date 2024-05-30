@@ -3,6 +3,7 @@ import { Schedule } from 'src/entities/schedules.entity';
 import { CreateScheduleDto } from 'src/common/dto/create-schedule.dto';
 import { UpdateScheduleDto } from 'src/common/dto/update-schedule.dto';
 import { SchedulesService } from 'src/services/schedules/schedules.service';
+import { IResponse } from 'src/common/interfaces/response.interface';
 
 @Controller('schedules')
 export class SchedulesController {
@@ -19,7 +20,7 @@ export class SchedulesController {
     }
 
     @Post('createschedule/:user_id')
-    createSchedule(@Body() createScheduleDto: CreateScheduleDto, @Param('user_id') user_id: number): Promise<String> {
+    createSchedule(@Body() createScheduleDto: CreateScheduleDto, @Param('user_id') user_id: number): Promise<IResponse> {
         return this.schedulesService.createSchedule(createScheduleDto, user_id);
     }
 

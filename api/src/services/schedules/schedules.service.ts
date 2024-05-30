@@ -5,6 +5,8 @@ import { CreateScheduleDto } from 'src/common/dto/create-schedule.dto';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { UpdateScheduleDto } from 'src/common/dto/update-schedule.dto';
+import { ResponseSuccess } from 'src/common/dto/response.dto';
+import { IResponse } from 'src/common/interfaces/response.interface';
 
 @Injectable()
 export class SchedulesService {
@@ -30,13 +32,13 @@ export class SchedulesService {
         return schedules;
     }
 
-    async createSchedule(createScheduleDto: CreateScheduleDto, user_id: number): Promise<String> {
+    async createSchedule(createScheduleDto: CreateScheduleDto, user_id: number): Promise<IResponse> {
         try {
             const schedule = this.schedulesRepository.create(createScheduleDto);
-            const user = await this.usersService.findUserbyId(user_id)
+            const user = await this.usersService.findUserbyId(user_id);
             schedule.user = user;
             await this.schedulesRepository.save(schedule);
-            return "Create schedule successfully"
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY", schedule.ID);
         }
         catch (error) {
             throw new NotFoundException('Cannot create schedule')
@@ -65,9 +67,4 @@ export class SchedulesService {
             throw new NotFoundException('Cannot delete schedule')
         }
     }
-
-
-
-
-
 }

@@ -14,13 +14,10 @@ export class Schedule {
   status: string;
 
   @Column()
-  start_time: string;
+  start_time: Date;
 
   @Column()
-  finish_time: string;
-
-  @Column()
-  date: Date;
+  finish_time: Date;
 
   @Column({ nullable: true })
   break_time: number;

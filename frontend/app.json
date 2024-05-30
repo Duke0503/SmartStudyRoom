@@ -23,7 +23,8 @@
       },
       "package": "com.anonymous.SSR",
       "googleServicesFile": "google-services.json"
-      
+      ,
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",

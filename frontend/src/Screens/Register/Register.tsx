@@ -1,21 +1,16 @@
-import { i18n, LocalizationKey } from "@/Localization";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
+import { View, StyleSheet, Pressable, TextInput } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
-// import { MainNavigator } from "@/Navigation/Main";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-// import { HomeScreenNavigatorProps } from "./HomeContainer";
 import { RootScreens } from "..";
 import Title3 from "@/Components/texts/Title3";
-import VSRegular from "@/Components/texts/VSRegular";
 import { colors } from "@/Components/colors";
-import VSSemiBold from "@/Components/texts/VSSemiBold";
-import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
 import { useRegisterUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
+import { SelectTrigger, SelectInput, SelectIcon, ChevronDownIcon, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, Select, Icon, SelectItem } from "@gluestack-ui/themed";
 
 export interface IRegisterProps {
   onNavigate: (string: RootScreens) => void;
@@ -25,6 +20,7 @@ export const Register = (props: IRegisterProps) => {
   const { onNavigate } = props;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
 
@@ -54,6 +50,8 @@ export const Register = (props: IRegisterProps) => {
     }, []
   );
 
+  console.log(role);
+
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
@@ -79,6 +77,40 @@ export const Register = (props: IRegisterProps) => {
                     value={email}
                     placeholder="Email của bạn"
                 ></TextInput>
+            </View>
+            <View style={styles.inputGroup}>
+                <SRegular>Vai trò*</SRegular>
+                <Select>
+                  <SelectTrigger variant="outline" size="md" >
+                    <SelectInput placeholder="Select option" />
+                    <SelectIcon mr="$3">
+                      <Icon as={ChevronDownIcon} />
+                    </SelectIcon>
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectBackdrop/>
+                    <SelectContent>
+                      <SelectDragIndicatorWrapper>
+                        <SelectDragIndicator />
+                      </SelectDragIndicatorWrapper>
+                      <SelectItem label="UX Research" value="ux" />
+                      <SelectItem label="Web Development" value="web" />
+                      <SelectItem
+                        label="Cross Platform Development Process"
+                        value="cross-platform"
+                      />
+                      <SelectItem
+                        label="UI Designing"
+                        value="ui"
+                        isDisabled={true}
+                      />
+                      <SelectItem
+                        label="Backend Development"
+                        value="backend"
+                      />
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
             </View>
             <View style={styles.inputGroup}>
                 <SRegular>Mật khẩu*</SRegular>

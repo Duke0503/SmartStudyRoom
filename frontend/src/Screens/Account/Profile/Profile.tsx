@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Image, SafeAr
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateProfileMutation } from "@/Services/users";
-import { RootScreens } from "..";
+import { RootScreens } from "../..";
 import { colors } from "@/Components/colors";
 import { updateUser } from "@/Store/reducers/profile";
 
@@ -29,7 +29,12 @@ export const Profile = (props: IProfileProps) => {
 
   const handleUpdate = async () => {
     try {
-      await updateProfile({ body: { name, birthday, phone_number, gender } }).unwrap();
+      await updateProfile({ body: {
+        name: name,
+        birthday: birthday,
+        phone_number: phone_number,
+        gender: gender
+        } }).unwrap();
       dispatch(updateUser({ name, birthday, phone_number, gender }));
       setSuccessModalVisible(true);
     } catch (error) {
