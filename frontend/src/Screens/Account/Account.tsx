@@ -49,6 +49,10 @@ export const Account = (props: IAccountProps) => {
   const handleNavigateToAboutUs = () => {
     onNavigate(RootScreens.ABOUTUS);
   };
+
+  const handleNavigateToNotification = () => {
+    onNavigate(RootScreens.NOTIFICATION);
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="auto" />
@@ -86,6 +90,11 @@ export const Account = (props: IAccountProps) => {
           <Pressable style={styles.contentItem} onPress={handleNavigateToAboutUs}>
             <Entypo name="help" size={24} color={colors.secondary_500} />
             <Text style={styles.contentItemText}>Về chúng tôi</Text>
+            <Entypo name="chevron-right" size={24} color={colors.neutral_500} />
+          </Pressable>
+          <Pressable style={styles.contentItem} onPress={handleNavigateToNotification}>
+            <Entypo name="help" size={24} color={colors.secondary_500} />
+            <Text style={styles.contentItemText}>Thông báo</Text>
             <Entypo name="chevron-right" size={24} color={colors.neutral_500} />
           </Pressable>
         </ScrollView>

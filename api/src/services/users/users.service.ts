@@ -50,7 +50,8 @@ export class UsersService {
     const userEdit =  await this.usersRepository.save(user);
 
     delete(userEdit.password);
-
+    console.log(new Date());
+    console.log(new Date().toString());
     return userEdit;
   }
   // End Edit Profile

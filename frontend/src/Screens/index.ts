@@ -16,4 +16,6 @@ export enum RootScreens {
     SETTING = "Setting",
     ABOUTUS = "AboutUs",
     UPDATE = "Update",
+
+    NOTIFICATION = "Notification",
 }
