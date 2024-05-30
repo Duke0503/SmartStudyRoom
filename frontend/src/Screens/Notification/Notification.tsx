@@ -10,14 +10,6 @@ export interface ILoginProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
 async function sendPushNotification(expoPushToken: string) {
   const message = {
     to: expoPushToken,

@@ -3,7 +3,7 @@ import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk';
 import { Notification } from 'src/entities/notifications.entity';
 import { ExpoPushToken } from 'src/entities/ExpoPushToken.entity';
 import { User } from 'src/entities/users.entity';
-import { LessThan, Repository } from 'typeorm';
+import { LessThan, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNotificationDto } from 'src/common/dto/create-notification.dto';
 import { Cron } from '@nestjs/schedule';
@@ -110,6 +110,7 @@ export class NotificationsService {
         isSent: false,
         isReady: false,
         date: LessThan(timeCondition),
+        schedule_ID: Not(null),
       },
     });
 
@@ -178,6 +179,7 @@ export class NotificationsService {
     createNotificationDto.date = new Date();
     createNotificationDto.isReady = true;
     createNotificationDto.isSent = false;
+    createNotificationDto.scheduleID = null;
 
     const notification = await this.createNotification(createNotificationDto);
 

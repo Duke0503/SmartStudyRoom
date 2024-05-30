@@ -12,4 +12,6 @@ export class CreateNotificationDto {
   date: Date;
 
   userID: number;
+
+  scheduleID: number;
 }

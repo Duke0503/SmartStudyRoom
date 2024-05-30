@@ -38,18 +38,17 @@ export class UsersService {
   // End User By Email
   
   // Edit Profile
-  async updateProfile(username: string, updateUserDto: UpdateUserDto) {
-    const user = await this.findByEmail(username);
+  async updateProfile(userID: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findUserbyId(userID);
 
     if (!user) {
       throw new NotFoundException();
-    }
+    };
 
     Object.assign(user, updateUserDto);
 
     const userEdit =  await this.usersRepository.save(user);
 
-    delete(userEdit.password);
     console.log(new Date());
     console.log(new Date().toString());
     return userEdit;
@@ -57,12 +56,9 @@ export class UsersService {
   // End Edit Profile
 
   // Check Password
-  async checkPassword(email: string, password: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({
-      where: {
-        email: email,
-      }
-    })
+  async checkPassword(userID: number, password: string): Promise<boolean> {
+    const user = await this.findUserbyId(userID);
+    
     if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 
     if(!bcrypt.compareSync(password, user.password)) {
@@ -74,12 +70,8 @@ export class UsersService {
   // End Check Password
 
   // Set Password
-  async setPassword(email: string, newPassword: string): Promise<boolean> { 
-    var user = await this.usersRepository.findOne({ 
-      where: {
-        email: email
-      }
-    });
+  async setPassword(userID: number, newPassword: string): Promise<boolean> { 
+    var user = await this.findUserbyId(userID)
     if(!user) throw new HttpException('LOGIN.USER_NOT_FOUND', HttpStatus.NOT_FOUND);
     
     user.password = bcrypt.hashSync(newPassword, Number(process.env.BCRYPT_SALT_ROUND));

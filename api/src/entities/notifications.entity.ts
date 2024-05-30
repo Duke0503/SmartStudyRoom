@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./users.entity";
+import { Schedule } from "./schedules.entity";
 
 @Entity('Notifications')
 
@@ -24,6 +25,9 @@ export class Notification {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "user_ID" })
-  // user: User; 
   userID: number; 
+
+  @ManyToOne(() => Schedule, { nullable: true })
+  @JoinColumn({ name: "schedule_ID" })
+  schedule_ID: number; 
 }
