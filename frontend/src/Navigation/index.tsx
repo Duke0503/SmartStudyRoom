@@ -17,6 +17,7 @@ import ProfileContainer from "@/Screens/Account/Profile/ProfileContainer";
 import PasswordContainer from "@/Screens/Account/Password/PasswordContainer";
 import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
+import NotificationContainer from "@/Screens/Notification/NotificationContainer";
 
 export type TabParamList = {
   [RootScreens.REGISTER]: undefined;
@@ -30,6 +31,7 @@ export type TabParamList = {
   [RootScreens.UPDATE]: undefined;
   [RootScreens.ABOUTUS]: undefined;
   [RootScreens.SETTING]: undefined;
+  [RootScreens.NOTIFICATION]: undefined;
 }
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -137,6 +139,16 @@ const BottomNavigator = () => {
         <Tab.Screen
             name={RootScreens.ABOUTUS}
             component={AboutUsContainer}
+            options={{
+              tabBarStyle: {
+                display: "none",
+              },
+              tabBarButton: () => null,
+            }}
+        />
+        <Tab.Screen
+            name={RootScreens.NOTIFICATION}
+            component={NotificationContainer}
             options={{
               tabBarStyle: {
                 display: "none",
