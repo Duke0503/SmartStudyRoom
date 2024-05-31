@@ -18,21 +18,21 @@ export interface Password {
 // Define new endpoints for fetching and updating user profile
 const userApi = API.injectEndpoints({
   endpoints: (build) => ({
-    getProfile: build.query<User, void>({
-      query: () => 'users/profile',
+    getProfile: build.query<User, {id: number}>({
+      query: (id) => `users/profile/${id}`,
     }),
 
-    updateProfile: build.mutation<void, { body: Partial<User> }>({
-      query: ({ body }) => ({
-        url: 'users/edit/profile',
+    updateProfile: build.mutation<User, { body: Partial<User>, id: number }>({
+      query: ({ body, id }) => ({
+        url: `users/edit/profile/${id}`,
         method: 'PATCH',
         body,
       }),
     }),
 
-    updatePassword: build.mutation<void, {body: Password }> ({
-      query: ({ body }) => ({
-        url: 'users/edit/password',
+    updatePassword: build.mutation<User, {body: Password, id: number }> ({
+      query: ({ body, id }) => ({
+        url: `users/edit/password/${id}`,
         method: 'PATCH',
         body,
       }),

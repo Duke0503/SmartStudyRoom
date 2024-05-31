@@ -1,25 +1,20 @@
-import { i18n, LocalizationKey } from "@/Localization";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
-import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
+import { FontAwesome5, Entypo, Ionicons} from "@expo/vector-icons";
 import { RootScreens } from "..";
 import { StatusBar } from "expo-status-bar";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
 import { colors } from "@/Components/colors";
-import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
-import SSemiBold from "@/Components/texts/SSemiBold";
 import { Platform, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
-import { State } from "react-native-gesture-handler";
-import { createSelector } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
-import { useLazyGetScheduleQuery } from "@/Services/schedules";
+import { useSelector } from "react-redux";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -40,7 +35,11 @@ export const Home = (props: IHomeProps) => {
   const schedules = useSelector((state: any) => state.schedules);
 
   let isScheduleToday:boolean = false;
-  // console.log("schedule list in home screen: ", scheduleList);
+
+
+
+
+  // console.log("schedule list in home screen: ", schedules.scheduelesList);
 
 
   // const dispatch = useDispatch();

@@ -17,29 +17,28 @@ export const Profile = (props: IProfileProps) => {
   const dispatch = useDispatch();
   const profile = useSelector((state: any) => state.profile);
 
+  const [userID, setUserID] = useState(profile.id);
   const [name, setName] = useState(profile.name);
   const [birthday, setBirthDate] = useState(profile.birthday);
   const [phone_number, setPhone] = useState(profile.phone_number);
   const [gender, setGender] = useState(profile.gender);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
-  const [errorModalVisible, setErrorModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const [updateProfile, { isLoading, isError }] = useUpdateProfileMutation();
 
   const handleUpdate = async () => {
     try {
-      await updateProfile({ body: {
-        name: name,
-        birthday: birthday,
-        phone_number: phone_number,
-        gender: gender
-        } }).unwrap();
+      await updateProfile({ 
+        body: {
+          name: name,
+          birthday: birthday,
+          phone_number: phone_number,
+          gender: gender
+        }, id: userID }).unwrap();
       dispatch(updateUser({ name, birthday, phone_number, gender }));
       setSuccessModalVisible(true);
     } catch (error) {
-      setErrorMessage("Failed to update profile");
-      setErrorModalVisible(true);
+      alert("Cập nhật thông tin thất bại!"); 
     }
   };
 
@@ -131,30 +130,6 @@ export const Profile = (props: IProfileProps) => {
             <Pressable
               style={styles.closeButton}
               onPress={() => setSuccessModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>Đóng</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Error Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={errorModalVisible}
-        onRequestClose={() => {
-          setErrorModalVisible(!errorModalVisible);
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.modalImage} />
-            <Text style={styles.modalTitle}>Cập nhật thất bại</Text>
-            <Text style={styles.modalText}>{errorMessage}</Text>
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setErrorModalVisible(false)}
             >
               <Text style={styles.closeButtonText}>Đóng</Text>
             </Pressable>

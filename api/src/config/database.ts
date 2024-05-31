@@ -4,7 +4,8 @@ import { User } from 'src/entities/users.entity';
 import { Device } from 'src/entities/devices.entity';
 import { Schedule } from 'src/entities/schedules.entity';
 import { Sensor } from 'src/entities/sensors.entity';
-import { Notification } from 'src/entities/home.entity';
+import { Notification } from 'src/entities/notifications.entity';
+import { ExpoPushToken } from 'src/entities/ExpoPushToken.entity';
 
 export default class TypeOrmConfig {
   static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
@@ -29,9 +30,11 @@ export default class TypeOrmConfig {
           Schedule,
           Sensor,
           Notification,
+          ExpoPushToken,
         ],
 
         synchronize: true,
+
     };
   }
 }

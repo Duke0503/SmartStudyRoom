@@ -100,7 +100,7 @@ export class AuthController {
       if (resetPasswordDto.newPasswordToken) {
         var user = await this.authService.getForgottenPasswordModel(resetPasswordDto.newPasswordToken);
 
-        isNewPasswordChanged = await this.usersService.setPassword(user.email, resetPasswordDto.newPassword);
+        isNewPasswordChanged = await this.usersService.setPassword(user.ID, resetPasswordDto.newPassword);
       
       } else {
         return new ResponseError("RESET_PASSWORD.CHANGE_PASSWORD_ERROR");

@@ -22,6 +22,8 @@ import CameraContainer from "@/Screens/Device/Camera/CameraContainer";
 import TempDeviceContainer from "@/Screens/Device/TempDevice/TempDeviceContainer";
 import NoiseDeviceContainer from "@/Screens/Device/NoiseDevice/NoiseDeviceContainer";
 // import * as Network from "expo-network";
+import NotificationContainer from "@/Screens/Notification/NotificationContainer";
+
 export type TabParamList = {
   [RootScreens.REGISTER]: undefined;
   [RootScreens.LOGIN]: undefined;
@@ -38,6 +40,7 @@ export type TabParamList = {
   [RootScreens.UPDATE]: undefined;
   [RootScreens.ABOUTUS]: undefined;
   [RootScreens.SETTING]: undefined;
+  [RootScreens.NOTIFICATION]: undefined;
 }
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -192,6 +195,16 @@ const BottomNavigator = () => {
             },
             tabBarButton: () => null,
           }}
+        />
+        <Tab.Screen
+            name={RootScreens.NOTIFICATION}
+            component={NotificationContainer}
+            options={{
+              tabBarStyle: {
+                display: "none",
+              },
+              tabBarButton: () => null,
+            }}
         />
       </Tab.Navigator>
     </NavigationContainer>

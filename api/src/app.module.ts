@@ -11,6 +11,7 @@ import { SchedulesModule } from './modules/schedules/schedules.module';
 import { HomeModule } from './modules/home/home.module';
 import { DevicesModule} from './modules/devices/devices.module'
 import { MqttModule } from './modules/mqtt/mqtt.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     SchedulesModule,
     HomeModule,
     MqttModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

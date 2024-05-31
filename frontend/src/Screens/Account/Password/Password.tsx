@@ -14,6 +14,8 @@ export const Password = (props: IProfileProps) => {
   const { onNavigate } = props;
   const dispatch = useDispatch();
   
+  const profile = useSelector((state: any) => state.profile);
+  const [userID, setUserID] = useState(profile.id);
   const [current_password, setCurrent_password] = useState("");
   const [new_password, setNew_password] = useState("");
 
@@ -23,8 +25,7 @@ export const Password = (props: IProfileProps) => {
 
   const handleUpdate = async () => {
     try {
-      await updatePassword({ body: { current_password, new_password } }).unwrap();
-
+      await updatePassword({ body: { current_password, new_password }, id: userID }).unwrap();
       setModalVisible(true);
     } catch (error) {
       alert("Mật khẩu hiện tại không chính xác.");
