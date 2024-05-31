@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, ImageProps } from "react-native";
 import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
 import { Button, Layout, IconElement, Divider, CircularProgressBar } from '@ui-kitten/components';
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useGetDeviceQuery } from "@/Services/devices";
+import { useDispatch, useSelector } from "react-redux";
+import { useUpdateLightSensorMutation } from "@/Services/sensors";
+import { light } from "@eva-design/eva";
+import * as Network from "expo-network";
+import { useGetSensorQuery } from "@/Services/sensors";
 export interface LightDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -11,9 +17,61 @@ export interface LightDeviceProps {
 
 
 export const LightDevice = (props: LightDeviceProps) => {
+    const [ipAddress, setIpAddress] = useState('undefined');
+    const [lightSensor, setLightsensor] = useState({})
+    const [lightdata, setLightdata] = useState(0)
+    const profile = useSelector((state: any) => state.profile);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const ip = await Network.getIpAddressAsync();
+            setIpAddress(ip)
+          } catch (error) {
+            console.log(error)
+          }
+        };
+        fetchData();
+      }, []);
+    const sensorsQuery = useGetSensorQuery({user_id: profile.id, ip: ipAddress})
+    const sensors = sensorsQuery.currentData
+    // console.log(profile.id, ipAddress)
+    // console.log(sensors)
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const sensorWithLightData = sensors && sensors.find(sensor => sensor.light_data != null);
+            if (sensorWithLightData) {
+                setLightsensor(sensorWithLightData);
+                setLightdata(parseFloat(sensorWithLightData.light_data))
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        };
+        fetchData();
+      }, [sensors]);
+    const device = useGetDeviceQuery({user_id: profile.id, type: "Light" }).currentData
+    const [updateLightSensor] = useUpdateLightSensorMutation()
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
-
+    const handleUpdateDevice = async (action) => {
+        if (action == "Increase") {
+            try {
+                await updateLightSensor({sensor_id: lightSensor.ID, light_data: parseFloat(lightdata) + 1});
+                setLightdata(parseFloat(lightdata) + 1)
+            } catch (error) {
+                console.log(error)
+            }  
+        }
+        if (action == "Decrease") {
+            try {
+                await updateLightSensor({sensor_id: lightSensor.ID, light_data: parseFloat(lightdata) - 1});
+                setLightdata(parseFloat(lightdata) - 1)
+            } catch (error) {
+                console.log(error)
+            }  
+        }
+    }
     const Header = () => {
         return (
             <View style={styles.header}>
@@ -29,14 +87,14 @@ export const LightDevice = (props: LightDeviceProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: Thiết bị 1</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> Đang bật</Text></Text>
+                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>
                     <CircularProgressBar
                         style={styles.customizeCircle}
-                        progress={0.7}
+                        progress={lightdata ? lightdata/100 : 0}
                     />
                 </View>
                 <View style={styles.box3}>
@@ -44,11 +102,13 @@ export const LightDevice = (props: LightDeviceProps) => {
                 </View>
                 <View style={styles.box4}>
                     <Button appearance='outline'
+                        onPress={() => handleUpdateDevice("Decrease")}
                         status='primary'
                         style={styles.button}>
                         - Giảm sáng
                     </Button>
                     <Button appearance='outline'
+                        onPress={() => handleUpdateDevice("Increase")}
                         status='primary'
                         style={styles.button}>
                         + Tăng sáng

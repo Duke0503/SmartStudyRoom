@@ -8,9 +8,9 @@ import { Device } from 'src/entities/devices.entity';
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
-  @Get('getdevice/:user_id')
-  getDeviceByUserId(@Param('user_id') user_id: number): Promise<Device[]> {
-    return this.devicesService.getDeviceByUserId(user_id);
+  @Get('getdevice/:user_id/:type')
+  getDeviceByUserId(@Param('user_id') user_id: number, @Param('type') type: string): Promise<Device[]> {
+    return this.devicesService.getDeviceByUserId(user_id, type);
   }
 
   @Post('createnewdevice/:user_id')

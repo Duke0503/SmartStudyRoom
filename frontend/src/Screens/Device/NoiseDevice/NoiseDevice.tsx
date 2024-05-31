@@ -4,6 +4,8 @@ import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
 import { Button, Layout, IconElement, Divider, CircularProgressBar } from '@ui-kitten/components';
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useGetDeviceQuery } from "@/Services/devices";
+import { useDispatch, useSelector } from "react-redux";
 export interface NoiseDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -11,6 +13,8 @@ export interface NoiseDeviceProps {
 
 
 export const NoiseDevice = (props: NoiseDeviceProps) => {
+    const profile = useSelector((state: any) => state.profile);
+    const device = useGetDeviceQuery({user_id: profile.id, type: "Sound" }).currentData
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
 
@@ -29,8 +33,8 @@ export const NoiseDevice = (props: NoiseDeviceProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: Thiết bị 3</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> Đang bật</Text></Text>
+                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>

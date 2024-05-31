@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API } from "../base";
+import { getIpAddress } from "react-native-device-info";
 
 export interface User {
   id: number;

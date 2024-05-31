@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, SectionList, Button, Alert } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 // import { MainNavigator } from "@/Navigation/Main";
@@ -14,20 +14,65 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { Divider } from "@ui-kitten/components";
+import * as Network from "expo-network";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetSensorQuery } from "@/Services/sensors";
+import { useGetDeviceQuery } from "@/Services/devices";
+import { addSensor, deleteCurrentSensor} from "@/Store/reducers/sensors";
 export interface IDeviceProps {
   onNavigate: (string: RootScreens) => void;
 }
 
 export const Device = (props: IDeviceProps) => {
+  const [ipAddress, setIpAddress] = useState('undefined');
+  const [connectedDevices, setConnectedDevices] = useState(false);
+  const [lightSensor, setLightsensor] = useState({})
+  const [tempSensor, setTemptsensor] = useState({})
+  const [soundSensor, setSoundsensor] = useState({})
+  const [cameraSensor, setCamerasensor] = useState({})
+  const profile = useSelector((state: any) => state.profile);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const ip = await Network.getIpAddressAsync();
+        setIpAddress(ip)
+       
+      } catch (error) {
+        console.log(error)
+      }
+    };
+
+    fetchData();
+  }, []);
+  // useEffect(() => {
+  //   dispatch(addSensor(lightSensor));
+  // }, [lightSensor]);
+  
+  // useEffect(() => {
+  //   dispatch(addSensor(tempSensor));
+  // }, [tempSensor]);
+  
+  // useEffect(() => {
+  //   dispatch(addSensor(soundSensor));
+  // }, [soundSensor]);
+  
+  // useEffect(() => {
+  //   dispatch(addSensor(cameraSensor));
+  // }, [cameraSensor]);
+  const sensorData = useGetSensorQuery({user_id: profile.id, ip: ipAddress}).currentData
+  const dispatch = useDispatch();
+  const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}).currentData
+  const devicename = deviceData && deviceData.map(device => device.name)
   const { onNavigate } = props;
   const DATA = [
     {
       title: 'Thiết bị đã kết nối',
-      data: ['Pizza', 'Burger', 'Risotto', 'Hotdog',],
+      data: devicename,
     },
 
   ];
-
+  
   const handleNagivateToLightDevice = () => {
     onNavigate(RootScreens.LIGHTDEVICE)
   };
@@ -40,11 +85,27 @@ export const Device = (props: IDeviceProps) => {
   const handleNagivateToNoiseDevice = () => {
     onNavigate(RootScreens.NOISEDEVICE)
   };
-
-  const [connectedDevices, setConnectedDevices] = useState(false);
-
-  const handleToggleConnect = () => {
+  const handleToggleConnect = async () => {
     setConnectedDevices(!connectedDevices);
+    dispatch(deleteCurrentSensor({}))
+    sensorData && sensorData.map((item, index) => {
+      dispatch(addSensor(item))
+      if (item.light_data != null) {
+        setLightsensor(item)
+      }
+      if (item.temp_data != null) {
+        setTemptsensor(item)
+      }
+      if (item.sound_data != null) {
+        setSoundsensor(item)
+      }
+      if (item.camera_data != null) {
+        setCamerasensor(item)
+      }
+    })
+    
+    
+    
   }
   const ContentBody = () => {
     return (
@@ -64,7 +125,7 @@ export const Device = (props: IDeviceProps) => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between", width: "90%" }}>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <VSSemiBold textStyles={{ color: colors.neutral_900 }}>Độ sáng</VSSemiBold>
-                        <SRegular textStyles={{ color: colors.neutral_900 }}>700</SRegular>
+                        {/* <SRegular textStyles={{ color: colors.neutral_900 }}>{lightSensor.light_data ? lightSensor.light_data : "Không có kết nối"}</SRegular> */}
                       </View>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <Ionicons name="chevron-forward" size={24} color={colors.neutral_900} />
@@ -75,7 +136,7 @@ export const Device = (props: IDeviceProps) => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between", width: "90%" }}>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <VSSemiBold textStyles={{ color: colors.neutral_900 }}>Nhiệt độ</VSSemiBold>
-                        <SRegular textStyles={{ color: colors.neutral_900 }}>700</SRegular>
+                        {/* <SRegular textStyles={{ color: colors.neutral_900 }}>{tempSensor.temp_data ? tempSensor.temp_data : "Không có kết nối"}</SRegular> */}
                       </View>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <Ionicons name="chevron-forward" size={24} color={colors.neutral_900} />
@@ -89,8 +150,8 @@ export const Device = (props: IDeviceProps) => {
                   <Pressable style={styles.session} onPress={handleNagivateToNoiseDevice}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", width: "90%" }}>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
-                        <VSSemiBold textStyles={{ color: colors.neutral_900 }}>Âm lượng</VSSemiBold>
-                        <SRegular textStyles={{ color: colors.neutral_900 }}>700</SRegular>
+                        <VSSemiBold textStyles={{ color: colors.neutral_900 }}>Âm thanh</VSSemiBold>
+                        {/* <SRegular textStyles={{ color: colors.neutral_900 }}>{soundSensor.sound_data ? soundSensor.sound_data : "Không có kết nối"}</SRegular> */}
                       </View>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <Ionicons name="chevron-forward" size={24} color={colors.neutral_900} />
@@ -101,7 +162,7 @@ export const Device = (props: IDeviceProps) => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between", width: "90%" }}>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <VSSemiBold textStyles={{ color: colors.neutral_900 }}>Camera</VSSemiBold>
-                        <SRegular textStyles={{ color: colors.neutral_900 }}>Bình thường</SRegular>
+                        {/* <SRegular textStyles={{ color: colors.neutral_900 }}>{cameraSensor.camera_data ? cameraSensor.camera_data : "Không có kết nối"}</SRegular> */}
                       </View>
                       <View style={{ flexDirection: "column", justifyContent: "center" }}>
                         <Ionicons name="chevron-forward" size={24} color={colors.neutral_900} />

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
-
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn  } from "typeorm";
+import { User } from "./users.entity";
 @Entity('Sensors')
 
 export class Sensor {
@@ -26,4 +26,8 @@ export class Sensor {
 
   @Column({ nullable: true })
   camera_data: string;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: "user_ID" })
+  user: User;
 }

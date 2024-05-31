@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, ImageProps } from "react-native";
 import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
 import { Button, Layout, IconElement, Divider, CircularProgressBar } from '@ui-kitten/components';
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useGetDeviceQuery } from "@/Services/devices";
+import { useDispatch, useSelector } from "react-redux";
+import { useUpdateTempSensorMutation } from "@/Services/sensors";
+import * as Network from "expo-network";
+import { useGetSensorQuery } from "@/Services/sensors";
 export interface TempDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -11,9 +16,59 @@ export interface TempDeviceProps {
 
 
 export const TempDevice = (props: TempDeviceProps) => {
+    const [ipAddress, setIpAddress] = useState('undefined');
+    const [tempSensor, setTempsensor] = useState({})
+    const [tempdata, setTempdata] = useState(0)
+    const profile = useSelector((state: any) => state.profile);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const ip = await Network.getIpAddressAsync();
+            setIpAddress(ip)
+          } catch (error) {
+            console.log(error)
+          }
+        };
+        fetchData();
+      }, []);
+    const sensorsQuery = useGetSensorQuery({user_id: profile.id, ip: ipAddress})
+    const sensors = sensorsQuery.currentData
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const sensorWithTempData = sensors && sensors.find(sensor => sensor.temp_data != null);
+            if (sensorWithTempData) {
+                setTempsensor(sensorWithTempData);
+                setTempdata(parseFloat(sensorWithTempData.temp_data))
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        };
+        fetchData();
+      }, [sensors]);
+    const device = useGetDeviceQuery({user_id: profile.id, type: "Temp" }).currentData
+    const [updateTempSensor] = useUpdateTempSensorMutation()
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
-
+    const handleUpdateDevice = async (action) => {
+        if (action == "Increase") {
+            try {
+                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: parseFloat(tempdata) + 1});
+                setTempdata(parseFloat(tempdata) + 1)
+            } catch (error) {
+                console.log(error)
+            }  
+        }
+        if (action == "Decrease") {
+            try {
+                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: parseFloat(tempdata) - 1});
+                setTempdata(parseFloat(tempdata) - 1)
+            } catch (error) {
+                console.log(error)
+            }  
+        }
+    }
     const Header = () => {
         return (
             <View style={styles.header}>
@@ -29,14 +84,14 @@ export const TempDevice = (props: TempDeviceProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: Thiết bị 2</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> Đang bật</Text></Text>
+                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>
                     <CircularProgressBar
                         style={styles.customizeCircle}
-                        progress={0.5}
+                        progress={tempdata ? tempdata/100: 0}
                     />
                 </View>
                 <View style={styles.box3}>
@@ -44,11 +99,13 @@ export const TempDevice = (props: TempDeviceProps) => {
                 </View>
                 <View style={styles.box4}>
                     <Button appearance='outline'
+                        onPress={() => handleUpdateDevice("Decrease")}
                         status='primary'
                         style={styles.button}>
                         - Giảm độ
                     </Button>
                     <Button appearance='outline'
+                        onPress={() => handleUpdateDevice("Increase")}
                         status='primary'
                         style={styles.button}>
                         + Tăng độ

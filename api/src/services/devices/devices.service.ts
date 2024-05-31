@@ -13,13 +13,24 @@ export class DevicesService {
     private readonly devicesRepository: Repository<Device>,
     private readonly userService: UsersService
   ){}
-  async getDeviceByUserId(user_ID: number): Promise<Device[]> {
-    const devices = this.devicesRepository.find({ where: { user: { ID: user_ID } } });
-    if (devices) {
-      return devices
+  async getDeviceByUserId(user_ID: number, type: string): Promise<Device[]> {
+    if (type == "All") {
+      const devices = this.devicesRepository.find({ where: { user: { ID: user_ID }} });
+      if (devices) {
+        return devices
+      } else {
+        throw new NotFoundException(`Can not get device`)
+      }
     } else {
-      throw new NotFoundException(`Can not get device`)
+      const devices = this.devicesRepository.find({ where: { user: { ID: user_ID }, type: type} });
+      if (devices) {
+        return devices
+      } else {
+        throw new NotFoundException(`Can not get device`)
+      }
     }
+    
+    
   }
   async createNewDevice(createDeviceDto: CreateDeviceDto, user_id: number): Promise<String> {
     try {
