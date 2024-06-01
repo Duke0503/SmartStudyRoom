@@ -1,12 +1,17 @@
 export enum RootScreens {
     HOMENAVIGATOR = "HomeNavigator",
     HOME = "Home",
-    
+
     SCHEDULENAVIGATOR = "ScheduleNavigator",
     SCHEDULE = "Schedule",
     SESSION = "Session",
 
     DEVICE = "Device",
+    LIGHTDEVICE = "LightDevice",
+    CAMERA = "Camera",
+    TEMPDEVICE = "TempDevice",
+    NOISEDEVICE = "NoiseDevice",
+
     REGISTER = "Register",
     LOGIN = "Login",
 
@@ -16,4 +21,6 @@ export enum RootScreens {
     SETTING = "Setting",
     ABOUTUS = "AboutUs",
     UPDATE = "Update",
+
+    NOTIFICATION = "Notification",
 }

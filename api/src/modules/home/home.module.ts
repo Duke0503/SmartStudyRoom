@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // import{User} from 'src/entities/home.entity';
-import{Notification} from 'src/entities/home.entity';
+import { Notification } from 'src/entities/notifications.entity';
 import{Schedule} from 'src/entities/schedules.entity';
 import{Sensor} from 'src/entities/sensors.entity';
 import { HomeController } from 'src/controllers/home/home.controller';
