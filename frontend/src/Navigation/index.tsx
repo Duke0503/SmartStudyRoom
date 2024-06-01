@@ -1,5 +1,5 @@
-import React from "react";
-import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
+import React, { useState} from "react";
+import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -17,6 +17,11 @@ import ProfileContainer from "@/Screens/Account/Profile/ProfileContainer";
 import PasswordContainer from "@/Screens/Account/Password/PasswordContainer";
 import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
+import LightDeviceContainer from "@/Screens/Device/LightDevice/LightDeviceContainer";
+import CameraContainer from "@/Screens/Device/Camera/CameraContainer";
+import TempDeviceContainer from "@/Screens/Device/TempDevice/TempDeviceContainer";
+import NoiseDeviceContainer from "@/Screens/Device/NoiseDevice/NoiseDeviceContainer";
+// import * as Network from "expo-network";
 import NotificationContainer from "@/Screens/Notification/NotificationContainer";
 
 export type TabParamList = {
@@ -26,6 +31,10 @@ export type TabParamList = {
   [RootScreens.SCHEDULE]: undefined;
   [RootScreens.SESSION]: undefined;
   [RootScreens.DEVICE]: undefined;
+  [RootScreens.LIGHTDEVICE]: undefined;
+  [RootScreens.TEMPDEVICE]: undefined;
+  [RootScreens.NOISEDEVICE]: undefined;
+  [RootScreens.CAMERA]: undefined;
   [RootScreens.ACCOUNT]: undefined;
   [RootScreens.PROFILE]: undefined;
   [RootScreens.UPDATE]: undefined;
@@ -36,14 +45,15 @@ export type TabParamList = {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
+
 const BottomNavigator = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={{ 
+      <Tab.Navigator screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.secondary_700,
         tabBarInactiveTintColor: colors.neutral_300,
-        }}>
+      }}>
         <Tab.Screen
           name={RootScreens.REGISTER}
           component={RegisterContainer}
@@ -65,86 +75,126 @@ const BottomNavigator = () => {
           }}
         />
         <Tab.Screen
-            name={RootScreens.HOME}
-            component={HomeContainer}
-            options={{
-              tabBarIcon: ({color}) => (<Entypo name="home" size={24} color={color} />),
-              tabBarLabel: "Trang chủ"
-            }}
+          name={RootScreens.HOME}
+          component={HomeContainer}
+          options={{
+            tabBarIcon: ({ color }) => (<Entypo name="home" size={24} color={color} />),
+            tabBarLabel: "Trang chủ"
+          }}
         />
         <Tab.Screen
-            name={RootScreens.SCHEDULE}
-            component={ScheduleContainer}
-            options={{
-              tabBarIcon: ({color}) => (<Entypo name="calendar" size={24} color={color} />),
-              tabBarLabel: "Lịch học"
-            }}
+          name={RootScreens.SCHEDULE}
+          component={ScheduleContainer}
+          options={{
+            tabBarIcon: ({ color }) => (<Entypo name="calendar" size={24} color={color} />),
+            tabBarLabel: "Lịch học"
+          }}
         />
         <Tab.Screen
-            name={RootScreens.DEVICE}
-            component={DeviceContainer}
-            options={{
-              tabBarIcon: ({color}) => (<Entypo name="light-bulb" size={24} color={color} />),
-              tabBarLabel: "Thiết bị"
-            }}
+          name={RootScreens.DEVICE}
+          component={DeviceContainer}
+          options={{
+            tabBarIcon: ({ color }) => (<Entypo name="light-bulb" size={24} color={color} />),
+            tabBarLabel: "Thiết bị"
+          }}
         />
         <Tab.Screen
-            name={RootScreens.SESSION}
-            component={SessionContainer}
-            options={{
-              tabBarStyle: {
-                display: "none",
-              },
-              tabBarButton: () => null,
-            }}
+          name={RootScreens.SESSION}
+          component={SessionContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
         />
         <Tab.Screen
-            name={RootScreens.ACCOUNT}
-            component={AccountContainer}
-            options={{
-              tabBarIcon: ({color}) => (<FontAwesome5 name="user" size={24} color={color} />),
-              tabBarLabel: "Tài khoản"
-            }}
+          name={RootScreens.ACCOUNT}
+          component={AccountContainer}
+          options={{
+            tabBarIcon: ({ color }) => (<FontAwesome5 name="user" size={24} color={color} />),
+            tabBarLabel: "Tài khoản"
+          }}
         />
         <Tab.Screen
-            name={RootScreens.PROFILE}
-            component={ProfileContainer}
-            options={{
-              tabBarStyle: {
-                display: "none",
-              },
-              tabBarButton: () => null,
-            }}
+          name={RootScreens.PROFILE}
+          component={ProfileContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
         />
         <Tab.Screen
-            name={RootScreens.UPDATE}
-            component={PasswordContainer}
-            options={{
-              tabBarStyle: {
-                display: "none",
-              },
-              tabBarButton: () => null,
-            }}
+          name={RootScreens.UPDATE}
+          component={PasswordContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
         />
         <Tab.Screen
-            name={RootScreens.SETTING}
-            component={SettingContainer}
-            options={{
-              tabBarStyle: {
-                display: "none",
-              },
-              tabBarButton: () => null,
-            }}
+          name={RootScreens.SETTING}
+          component={SettingContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
         />
         <Tab.Screen
-            name={RootScreens.ABOUTUS}
-            component={AboutUsContainer}
-            options={{
-              tabBarStyle: {
-                display: "none",
-              },
-              tabBarButton: () => null,
-            }}
+          name={RootScreens.ABOUTUS}
+          component={AboutUsContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.LIGHTDEVICE}
+          component={LightDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.CAMERA}
+          component={CameraContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.TEMPDEVICE}
+          component={TempDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.NOISEDEVICE}
+          component={NoiseDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
         />
         <Tab.Screen
             name={RootScreens.NOTIFICATION}

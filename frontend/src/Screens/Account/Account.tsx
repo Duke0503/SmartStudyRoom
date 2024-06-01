@@ -88,7 +88,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "95%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    flex: 1,
+    padding: 20,
+    marginTop: 20,
+
   },
 
   header: {
@@ -98,6 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
+    backgroundColor: '#fff',
   },
 
   logo: {
