@@ -13,10 +13,11 @@ import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCurrentSchedule } from "@/Store/reducers";
-import { VStack, Heading, Progress, ProgressFilledTrack, Text } from "@gluestack-ui/themed";
+import { VStack, Heading, Progress, ProgressFilledTrack, Text, HStack, Box } from "@gluestack-ui/themed";
 
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import LRegular from "@/Components/texts/LRegular";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -37,9 +38,7 @@ export const Session = (props: ISessionProps) => {
   const currentSchedule = schedules.currentSchedule;
 
   const studyTime = (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) > 0? 
-  (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / (moment(currentSchedule.finish_time).unix() - moment(currentSchedule.start_time).unix()) * 100 : 0;
-
-  console.log(studyTime)
+  (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / (moment(currentSchedule.finish_time).unix() - moment(currentSchedule.start_time).unix()) * 100 > 100? 100 : (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) : 0;
 
   const handleReturn = () => {
     dispatch(deleteCurrentSchedule({}));
@@ -57,9 +56,13 @@ export const Session = (props: ISessionProps) => {
           <Title3 textStyles={{color: colors.neutral_900}}>{currentSchedule.title}</Title3>
         </View>
         <View style={styles.body}>
-          <VStack space="lg">
+          <VStack h={"80%"} space="lg">
             <VStack space="md">
+              {moment(new Date()).unix() > moment(currentSchedule.finish_time).unix()?
+              <Heading>Thời gian đã học: Đã xong</Heading>:
               <Heading>Thời gian đã học: {Math.round((moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / 60)} phút</Heading>
+              }
+              
               <Text size="md">Thời gian bắt đầu: {moment(currentSchedule.start_time).format("ddd, DD/MM/YYYY, HH:mm")}</Text>
               <Progress value={studyTime} size="md">
                 <ProgressFilledTrack h={8} bg={colors.secondary_500}/>
@@ -68,7 +71,31 @@ export const Session = (props: ISessionProps) => {
             </VStack>
             <VStack space="md">
               <Heading>Thông số môi trường học tập:</Heading>
+              <VStack h="75%">
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
+                    <LRegular>Độ sáng:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <FontAwesome5 name="temperature-low" size={50} color={"red"} />
+                    <LRegular>Nhiệt độ:</LRegular>
+                  </Box>
+                </HStack>
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Âm thanh:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Camera</LRegular>
+                  </Box>
+                </HStack>
+              </VStack>
             </VStack>
+            <LRegular>Chỉnh sửa</LRegular>
+            <LRegular>Xóa</LRegular>
           </VStack>
         </View>
       </View>
@@ -150,5 +177,13 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  sensorDataBox: {
+    justifyContent: "space-evenly",
+    borderWidth: 1,
+    borderColor: colors.neutral_300,
+    borderRadius: 15,
+    padding: "5%"
   }
 });

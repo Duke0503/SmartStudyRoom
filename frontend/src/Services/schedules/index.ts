@@ -28,4 +28,4 @@ const schedulesAPI = API.injectEndpoints({
 });
 
 
-export const { useGetScheduleQuery,useLazyGetScheduleQuery, useCreateScheduleMutation } = schedulesAPI;
+export const { useGetScheduleQuery, useLazyGetScheduleQuery, useCreateScheduleMutation } = schedulesAPI;

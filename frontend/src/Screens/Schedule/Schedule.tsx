@@ -263,7 +263,7 @@ export const Schedule = (props: IScheduleProps) => {
             <ScrollView style={styles.schedule}>
               {schedulesList.map((schedule: any) => {
                 let count = 0;
-                if (moment(schedule.date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
+                if (moment(schedule.start_time).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                   count++;
                   return (
                     <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
