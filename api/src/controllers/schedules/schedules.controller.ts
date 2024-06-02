@@ -30,7 +30,7 @@ export class SchedulesController {
     }
 
     @Delete('deleteschedule/:schedule_id')
-    deleteSchedule(@Param('schedule_id') schedule_id: number): Promise<String> {
+    deleteSchedule(@Param('schedule_id') schedule_id: number): Promise<IResponse> {
         return this.schedulesService.deleteSchedule(schedule_id)
     }
 

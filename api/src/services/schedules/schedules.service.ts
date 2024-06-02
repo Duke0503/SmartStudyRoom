@@ -57,11 +57,11 @@ export class SchedulesService {
         }
     }
 
-    async deleteSchedule(schedule_id: number): Promise<String> {
+    async deleteSchedule(schedule_id: number): Promise<IResponse> {
         try {
             const schedule = await this.schedulesRepository.findOne({ where: { ID: schedule_id } });
             await this.schedulesRepository.remove(schedule);
-            return "Delete schedule successfully"
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY");
         }
         catch (error) {
             throw new NotFoundException('Cannot delete schedule')

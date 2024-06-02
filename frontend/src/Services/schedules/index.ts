@@ -22,10 +22,21 @@ const schedulesAPI = API.injectEndpoints({
                     }
                 })
             }
+        ),
+        deleteSchedule: build.mutation(
+            {
+                query: ({schedule_ID}) => ({
+                    url: `schedules/deleteschedule/${schedule_ID}`,
+                    method: "DELETE",
+                    body: {
+                        "schedule_ID": schedule_ID
+                    }
+                })
+            }
         )
     }),
     overrideExisting: true,
 });
 
 
-export const { useGetScheduleQuery, useLazyGetScheduleQuery, useCreateScheduleMutation } = schedulesAPI;
+export const { useGetScheduleQuery, useLazyGetScheduleQuery, useCreateScheduleMutation, useDeleteScheduleMutation } = schedulesAPI;

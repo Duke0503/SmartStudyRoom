@@ -12,12 +12,13 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCurrentSchedule } from "@/Store/reducers";
+import { deleteCurrentSchedule, deleteSchedule } from "@/Store/reducers";
 import { VStack, Heading, Progress, ProgressFilledTrack, Text, HStack, Box } from "@gluestack-ui/themed";
 
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import LRegular from "@/Components/texts/LRegular";
+import { useDeleteScheduleMutation } from "@/Services/schedules";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -36,6 +37,7 @@ export const Session = (props: ISessionProps) => {
   const dispatch = useDispatch();
   const schedules = useSelector((state: any) => state.schedules);
   const currentSchedule = schedules.currentSchedule;
+  const [deleteScheduleDatabase, deleteScheduleDatabaseResult] = useDeleteScheduleMutation();
 
   const studyTime = (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) > 0? 
   (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / (moment(currentSchedule.finish_time).unix() - moment(currentSchedule.start_time).unix()) * 100 > 100? 100 : (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) : 0;
@@ -43,6 +45,18 @@ export const Session = (props: ISessionProps) => {
   const handleReturn = () => {
     dispatch(deleteCurrentSchedule({}));
     onNavigate(RootScreens.SCHEDULE);
+  }
+
+  const handleDelete = async (schedule_ID: Number) => {
+    const response = await deleteScheduleDatabase({schedule_ID: schedule_ID}).unwrap();
+
+    if (response.success) {
+      console.log("Delete Schedule Success");
+      dispatch(deleteSchedule({schedule_ID: schedule_ID}));
+      onNavigate(RootScreens.SCHEDULE);
+    } else {
+      console.log("Delete Schedule Failed");
+    }
   }
 
   return (
@@ -95,7 +109,9 @@ export const Session = (props: ISessionProps) => {
               </VStack>
             </VStack>
             <LRegular>Chỉnh sửa</LRegular>
-            <LRegular>Xóa</LRegular>
+            <Pressable onPress={() => handleDelete(currentSchedule.ID)}>
+              <LRegular>Xóa</LRegular>
+            </Pressable>
           </VStack>
         </View>
       </View>
