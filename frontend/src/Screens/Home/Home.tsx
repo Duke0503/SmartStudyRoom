@@ -10,10 +10,12 @@ import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { Platform, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
+import { fetchSchedule } from "@/Store/reducers";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -31,21 +33,29 @@ export interface IHomeProps {
 export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
+  const dispatch = useDispatch();
+  const [fetchOne, result] = useLazyGetScheduleQuery();
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
 
   let isScheduleToday: boolean = false;
 
-
-
-
   // console.log("schedule list in home screen: ", schedules.scheduelesList);
-
-
-  // const dispatch = useDispatch();
   // const sensorList = useSelector((state: any) => state.sensors.sensorsList);
 
   // console.log("sensorList: ",sensorList.name);
+
+  const handleFetch = async () => {
+    await fetchOne(user.id);
+  }
+
+  useEffect(() => {
+    handleFetch();
+
+    if (result.isSuccess) {
+      dispatch(fetchSchedule(result.data));
+    }
+  }, [result.isSuccess])
 
   return (
     <SafeAreaView>
@@ -105,10 +115,8 @@ export const Home = (props: IHomeProps) => {
               </Block>
             </View>
           </View>
-
         </View>
       </View>
-
     </SafeAreaView>
   );
 }

@@ -15,11 +15,13 @@ import SSemiBold from "@/Components/texts/SSemiBold";
 import { useLoginUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
+import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
 import Constants from "expo-constants";
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
 
 // Set Up Notification
 Notifications.setNotificationHandler({
@@ -123,7 +125,7 @@ export const Login = (props: ILoginProps) => {
         }));
 
         setUserID(response.data.id);
-        registerForPushNotificationsAsync()        
+        registerForPushNotificationsAsync();
         
         onNavigate(RootScreens.HOME);
       } else {
