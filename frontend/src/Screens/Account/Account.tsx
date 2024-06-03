@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, Image } from "react-native";
+import { View, StyleSheet, Pressable, ScrollView, Image } from "react-native";
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { RootScreens } from "..";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "@/Store/reducers";
-import { useLazyGetProfileQuery } from "@/Services/users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "@/Components/colors";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
-import SSemiBold from "@/Components/texts/SSemiBold";
 import LRegular from "@/Components/texts/LRegular";
 
 export interface IAccountProps {
@@ -22,15 +20,6 @@ export const Account = (props: IAccountProps) => {
   const { onNavigate } = props;
   const profile = useSelector((state: any) => state.profile);
   const dispatch = useDispatch();
-  const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetProfileQuery();
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
-
-  const handleFetch = async () => {
-    await fetchOne();
-  };
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
@@ -89,10 +78,7 @@ const styles = StyleSheet.create({
     height: "95%",
     flexDirection: "column",
     alignItems: "center",
-    flex: 1,
     padding: 20,
-    marginTop: 20,
-
   },
 
   header: {
