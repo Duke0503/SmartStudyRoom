@@ -9,7 +9,9 @@ export class NotificationsController {
   @Post('createExpoPushToken')
   async createExpoPushToken(@Body('token') token: string, @Body('userID') userID: number) {
     try {
+      
       const expoPushToken = await this.notificationsService.updateExpoPushToken(token, userID);
+      console.log(expoPushToken);
       return { success: true, expoPushToken};
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -19,6 +21,7 @@ export class NotificationsController {
   @Post('create')
   async createScheduledNotification(@Body() createNotificationDto: CreateNotificationDto) {
     try {
+      
       const notification = await this.notificationsService.createNotification(createNotificationDto);
       return { success: true, notification};
     } catch (error) {
