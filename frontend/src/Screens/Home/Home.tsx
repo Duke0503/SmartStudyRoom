@@ -34,7 +34,7 @@ export const Home = (props: IHomeProps) => {
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
 
-  let isScheduleToday:boolean = false;
+  let isScheduleToday: boolean = false;
 
 
 
