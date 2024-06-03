@@ -10,6 +10,7 @@ const profileSlice = createSlice({
     birthday: "",
     phone_number: "",
     gender: "",
+    ipaddress: "",
   },
   reducers: {
     addUser: (state, action) => {

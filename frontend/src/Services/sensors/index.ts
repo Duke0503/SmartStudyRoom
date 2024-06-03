@@ -3,10 +3,10 @@ import { API } from "../base";
 const sensorsAPI = API.injectEndpoints({
   endpoints: (build) => ({
     getSensor: build.query({
-      query: (arg) => {
-        const { user_id, ip } = arg;
-        return `sensors/getsensorbyIP/${user_id}/${ip}`;
-      }
+      query: ({user_id, ip}) => ({
+        url: `sensors/getsensorbyIP/${user_id}/${ip}`,
+        method: "GET",
+      })
     }),
     updateLightSensor: build.mutation(
       {
@@ -35,4 +35,4 @@ const sensorsAPI = API.injectEndpoints({
 });
 
 // Export hooks for the new endpoints
-export const { useGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation} = sensorsAPI;
+export const { useGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation, useLazyGetSensorQuery} = sensorsAPI;

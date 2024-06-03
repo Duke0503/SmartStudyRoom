@@ -16,7 +16,7 @@ import SRegular from "@/Components/texts/SRegular";
 import { Divider } from "@ui-kitten/components";
 import * as Network from "expo-network";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetSensorQuery } from "@/Services/sensors";
+import { useLazyGetSensorQuery } from "@/Services/sensors";
 import { useGetDeviceQuery } from "@/Services/devices";
 import { addSensor, deleteCurrentSensor} from "@/Store/reducers/sensors";
 export interface IDeviceProps {
@@ -31,7 +31,7 @@ export const Device = (props: IDeviceProps) => {
   const [soundSensor, setSoundsensor] = useState({})
   const [cameraSensor, setCamerasensor] = useState({})
   const profile = useSelector((state: any) => state.profile);
-  
+  const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,7 +44,7 @@ export const Device = (props: IDeviceProps) => {
     };
 
     fetchData();
-  }, []);
+  }, [connectedDevices, data]);
   // useEffect(() => {
   //   dispatch(addSensor(lightSensor));
   // }, [lightSensor]);
@@ -60,7 +60,8 @@ export const Device = (props: IDeviceProps) => {
   // useEffect(() => {
   //   dispatch(addSensor(cameraSensor));
   // }, [cameraSensor]);
-  const sensorData = useGetSensorQuery({user_id: profile.id, ip: ipAddress}).currentData
+  
+  // const [fetchdata, {data}] = useGetSensorQuery({user_id: profile.id, ip: ipAddress}).currentData
   const dispatch = useDispatch();
   const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}).currentData
   const devicename = deviceData && deviceData.map(device => device.name)
@@ -87,8 +88,10 @@ export const Device = (props: IDeviceProps) => {
   };
   const handleToggleConnect = async () => {
     setConnectedDevices(!connectedDevices);
+    await fetchOne({user_id: profile.id, ip: ipAddress})
+    // console.log(data)
     dispatch(deleteCurrentSensor({}))
-    sensorData && sensorData.map((item, index) => {
+    data && data.map((item, index) => {
       dispatch(addSensor(item))
       if (item.light_data != null) {
         setLightsensor(item)

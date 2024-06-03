@@ -120,6 +120,7 @@ export const Login = (props: ILoginProps) => {
           gender: response.data.gender,
           roles: response.data.roles,
           supervisor: response.data.supervisor,
+         
         }));
 
         setUserID(response.data.id);
