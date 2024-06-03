@@ -23,11 +23,9 @@ export class Notification {
   @Column()
   date: Date;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "user_ID" })
+  @Column({nullable: true})
   userID: number; 
 
-  @ManyToOne(() => Schedule, { nullable: true })
-  @JoinColumn({ name: "schedule_ID" })
-  schedule_ID: number; 
+  @Column({nullable: true})
+  scheduleID: number; 
 }

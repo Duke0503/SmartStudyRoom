@@ -12,6 +12,9 @@ import { HomeModule } from './modules/home/home.module';
 import { DevicesModule} from './modules/devices/devices.module'
 import { MqttModule } from './modules/mqtt/mqtt.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 
 
 @Module({
@@ -19,6 +22,10 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/public/',
     }),
     TypeOrmModule.forRootAsync(config),
     UsersModule,

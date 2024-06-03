@@ -5,12 +5,14 @@ export interface ExpoPushToken {
   userID: number;
 }
 
-export interface Notifcation {
+export interface Notification {
   title: string,
   content: string,
   userID: number,
   scheduleID: number,
   date: Date,
+  isReady: boolean,
+  isSent: boolean,
 }
 // Define new endpoints for fetching and updating user profile
 const userApi = API.injectEndpoints({
@@ -18,7 +20,7 @@ const userApi = API.injectEndpoints({
     createExpoPushToken: build.mutation<void, {body: ExpoPushToken }> ({
       query: ({ body }) => ({
         url: 'notifications/createExpoPushToken',
-        method: 'Post',
+        method: 'POST',
         body,
       }),
     }),
@@ -26,7 +28,7 @@ const userApi = API.injectEndpoints({
     createScheduledNotification: build.mutation<void, { body: Notification}> ({
       query: ({ body}) => ({
         url: 'notifications/create',
-        methd: 'Post',
+        method: 'POST',
         body
       })
     }),
@@ -34,7 +36,7 @@ const userApi = API.injectEndpoints({
     deleteScheduledNotification: build.mutation<void, {id: number}> ({
       query: ({ id }) => ({
         url: `notifications/delete/${id}`,
-        method: 'Delete',
+        method: 'DELETE',
       })
     }) 
   }),

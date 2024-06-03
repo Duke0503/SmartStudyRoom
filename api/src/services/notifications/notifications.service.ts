@@ -80,7 +80,9 @@ export class NotificationsService {
     if (!user) 
       throw new Error('User not found');
 
-    const notification = await this.notificationsRepository.create(createNotificationDto);
+    const notification = this.notificationsRepository.create(createNotificationDto);
+    
+    await this.notificationsRepository.save(notification);
 
     return notification;
   }
@@ -99,7 +101,7 @@ export class NotificationsService {
   // End Delete Notification
 
   // Send Scheduled 
-  @Cron('*/60 * * * * *')
+  @Cron('* * * * *')
   async sendScheuledNOtifications() {
     const now = new Date();
     const timeCondition = new Date(now.getTime() + 60000);
@@ -110,7 +112,6 @@ export class NotificationsService {
         isSent: false,
         isReady: false,
         date: LessThan(timeCondition),
-        schedule_ID: Not(null),
       },
     });
 
@@ -133,8 +134,15 @@ export class NotificationsService {
           to: pushToken.ExpoPushToken,
           title: notification.title,
           body: notification.content,
-          sound: 'default',
-          data: { url: 'Schedule', notificationID: notification.ID }
+          sound: {
+            name: 'default',
+            critical: true,
+            volume: 1.0,
+          },
+          data: { 
+            url: 'Schedule', 
+            notificationID: notification.ID, 
+          }
         });        
       };
 
