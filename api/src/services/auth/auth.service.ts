@@ -42,13 +42,12 @@ export class AuthService {
 
   // Sign Up
   async signUp(signUpDto: SignUpDto): Promise<User> {
-    const { name, email, password } = signUpDto;
+    const { email } = signUpDto;
     const user = await this.usersService.findByEmail(email);
 
     if (user) {
       throw new HttpException('User already registered', HttpStatus.FOUND);
     }
-
     return await this.usersService.signUp(signUpDto);
   }
   // End Sign Up

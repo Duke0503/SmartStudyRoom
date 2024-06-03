@@ -16,4 +16,7 @@ export enum RootScreens {
     SETTING = "Setting",
     ABOUTUS = "AboutUs",
     UPDATE = "Update",
+
+    HOMEADMINNAVIGATOR = "HomeAdminNavigator",
+    HOMEADMIN = "HomeAdmin",
 }

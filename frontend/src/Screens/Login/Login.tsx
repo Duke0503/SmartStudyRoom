@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native";
@@ -16,6 +16,7 @@ import { useLoginUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "@/Context/AuthProvider";
 
 export interface ILoginProps {
   onNavigate: (string: RootScreens) => void;
@@ -28,6 +29,7 @@ export const Login = (props: ILoginProps) => {
 
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.profile);
+  const {updateAuthState} = useContext(AuthContext);
 
   const [login, loginResult] = useLoginUserMutation();
 
@@ -36,6 +38,9 @@ export const Login = (props: ILoginProps) => {
       const response = await login({ email, password }).unwrap();
 
       if (response.success) {
+        // console.log(response.data);
+        updateAuthState({loggedIn: true, profile: response.data, busy: false});
+
         await AsyncStorage.setItem('token', response.data.token);
         dispatch(addUser({
           token: response.data.token, 
@@ -48,7 +53,11 @@ export const Login = (props: ILoginProps) => {
           roles: response.data.roles,
           supervisor: response.data.supervisor,
         }));
-        onNavigate(RootScreens.HOME);
+        
+        if(response.data.roles === 'supervisor'){
+          onNavigate(RootScreens.HOMEADMIN)
+        } 
+        else onNavigate(RootScreens.HOME);
       } else {
         console.error('Login failed');
       }
@@ -59,7 +68,14 @@ export const Login = (props: ILoginProps) => {
 
   useEffect(() => {
     if (user.token !== undefined && user.token !== "") {
-      onNavigate(RootScreens.HOMENAVIGATOR);
+      if(user.roles === 'supervisor') {
+        updateAuthState({loggedIn: true, profile: user, busy: false});
+        onNavigate(RootScreens.HOMEADMIN);
+      }
+      else{
+        updateAuthState({loggedIn: true, profile: user, busy: false});
+        onNavigate(RootScreens.HOME);
+      }
     }
     }, []
   );

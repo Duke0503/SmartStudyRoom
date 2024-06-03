@@ -15,7 +15,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
-import { addSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
+import { addSchedule, deleteCurrentSchedule, reset, updateCurrentSchedule } from "@/Store/reducers/schedules";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -51,7 +51,6 @@ export const Schedule = (props: IScheduleProps) => {
   const user = useSelector((state:any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
-  console.log("schedulesList before add: ", schedulesList);
 
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
   
@@ -115,6 +114,10 @@ export const Schedule = (props: IScheduleProps) => {
   const handleNavigateSession = (schedule_ID: Number) => {
     dispatch(updateCurrentSchedule(schedule_ID));
     onNavigate(RootScreens.SESSION);
+  }
+
+  const handleReset = () => {
+    dispatch(reset());
   }
 
   return (
@@ -258,7 +261,8 @@ export const Schedule = (props: IScheduleProps) => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            {/* {schedulesList.length == 0? 
+            
+            {schedulesList.length == 0? 
             <View style={{padding: "5%", alignSelf: "center"}}>
               <SRegular>Không có dữ liệu</SRegular>
             </View>: 
@@ -273,7 +277,7 @@ export const Schedule = (props: IScheduleProps) => {
                     </Pressable>)
                 }
               })} 
-            </ScrollView>} */}
+            </ScrollView>}
           </View>
         </View>
       </View>

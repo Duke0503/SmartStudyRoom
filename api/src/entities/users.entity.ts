@@ -5,7 +5,9 @@ import {
   UpdateDateColumn, 
   BeforeInsert, 
   BeforeUpdate,
-  CreateDateColumn
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn
 } from "typeorm";
 import * as bcrypt from 'bcrypt'
 
@@ -24,11 +26,12 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column()
   roles: string
 
-  @Column({ nullable: true })
-  supervisor: string;
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: "supervisor_ID" })
+  supervisor: Number;
 
   @Column({ default: false, nullable: true })
   isVerified: boolean;

@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = { 
+  scheduelesList: [],
+  currentSchedule: {},
+}
 const schedulesSlice = createSlice({
   name: "schedules",
-  initialState: { 
-    scheduelesList: [],
-    currentSchedule: {},
-  },
+  initialState,
   reducers: {
     addSchedule: (state, action) => {
       state.scheduelesList.push(action.payload);
@@ -17,8 +18,12 @@ const schedulesSlice = createSlice({
     deleteCurrentSchedule: (state, action) => {
       state.currentSchedule = {};
     },
+    reset: () => {
+      return initialState
+    }
+
   },
 });
 
-export const { addSchedule, updateCurrentSchedule, deleteCurrentSchedule } = schedulesSlice.actions;
+export const { addSchedule, updateCurrentSchedule, deleteCurrentSchedule, reset } = schedulesSlice.actions;
 export const schedulesReducers = schedulesSlice.reducer;

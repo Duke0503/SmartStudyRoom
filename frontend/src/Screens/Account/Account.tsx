@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, Image } from "react-native";
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
 import LRegular from "@/Components/texts/LRegular";
+import { AuthContext } from "@/Context/AuthProvider";
 
 export interface IAccountProps {
   onNavigate: (screen: RootScreens) => void;
@@ -24,6 +25,8 @@ export const Account = (props: IAccountProps) => {
   const dispatch = useDispatch();
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetProfileQuery();
 
+  const {updateAuthState} = useContext(AuthContext);
+
   useEffect(() => {
     handleFetch();
   }, []);
@@ -33,8 +36,10 @@ export const Account = (props: IAccountProps) => {
   };
 
   const handleLogout = async () => {
+    
     await AsyncStorage.removeItem('token');
     dispatch(deleteUser(profile));
+    updateAuthState({loggedIn: false, profile: null, busy: false});
     onNavigate(RootScreens.LOGIN);
   };
 

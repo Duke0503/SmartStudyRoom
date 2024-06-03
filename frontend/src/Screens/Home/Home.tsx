@@ -1,4 +1,3 @@
-import { i18n, LocalizationKey } from "@/Localization";
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
@@ -6,18 +5,14 @@ import { RootScreens } from "..";
 import { StatusBar } from "expo-status-bar";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
-import { colors } from "@/Components/colors";
-import VSSemiBold from "@/Components/texts/VSSemiBold";
-import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
+import { colors } from "@/Components/colors";
+import LSemiBold from "@/Components/texts/LSemiBold";
 import SSemiBold from "@/Components/texts/SSemiBold";
 import { Platform, ViewStyle } from 'react-native';
-import Constants from 'expo-constants';
-import { State } from "react-native-gesture-handler";
-import { createSelector } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { useLazyGetScheduleQuery } from "@/Services/schedules";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { updateCurrentSchedule } from "@/Store/reducers/schedules";
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 moment().tz("Asia/Ho_Chi_Minh").format();
@@ -36,11 +31,21 @@ export interface IHomeProps {
 export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
+  const dispatch = useDispatch();
+
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
 
+  const handleNavigateSession = (schedule_ID: Number) => {
+    dispatch(updateCurrentSchedule(schedule_ID));
+    onNavigate(RootScreens.SESSION);
+  }
+  // console.log("state: ", state);
+  
+
   let isScheduleToday:boolean = false;
-  // console.log("schedule list in home screen: ", scheduleList);
+  // console.log("warning list view in home screen");
+  // console.log("schedule list in home screen: ", schedules.scheduelesList);
 
 
   // const dispatch = useDispatch();
@@ -70,9 +75,22 @@ export const Home = (props: IHomeProps) => {
                 {schedules.scheduelesList.map((schedule: any) => {
                   if(moment(schedule.start_time).format("DD-MM-YYYY") === moment(new Date()).format("DD-MM-YYYY")) isScheduleToday = true;
                   return (moment(schedule.start_time).format("DD-MM-YYYY") !== moment(new Date()).format("DD-MM-YYYY")? 
-                    <></> :
-                    <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
-                      <SRegular>{schedule.title}</SRegular>
+                    null :
+                    <Pressable key={schedule.id} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
+                      <View style={styles.topSession}>
+                        <SSemiBold>
+                          {schedule.title}
+                        </SSemiBold>
+                      </View>
+                      <Seperator/>
+                      <View style={styles.bottomSession}>
+                        <VSRegular>
+                          Bắt đầu lúc: {moment(schedule.start_time).utcOffset("+0700").format('HH:mm')}
+                        </VSRegular>
+                        <VSRegular>
+                          Kết thúc lúc: {moment(schedule.finish_time).utcOffset("+0700").format('HH:mm')}
+                        </VSRegular>
+                      </View>
                     </Pressable>)
                 })}
                 {isScheduleToday? null:
@@ -88,22 +106,26 @@ export const Home = (props: IHomeProps) => {
           <View style={styles.statistic}>
             <LSemiBold>Thông số môi trường học tập</LSemiBold>
             <View style={styles.statisticSensor}>
-              <Block style = {styles.lightSensor}>
-                <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Độ sáng </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Nhiệt độ </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Âm lượng </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Camera </Text>
-              </Block>
+              <View style={styles.statisticRow}>
+                <Block style = {styles.lightSensor}>
+                  <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
+                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Độ sáng </Text>
+                </Block>
+                <Block style = {styles.lightSensor}>
+                  <FontAwesome5 name="temperature-low" size={50} color={"red"} />
+                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Nhiệt độ </Text>
+                </Block>
+              </View>
+              <View style={styles.statisticRow}>
+                <Block style = {styles.lightSensor}>
+                  <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
+                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Âm lượng </Text>
+                </Block>
+                <Block style = {styles.lightSensor}>
+                  <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
+                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Camera </Text>
+                </Block>
+              </View>
             </View>
           </View>
 
@@ -164,12 +186,12 @@ const styles = StyleSheet.create({
 
   session: {
     width: "100%",
-    height: 100,
+    height: 70,
     marginVertical: "2%",
     borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    borderColor: "#CBD5E1",
+    borderWidth: 1,
   },
 
   topSession: {
@@ -217,12 +239,17 @@ const styles = StyleSheet.create({
 
   statisticSensor: {
     marginTop: 20,
-    flex: 1,
+    // flex: 1,
+    flexWrap: "wrap",
+    rowGap: 20,
+    // backgroundColor: "lightblue",
+    
+  },
+
+  statisticRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-//     backgroundColor: "lightblue",
-    columnGap: 66,
-    rowGap: 30
+    justifyContent: 'space-between',
   },
 
   lightSensor: {
@@ -230,7 +257,7 @@ const styles = StyleSheet.create({
     color: "#4178D4",
     padding: 20,
     height: 140,
-    width: 152,
+    width: 160,
     borderRadius: 15,
     borderColor: "#CBD5E1",
     borderWidth: 1,
