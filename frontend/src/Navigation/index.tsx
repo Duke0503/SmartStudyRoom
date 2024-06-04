@@ -200,9 +200,6 @@ const BottomNavigator = () => {
             name={RootScreens.NOTIFICATION}
             component={NotificationContainer}
             options={{
-              tabBarStyle: {
-                display: "none",
-              },
               tabBarButton: () => null,
             }}
         />

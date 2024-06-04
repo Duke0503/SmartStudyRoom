@@ -38,7 +38,11 @@ const userApi = API.injectEndpoints({
         url: `notifications/delete/${id}`,
         method: 'DELETE',
       })
-    }) 
+    }), 
+
+    getNotifications: build.query<Notification[], {id: number}> ({
+      query: (id) => `notifications/${id}`,
+    }),
   }),
   overrideExisting: true,
 });
@@ -48,4 +52,5 @@ export const {
   useCreateExpoPushTokenMutation, 
   useCreateScheduledNotificationMutation, 
   useDeleteScheduledNotificationMutation, 
+  useGetNotificationsQuery,
 } = userApi;

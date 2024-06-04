@@ -53,7 +53,7 @@ export const Schedule = (props: IScheduleProps) => {
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
-  const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation()
+  const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation();
   
   const handleAddCalendar = () => {
     setAddCalendar(true);
