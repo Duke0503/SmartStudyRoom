@@ -24,44 +24,21 @@ export interface IDeviceProps {
 }
 
 export const Device = (props: IDeviceProps) => {
-  const [ipAddress, setIpAddress] = useState('undefined');
   const [connectedDevices, setConnectedDevices] = useState(false);
-  const [lightSensor, setLightsensor] = useState({})
-  const [tempSensor, setTemptsensor] = useState({})
-  const [soundSensor, setSoundsensor] = useState({})
-  const [cameraSensor, setCamerasensor] = useState({})
   const profile = useSelector((state: any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const ip = await Network.getIpAddressAsync();
-        setIpAddress(ip)
-       
+        await fetchOne({user_id: profile.id, ip: ip});
       } catch (error) {
         console.log(error)
       }
     };
 
     fetchData();
-  }, [connectedDevices, data]);
-  // useEffect(() => {
-  //   dispatch(addSensor(lightSensor));
-  // }, [lightSensor]);
-  
-  // useEffect(() => {
-  //   dispatch(addSensor(tempSensor));
-  // }, [tempSensor]);
-  
-  // useEffect(() => {
-  //   dispatch(addSensor(soundSensor));
-  // }, [soundSensor]);
-  
-  // useEffect(() => {
-  //   dispatch(addSensor(cameraSensor));
-  // }, [cameraSensor]);
-  
-  // const [fetchdata, {data}] = useGetSensorQuery({user_id: profile.id, ip: ipAddress}).currentData
+  }, []);
   const dispatch = useDispatch();
   const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}).currentData
   const devicename = deviceData && deviceData.map(device => device.name)
@@ -87,28 +64,12 @@ export const Device = (props: IDeviceProps) => {
     onNavigate(RootScreens.NOISEDEVICE)
   };
   const handleToggleConnect = async () => {
-    setConnectedDevices(!connectedDevices);
-    await fetchOne({user_id: profile.id, ip: ipAddress})
-    // console.log(data)
+    console.log(data)
     dispatch(deleteCurrentSensor({}))
     data && data.map((item, index) => {
       dispatch(addSensor(item))
-      if (item.light_data != null) {
-        setLightsensor(item)
-      }
-      if (item.temp_data != null) {
-        setTemptsensor(item)
-      }
-      if (item.sound_data != null) {
-        setSoundsensor(item)
-      }
-      if (item.camera_data != null) {
-        setCamerasensor(item)
-      }
     })
-    
-    
-    
+    setConnectedDevices(!connectedDevices);
   }
   const ContentBody = () => {
     return (
@@ -175,7 +136,7 @@ export const Device = (props: IDeviceProps) => {
                 </View>
               </View>
             </ScrollView>
-            <SectionList
+            {/* <SectionList
               sections={DATA}
               keyExtractor={(item, index) => item + index}
               renderItem={({ item }) => (
@@ -188,7 +149,7 @@ export const Device = (props: IDeviceProps) => {
                   <Text style={styles.headeritem}>{title}</Text>
                 </View>
               )}
-            />
+            />  */}
           </View>
           <View >
             <Button

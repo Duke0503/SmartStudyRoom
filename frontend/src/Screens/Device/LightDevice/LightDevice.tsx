@@ -10,6 +10,7 @@ import { useUpdateLightSensorMutation } from "@/Services/sensors";
 import { light } from "@eva-design/eva";
 import * as Network from "expo-network";
 import { useLazyGetSensorQuery, useGetSensorQuery } from "@/Services/sensors";
+import { updateLightSensor} from "@/Store/reducers/sensors";
 export interface LightDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -21,79 +22,36 @@ export const LightDevice = (props: LightDeviceProps) => {
     const [lightSensor, setLightsensor] = useState({})
     const [lightdata, setLightdata] = useState(0)
     const profile = useSelector((state: any) => state.profile);
-    const [fetchOne, { data, isLoading, isError }] = useLazyGetSensorQuery();
-    // fetchOne(1, "192.168.1.5")
-    const handleFetch = async (ip: string) => {
-        console.log(profile.id, ip)
-        await fetchOne({user_id: profile.id, ip: ip})
-    }
+    const sensorsData = useSelector((state: any) => state.sensors.sensorsList);
+    const device = useGetDeviceQuery({user_id: profile.id, type: "Light" }).data
+    const [updateLightSensor] = useUpdateLightSensorMutation()
+    const dispatch = useDispatch();
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const ip = await Network.getIpAddressAsync();
-            setIpAddress(ip)
-            console.log("check ip:", ip)
-            // data = {}
-            // await fetchOne({user_id: profile.id, ip: "192.168.1.5"})
-            // await handleFetch(ip)
-            await fetchOne({user_id: profile.id, ip: ip})
-            console.log("check data: ", data)
-          } catch (error) {
-            console.log(error)
-          }
-        };
-        fetchData();
-      }, []);
-    // const sensors = useGetSensorQuery({user_id: profile.id, ip: profile.ipAddress}).currentData
-    // console
-    // console.log(profile.id, profile.ipAddress)
-    // console.log(sensors)
-    useEffect(() => {
-        // console.log(data)
-        if (data) {
-            const sensorWithLightData = data.find(sensor => sensor.light_data != null);
-            if (sensorWithLightData) {
+        if (sensorsData) {
+            const sensorWithLightData = sensorsData.find(sensor => sensor.light_data != null);
+            if (sensorWithLightData && sensorWithLightData.is_active) {
                 setLightsensor(sensorWithLightData);
                 setLightdata(parseFloat(sensorWithLightData.light_data));
             }
         }
-        // const fetchData = async () => {
-        //   try {
-        //     // console.log(data)
-        //     // console.log(ipAddress)
-        //     // await fetchOne({user_id: profile.id, ip: ipAddress})
-        //     // // console.log(profile.id, ipAddress)
-        //     // console.log("check: ", data)
-        //     const sensorWithLightData = data && data.find(sensor => sensor.light_data != null);
-        //     if (sensorWithLightData) {
-        //         setLightsensor(sensorWithLightData);
-        //         setLightdata(parseFloat(sensorWithLightData.light_data))
-        //     }
-        //     // await fetchOne({user_id: profile.id, ip: ipAddress})
-        //   } catch (error) {
-        //     console.log(error)
-        //   }
-        // };
-        // fetchData();
       }, []);
-    
-    const device = useGetDeviceQuery({user_id: profile.id, type: "Light" }).currentData
-    const [updateLightSensor] = useUpdateLightSensorMutation()
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
     const handleUpdateDevice = async (action) => {
         if (action == "Increase") {
             try {
-                await updateLightSensor({sensor_id: 1, light_data: 1});
-                setLightdata(1)
+                await updateLightSensor({sensor_id: lightSensor.ID, light_data: lightdata + 1});
+                dispatch(updateLightSensor({ID: lightSensor.ID, light_data: lightdata + 1}))
+                setLightdata(lightdata + 1)
             } catch (error) {
                 console.log(error)
             }  
         }
         if (action == "Decrease") {
             try {
-                await updateLightSensor({sensor_id: lightSensor.ID, light_data: parseFloat(lightdata) - 1});
-                setLightdata(parseFloat(lightdata) - 1)
+                await updateLightSensor({sensor_id: lightSensor.ID, light_data: lightdata - 1});
+                dispatch(updateLightSensor({ID: lightSensor.ID, light_data: lightdata - 1}))
+                setLightdata(lightdata - 1)
             } catch (error) {
                 console.log(error)
             }  

@@ -20,42 +20,26 @@ export const TempDevice = (props: TempDeviceProps) => {
     const [tempSensor, setTempsensor] = useState({})
     const [tempdata, setTempdata] = useState(0)
     const profile = useSelector((state: any) => state.profile);
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const ip = await Network.getIpAddressAsync();
-            setIpAddress(ip)
-          } catch (error) {
-            console.log(error)
-          }
-        };
-        fetchData();
-      }, []);
-    const sensorsQuery = useGetSensorQuery({user_id: profile.id, ip: ipAddress})
-    const sensors = sensorsQuery.currentData
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const sensorWithTempData = sensors && sensors.find(sensor => sensor.temp_data != null);
-            if (sensorWithTempData) {
-                setTempsensor(sensorWithTempData);
-                setTempdata(parseFloat(sensorWithTempData.temp_data))
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        };
-        fetchData();
-      }, [sensors]);
-    const device = useGetDeviceQuery({user_id: profile.id, type: "Temp" }).currentData
+    const sensorsData = useSelector((state: any) => state.sensors.sensorsList);
+    const device = useGetDeviceQuery({user_id: profile.id, type: "Temp" }).data
     const [updateTempSensor] = useUpdateTempSensorMutation()
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (sensorsData) {
+            const sensorWithTempData = sensorsData.find(sensor => sensor.temp_data != null);
+            if (sensorWithTempData && sensorWithTempData.is_active) {
+                setTempsensor(sensorWithTempData);
+                setTempdata(parseFloat(sensorWithTempData.temp_data));
+            }
+        }
+      }, []);
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
     const handleUpdateDevice = async (action) => {
         if (action == "Increase") {
             try {
-                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: parseFloat(tempdata) + 1});
-                setTempdata(parseFloat(tempdata) + 1)
+                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: tempdata + 1});
+                setTempdata(tempdata + 1)
             } catch (error) {
                 console.log(error)
             }  
