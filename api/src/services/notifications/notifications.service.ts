@@ -23,6 +23,19 @@ export class NotificationsService {
     this.expo = new Expo({ useFcmV1: true });
   }
 
+  // Fetch Data
+  async fetchNotifications(userId: number): Promise<Notification[]> {
+    const notifications = await this.notificationsRepository.find({
+      where: {
+        userID: userId,
+        isReady: true,
+        isSent: true,
+      }
+    });
+    return notifications
+  };
+  // End Fetch Data
+
   // Create Expo Push Token
   async createExpoPushToken(token: string, userId: number): Promise<ExpoPushToken> {
     const user = await this.usersRepository.findOne({
