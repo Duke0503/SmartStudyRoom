@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpException, HttpStatus, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, Delete, Param, Get } from '@nestjs/common';
 import { CreateNotificationDto } from 'src/common/dto/create-notification.dto';
 import { NotificationsService } from 'src/services/notifications/notifications.service';
 
@@ -9,7 +9,9 @@ export class NotificationsController {
   @Post('createExpoPushToken')
   async createExpoPushToken(@Body('token') token: string, @Body('userID') userID: number) {
     try {
+      
       const expoPushToken = await this.notificationsService.updateExpoPushToken(token, userID);
+      console.log(expoPushToken);
       return { success: true, expoPushToken};
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -19,6 +21,7 @@ export class NotificationsController {
   @Post('create')
   async createScheduledNotification(@Body() createNotificationDto: CreateNotificationDto) {
     try {
+      
       const notification = await this.notificationsService.createNotification(createNotificationDto);
       return { success: true, notification};
     } catch (error) {
@@ -29,5 +32,10 @@ export class NotificationsController {
   @Delete('delete/:id')
   async deleteScheduledNotification(@Param('id') id: number) {
     return await this.notificationsService.deleteNotification(id);
+  }
+
+  @Get(':id')
+  async getNotification (@Param('id') id: number) {
+    return this.notificationsService.fetchNotifications(id);
   }
 }

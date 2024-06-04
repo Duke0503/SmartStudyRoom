@@ -7,12 +7,17 @@ import { UsersService } from '../users/users.service';
 import { UpdateScheduleDto } from 'src/common/dto/update-schedule.dto';
 import { ResponseSuccess } from 'src/common/dto/response.dto';
 import { IResponse } from 'src/common/interfaces/response.interface';
+import { Notification } from 'src/entities/notifications.entity';
 
 @Injectable()
 export class SchedulesService {
     constructor(
         @InjectRepository(Schedule)
         private readonly schedulesRepository: Repository<Schedule>,
+
+        @InjectRepository(Notification)
+        private readonly notificationsRepository: Repository<Notification>,
+
         private readonly usersService: UsersService
     ) { }
 
@@ -57,11 +62,24 @@ export class SchedulesService {
         }
     }
 
-    async deleteSchedule(schedule_id: number): Promise<String> {
+    async deleteSchedule(schedule_id: number): Promise<IResponse> {
         try {
+            
+            const notifications = await this.notificationsRepository.find({
+                where: {
+                    scheduleID: schedule_id
+                }
+            });
+
+            for (let notification of notifications) {
+                await this.notificationsRepository.remove(notification);
+            };
+
             const schedule = await this.schedulesRepository.findOne({ where: { ID: schedule_id } });
+
             await this.schedulesRepository.remove(schedule);
-            return "Delete schedule successfully"
+
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY");
         }
         catch (error) {
             throw new NotFoundException('Cannot delete schedule')

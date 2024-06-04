@@ -13,7 +13,6 @@ import { DevicesModule} from './modules/devices/devices.module'
 import { MqttModule } from './modules/mqtt/mqtt.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 
-
 @Module({
   imports: [    
     ConfigModule.forRoot({

@@ -15,6 +15,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
+import { useCreateScheduledNotificationMutation } from "@/Services/notifications";
 import { addSchedule, deleteCurrentSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
@@ -52,6 +53,7 @@ export const Schedule = (props: IScheduleProps) => {
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
+  const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation();
   
   const handleAddCalendar = () => {
     setAddCalendar(true);
@@ -94,6 +96,42 @@ export const Schedule = (props: IScheduleProps) => {
           finish_time: finishTime,
           break_time: breakTime
         }
+
+        const beforeSession = await createNotification({
+          body: {
+            title: "Phiên học",
+            content: `Phiên học ${title} sắp bắt đầu`,
+            userID: user.id,
+            scheduleID: response.data,
+            date: new Date(new Date(startTime).getTime() - 5 * 60 * 1000),
+            isReady: false,
+            isSent: false,
+          }
+        }).unwrap();
+
+        const startSession = await createNotification({
+          body: {
+            title: "Phiên học",
+            content: `Phiên học ${title} bắt đầu`,
+            userID: user.id,
+            scheduleID: response.data,
+            date: startTime,
+            isReady: false,
+            isSent: false,
+          }
+        }).unwrap();
+
+        const endSession = await createNotification({
+          body: {
+            title: "Phiên học",
+            content: `Phiên học ${title} kết thúc`,
+            userID: user.id,
+            scheduleID: response.data,
+            date: finishTime,
+            isReady: false,
+            isSent: false,
+          }
+        }).unwrap();
 
         dispatch(addSchedule(params));
 
@@ -262,7 +300,7 @@ export const Schedule = (props: IScheduleProps) => {
             <ScrollView style={styles.schedule}>
               {schedulesList.map((schedule: any) => {
                 let count = 0;
-                if (moment(schedule.date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
+                if (moment(schedule.start_time).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                   count++;
                   return (
                     <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>

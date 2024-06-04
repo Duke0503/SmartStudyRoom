@@ -7,8 +7,17 @@ const schedulesSlice = createSlice({
     currentSchedule: {},
   },
   reducers: {
+    fetchSchedule: (state, action) => {
+      state.scheduelesList = action.payload;
+    },
     addSchedule: (state, action) => {
       state.scheduelesList.push(action.payload);
+    },
+    deleteSchedule: (state, action) => {
+      const index = state.scheduelesList.map(schedule => schedule.ID).indexOf(action.payload.schedule_ID);
+
+      state.scheduelesList.splice(index, 1);
+      
     },
     updateCurrentSchedule: (state, action) => {
       // state.currentSchedule = action.payload;
@@ -20,5 +29,5 @@ const schedulesSlice = createSlice({
   },
 });
 
-export const { addSchedule, updateCurrentSchedule, deleteCurrentSchedule } = schedulesSlice.actions;
+export const { fetchSchedule, addSchedule, deleteSchedule, updateCurrentSchedule, deleteCurrentSchedule } = schedulesSlice.actions;
 export const schedulesReducers = schedulesSlice.reducer;

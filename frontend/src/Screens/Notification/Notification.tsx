@@ -1,159 +1,140 @@
-import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootScreens } from "..";
-import * as Notifications from "expo-notifications";
-import { Platform, View, Text, Button } from "react-native";
-import * as Device from "expo-device";
-import Constants from "expo-constants";
-import { router } from "expo-router";
+import { useGetNotificationsQuery } from "@/Services/notifications";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, Pressable, ScrollView, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { Ionicons } from "@expo/vector-icons";
+import { updateCurrentSchedule } from "@/Store/reducers/schedules";
 
 export interface ILoginProps {
-  onNavigate: (string: RootScreens) => void;
-}
-
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
-  };
-
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
-
-function handleRegistrationError(errorMessage: string) {
-  alert(errorMessage);
-  throw new Error(errorMessage);
+  onNavigate: (screen: RootScreens) => void;
 }
 
 export const Notification = (props: ILoginProps) => {
   const { onNavigate } = props;
-
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >(undefined);
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
+  const [dataNotifications, setData] = useState<any>([]);
+  const profile = useSelector((state: any) => state.profile);
+  const dispatch = useDispatch();
+  const { data, isSuccess, isLoading, error } = useGetNotificationsQuery(profile.id);
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ''))
-      .catch((error: any) => setExpoPushToken(`${error}`));
-
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
-
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
-  
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      notificationListener.current &&
-        Notifications.removeNotificationSubscription(
-          notificationListener.current,
-        );
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-
-  function redirect(notification: Notifications.Notification) {
-    const url = notification.request.content.data?.url;
-    console.log(url);
-    if (url) {
-      onNavigate(url as RootScreens);
+    if (isLoading) {
+      console.log("Loading notifications...");
     }
-  }
 
-  console.log("Token: ", expoPushToken);
+    if (error) {
+      console.error("Error fetching notifications:", error);
+    }
+
+    if (isSuccess && data) {
+      // console.log("Fetched notifications:", data);
+      setData(data);
+    }
+  }, [data, isSuccess, isLoading, error]);
+
+  const handleNavigateSession = (schedule_ID: Number) => {
+    dispatch(updateCurrentSchedule(schedule_ID));
+    onNavigate(RootScreens.SESSION);
+  } 
 
   return (
-    <View
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}
-    >
-      <Text>Your Expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{' '}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{' '}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
+    <SafeAreaView>
+      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Ionicons name="arrow-back" size={24} color="black" onPress={() => onNavigate(RootScreens.HOME)} />
+          <Text style={styles.headerText}>Thông báo</Text>
+        </View>
+        <View style={styles.content}>
+          
+          <ScrollView>
+            {isLoading ? (
+              <Text>Loading...</Text>
+            ) : error ? (
+              <Text>Error fetching notifications</Text>
+            ) : (
+              dataNotifications.map((notification: any) => (
+                <Pressable key={notification.ID} style={styles.notificationItem} onPress={() => handleNavigateSession(notification.scheduleID)} >
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.notificationTitle}>{notification.title}</Text>
+                    <Text style={styles.notificationContent}>{notification.content}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    <Text style={styles.notificationDate}>
+                      {new Intl.DateTimeFormat('vi-VN', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        timeZone: 'Asia/Ho_Chi_Minh',
+                      }).format(new Date(notification.date))}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))
+            )}
+          </ScrollView>
+        </View>
       </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
-
-async function registerForPushNotificationsAsync() {
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      handleRegistrationError('Permission not granted to get push token for push notification!');
-      return;
-    }
-    const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
-    if (!projectId) {
-      handleRegistrationError('Project ID not found');
-    }
-    try {
-    const pushTokenString = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId,
-        })
-      ).data;
-      console.log(pushTokenString);
-      return pushTokenString;
-    } catch (e: unknown) {
-      handleRegistrationError(`${e}`);
-    }
-  } else {
-    handleRegistrationError('Must use physical device for push notifications');
-  }
-}
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 20,
+  },
+  header: {
+    width: "100%",
+    height: "7%",
+    flexDirection: 'row',
+    marginBottom: 10,
+    // paddingTop: 20,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  content: {
+    width: "100%",
+    height: "100%",
+  },
+  contentItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: "5%",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+  },
+  notificationItem: {
+    flexDirection: 'row',
+    padding: 10,
+    height: "3%",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 5,
+    // alignItems: 'center', // Align items vertically
+  },
+  notificationTitle: {
+    fontWeight: 'bold',
+    flex: 1, // Allow title to expand
+  },
+  notificationContent: {
+    marginTop: 5, // Adjust the spacing
+    flex: 1, // Allow content to expand
+  },
+  notificationDate: {
+    fontSize: 12,
+    color: '#666',
+  },
+});
