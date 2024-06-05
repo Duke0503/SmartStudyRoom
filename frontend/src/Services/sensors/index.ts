@@ -4,8 +4,8 @@ const sensorsAPI = API.injectEndpoints({
   endpoints: (build) => ({
     getSensor: build.query({
       query: (arg) => {
-        const { user_id, ip} = arg;
-        return `sensors/getsensorbyIP/${user_id}/${ip}`;
+        const {ip} = arg;
+        return `sensors/getsensorbyIP/${ip}`;
       },
       onQueryStarted: async (apiRequest, { dispatch, getState }) => {
         console.log('getSensor request started:', apiRequest);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, ImageProps } from "react-native";
 import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
@@ -6,6 +6,8 @@ import { Button, Layout, IconElement, Divider, CircularProgressBar } from '@ui-k
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useGetDeviceQuery } from "@/Services/devices";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateDeviceMutation} from "@/Services/devices";
+import { updateDeviceRedux } from "@/Store/reducers/devices";
 export interface NoiseDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -13,8 +15,31 @@ export interface NoiseDeviceProps {
 
 
 export const NoiseDevice = (props: NoiseDeviceProps) => {
+    const [noiseSensor, setNoisesensor] = useState({})
+    const [noisedata, setNoisedata] = useState(0)
+    const [noiseDevice, setNoiseDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const device = useGetDeviceQuery({user_id: profile.id, type: "Sound" }).currentData
+    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const deviceData = useSelector((state: any) => state.devices.devicessList);
+    const [updateNoiseDevice] = useUpdateDeviceMutation()
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (sensorsData && sensorsData.is_active) {
+            setNoisesensor(sensorsData)
+            setNoisedata(parseFloat(sensorsData.sound_data))
+               
+        } 
+        
+      }, []);
+    // const handleDisconnect = async () => {
+    //     try {
+    //         await updateNoiseDevice({device_id: noiseDevice.ID, status: "Disable"})
+    //         dispatch(updateDeviceRedux({ID: noiseDevice.ID, status: "Disable"}))
+    //         setNoiseDevice({...noiseDevice, status: "Disable" })
+    //     } catch(error) {
+    //         console.log(error)
+    //     }
+    // }
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
 
@@ -33,14 +58,14 @@ export const NoiseDevice = (props: NoiseDeviceProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
+                        <Text style={styles.optionText}>Tên cảm biến: Cảm biến âm thanh</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {noiseSensor && noiseSensor.is_active ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>
                     <CircularProgressBar
                         style={styles.customizeCircle}
-                        progress={0.3}
+                        progress={noisedata && noiseSensor && noiseSensor.is_active? noisedata/100 : 0}
                     />
                 </View>
                 <View style={styles.box3}>
@@ -48,6 +73,7 @@ export const NoiseDevice = (props: NoiseDeviceProps) => {
                 </View>
                 <View style={styles.box5}>
                     <Button appearance='outline'
+                        // onPress={() => handleDisconnect()}
                         status='danger'
                         style={styles.button}>
                         Ngắt kết nối

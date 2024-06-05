@@ -1,6 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, SectionList, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView, SectionList, Button, Alert, FlatList } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 // import { MainNavigator } from "@/Navigation/Main";
 import { SafeAreaView } from "react-native";
@@ -19,19 +19,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLazyGetSensorQuery } from "@/Services/sensors";
 import { useGetDeviceQuery } from "@/Services/devices";
 import { addSensor, deleteCurrentSensor} from "@/Store/reducers/sensors";
+import { addDevice, deleteCurrentDevice } from "@/Store/reducers/devices";
+import { ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from '@gluestack-ui/themed';
 export interface IDeviceProps {
   onNavigate: (string: RootScreens) => void;
 }
 
 export const Device = (props: IDeviceProps) => {
   const [connectedDevices, setConnectedDevices] = useState(false);
+  const [selectedSensor, setSelectedSensor] = useState(false);
+  const [showSensor, setShowSensor] = useState(false)
   const profile = useSelector((state: any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const ip = await Network.getIpAddressAsync();
-        await fetchOne({user_id: profile.id, ip: ip});
+        await fetchOne({ip: ip});
       } catch (error) {
         console.log(error)
       }
@@ -40,7 +44,7 @@ export const Device = (props: IDeviceProps) => {
     fetchData();
   }, []);
   const dispatch = useDispatch();
-  const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}).currentData
+  const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}, { refetchOnMountOrArgChange: true }).currentData
   const devicename = deviceData && deviceData.map(device => device.name)
   const { onNavigate } = props;
   const DATA = [
@@ -50,7 +54,12 @@ export const Device = (props: IDeviceProps) => {
     },
 
   ];
-  
+  const listSensor = data ? data.map((item, index) => ({
+    id: item.id_sensor,
+    title: "Sensor " + item.id_sensor,
+    isActive: item.is_active,
+    sensor: item
+  })) : [];
   const handleNagivateToLightDevice = () => {
     onNavigate(RootScreens.LIGHTDEVICE)
   };
@@ -65,11 +74,17 @@ export const Device = (props: IDeviceProps) => {
   };
   const handleToggleConnect = async () => {
     console.log(data)
-    dispatch(deleteCurrentSensor({}))
-    data && data.map((item, index) => {
-      dispatch(addSensor(item))
+    dispatch(deleteCurrentDevice({}))
+    deviceData && deviceData.map((item, index) => {
+      dispatch(addDevice(item))
     })
+    setShowSensor(true)
     setConnectedDevices(!connectedDevices);
+  }
+  const handleSelectSensor = (sensor) => {
+    dispatch(deleteCurrentSensor({}))
+    dispatch(addSensor(sensor))
+    setSelectedSensor(true)
   }
   const ContentBody = () => {
     return (
@@ -136,7 +151,7 @@ export const Device = (props: IDeviceProps) => {
                 </View>
               </View>
             </ScrollView>
-            {/* <SectionList
+            <SectionList
               sections={DATA}
               keyExtractor={(item, index) => item + index}
               renderItem={({ item }) => (
@@ -149,7 +164,7 @@ export const Device = (props: IDeviceProps) => {
                   <Text style={styles.headeritem}>{title}</Text>
                 </View>
               )}
-            />  */}
+            /> 
           </View>
           <View >
             <Button
@@ -178,13 +193,41 @@ export const Device = (props: IDeviceProps) => {
 
   return (
     <SafeAreaView>
-      {connectedDevices ? <ContentBody /> :
+      {connectedDevices && selectedSensor ? <ContentBody /> :
         <View style={styles.openContainer}>
           <Button
             title="Connect"
             color=""
             onPress={handleToggleConnect} />
+          <Modal
+              isOpen={showSensor}
+              onClose={() => {
+                setShowSensor(false)
+              }}
+            >
+              <ModalBackdrop />
+              <ModalContent>
+                <ModalHeader>
+                  <Heading size="lg">Chọn sensor</Heading>
+                  <ModalCloseButton>
+                    <Icon as={CloseIcon} />
+                  </ModalCloseButton>
+                </ModalHeader>
+                <ModalBody>
+                  {listSensor && listSensor.map((item, index) => {
+                      return item.isActive && (<View key={index} ><Pressable  onPress={() => handleSelectSensor(item.sensor)}><Text>{item.title}</Text></Pressable></View>)
+                  })}
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                      title="Cancel"
+                      color=""
+                      onPress={() => {setShowSensor(false)}} />
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
         </View>
+        
       }
     </SafeAreaView>
   );

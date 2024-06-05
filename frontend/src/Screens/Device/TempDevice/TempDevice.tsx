@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateTempSensorMutation } from "@/Services/sensors";
 import * as Network from "expo-network";
 import { useGetSensorQuery } from "@/Services/sensors";
+import { useUpdateDeviceMutation, useUpdateTempDeviceMutation} from "@/Services/devices";
+import { updateDeviceRedux, updateTempDeviceRedux } from "@/Store/reducers/devices";
+import { updateTempSensorRedux } from "@/Store/reducers";
 export interface TempDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -19,40 +22,48 @@ export const TempDevice = (props: TempDeviceProps) => {
     const [ipAddress, setIpAddress] = useState('undefined');
     const [tempSensor, setTempsensor] = useState({})
     const [tempdata, setTempdata] = useState(0)
+    const [tempDevice, setTempDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const sensorsData = useSelector((state: any) => state.sensors.sensorsList);
-    const device = useGetDeviceQuery({user_id: profile.id, type: "Temp" }).data
+    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const deviceData = useSelector((state: any) => state.devices.devicessList);
     const [updateTempSensor] = useUpdateTempSensorMutation()
+    const [updateTempDevice] = useUpdateTempDeviceMutation()
     const dispatch = useDispatch();
     useEffect(() => {
-        if (sensorsData) {
-            const sensorWithTempData = sensorsData.find(sensor => sensor.temp_data != null);
-            if (sensorWithTempData && sensorWithTempData.is_active) {
-                setTempsensor(sensorWithTempData);
-                setTempdata(parseFloat(sensorWithTempData.temp_data));
+        console.log("check sensor: ", sensorsData)
+        if (deviceData) {
+            const deviceTemp = deviceData.find(device => device.type == "Temp")
+            if (deviceTemp) {
+                setTempDevice(deviceTemp)
             }
+            if (sensorsData && sensorsData.is_active) {
+                setTempsensor(sensorsData)
+                setTempdata(parseFloat(sensorsData.temp_data))
+            } 
         }
+        
       }, []);
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
     const handleUpdateDevice = async (action) => {
-        if (action == "Increase") {
-            try {
-                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: tempdata + 1});
-                setTempdata(tempdata + 1)
-            } catch (error) {
-                console.log(error)
-            }  
-        }
-        if (action == "Decrease") {
-            try {
-                await updateTempSensor({sensor_id: tempSensor.ID, temp_data: parseFloat(tempdata) - 1});
-                setTempdata(parseFloat(tempdata) - 1)
-            } catch (error) {
-                console.log(error)
-            }  
+        const temp_data = action == "Increase" ? tempdata + 1 : tempdata - 1
+        try {
+            await updateTempDevice({device_id: tempDevice.ID, temp_data: temp_data})
+            dispatch(updateTempDeviceRedux({ID: tempDevice.ID, temp_data: temp_data}))
+            setTempdata(temp_data)
+        } catch (error) {
+            console.log(error)
         }
     }
+    // const handleDisconnect = async () => {
+    //     try {
+    //         await updateTempDevice({device_id: tempDevice.ID, status: "Disable"})
+    //         dispatch(updateDeviceRedux({ID: tempDevice.ID, status: "Disable"}))
+    //         setTempDevice({... tempDevice, status: "Disable" })
+    //     } catch(error) {
+    //         console.log(error)
+    //     }
+    // }
     const Header = () => {
         return (
             <View style={styles.header}>
@@ -68,14 +79,14 @@ export const TempDevice = (props: TempDeviceProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
+                        <Text style={styles.optionText}>Tên cảm biến: Cảm biến nhiệt độ</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {tempSensor && tempSensor.is_active ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>
                     <CircularProgressBar
                         style={styles.customizeCircle}
-                        progress={tempdata ? tempdata/100: 0}
+                        progress={tempdata && tempSensor && tempSensor.is_active ? tempdata/100: 0}
                     />
                 </View>
                 <View style={styles.box3}>
@@ -97,6 +108,7 @@ export const TempDevice = (props: TempDeviceProps) => {
                 </View>
                 <View style={styles.box5}>
                     <Button appearance='outline'
+                        // onPress={() => handleDisconnect()}
                         status='danger'
                         style={styles.button}>
                         Ngắt kết nối

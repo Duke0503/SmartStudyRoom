@@ -1,4 +1,3 @@
-import { Schedule } from "@/Screens/Schedule/Schedule";
 import { createSlice } from "@reduxjs/toolkit";
 
 const sensorsSlice = createSlice({
@@ -11,9 +10,14 @@ const sensorsSlice = createSlice({
     addSensor: (state, action) => {
       state.sensorsList.push(action.payload);
     },
-    updateLightSensor: (state, action) => {
+    updateLightSensorRedux: (state, action) => {
       state.sensorsList = state.sensorsList.map(sensor => 
         sensor.id_sensor == action.payload.ID ? { ...sensor, light_data: action.payload.light_data } : sensor
+      );
+    },
+    updateTempSensorRedux: (state, action) => {
+      state.sensorsList = state.sensorsList.map(sensor => 
+        sensor.id_sensor == action.payload.ID ? { ...sensor, temp_data: action.payload.temp_data } : sensor
       );
     },
     deleteCurrentSensor: (state, action) => {
@@ -22,5 +26,5 @@ const sensorsSlice = createSlice({
   },
 });
 
-export const {addSensor, deleteCurrentSensor, updateLightSensor } = sensorsSlice.actions;
+export const {addSensor, deleteCurrentSensor, updateLightSensorRedux, updateTempSensorRedux } = sensorsSlice.actions;
 export const sensorsReducers = sensorsSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, ImageProps } from "react-native";
 import { RootScreens } from "@/Screens";
 import { colors } from "@/Components/colors";
@@ -6,6 +6,8 @@ import { Button, Layout, IconElement, Divider, CircularProgressBar } from '@ui-k
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useGetDeviceQuery } from "@/Services/devices";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateDeviceMutation} from "@/Services/devices";
+import { updateDeviceRedux } from "@/Store/reducers/devices";
 export interface CameraProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -13,8 +15,29 @@ export interface CameraProps {
 
 
 export const Camera = (props: CameraProps) => {
+    const [cameraSensor, setCamerasensor] = useState({})
+    const [cameradata, setCameradata] = useState(0)
+    const [cameraDevice, setCameraDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const device = useGetDeviceQuery({user_id: profile.id, type: "Camera" }).currentData
+    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const deviceData = useSelector((state: any) => state.devices.devicessList);
+    const [updateCameraDevice] = useUpdateDeviceMutation()
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (sensorsData && sensorsData.is_active) {
+            setCamerasensor(sensorsData)
+            setCameradata(sensorsData.camera_data)
+        }
+      }, []);
+    //   const handleDisconnect = async () => {
+    //     try {
+    //         await updateCameraDevice({device_id: cameraDevice.ID, status: "Disable"})
+    //         dispatch(updateDeviceRedux({ID: cameraDevice.ID, status: "Disable"}))
+    //         setCameraDevice({...cameraDevice, status: "Disable"})
+    //     } catch(error) {
+    //         console.log(error)
+    //     }
+    // }
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
 
@@ -33,8 +56,8 @@ export const Camera = (props: CameraProps) => {
                 style={styles.boxContainer}>
                 <View style={styles.box1}>
                     <View style={styles.inner}>
-                        <Text style={styles.optionText}>Tên thiết bị: {device && device[0] && device[0].name ? device[0].name : "Không tồn tại thiết bị"}</Text>
-                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {device && device[0] && device[0].status ? "Đang bật" : "Đang tắt"}</Text></Text>
+                        <Text style={styles.optionText}>Tên cảm biến: Cảm biến camera</Text>
+                        <Text style={styles.optionText}>Trạng thái: <Text style={{ color: 'green' }}> {cameraSensor && cameraSensor.is_active ? "Đang bật" : "Đang tắt"}</Text></Text>
                     </View>
                 </View>
                 <View style={styles.box2}>
@@ -47,6 +70,7 @@ export const Camera = (props: CameraProps) => {
                 </View>
                 <View style={styles.box5}>
                     <Button appearance='outline'
+                        // onPress={() => handleDisconnect()}
                         status='danger'
                         style={styles.button}>
                         Ngắt kết nối
