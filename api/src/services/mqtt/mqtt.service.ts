@@ -4,6 +4,11 @@ import { debug, error, info } from "ps-logger";
 import { SensorsService } from "../sensors/sensors.service";
 import { CreateSensorDto } from "src/common/dto/create-sensor.dto";
 import { UpdateSensorDto } from "src/common/dto/update-sensor.dto";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Sensors } from "src/models/sensors.models";
+import { CreateSensorModelDto } from "src/common/dto/create-sensor-model.dto";
+import { now } from "moment";
 
 @Injectable()
 export class MqttService implements OnModuleInit {
@@ -11,6 +16,8 @@ export class MqttService implements OnModuleInit {
   private sensorTimeouts: Map<string, NodeJS.Timeout> = new Map();
   constructor(
     private sensorService: SensorsService,
+    @InjectModel(Sensors.name)
+    private sensorModel: Model<Sensors>,
   ) {}
 
   onModuleInit() {
@@ -45,7 +52,24 @@ export class MqttService implements OnModuleInit {
 
       // String to JSON
       const data = JSON.parse(message.toString());
-      
+
+      // Push Sensor Data to MongoDB
+      const createSensorModelDto = new CreateSensorModelDto();
+      createSensorModelDto.id_sensor = data.id_sensor;
+      createSensorModelDto.sound_data = parseInt(data.sound_data);
+      createSensorModelDto.light_data = parseInt(data.light_data);
+      createSensorModelDto.temp_data = parseFloat(data.temp_data);
+      createSensorModelDto.camera_data = data.camera_data;
+      createSensorModelDto.time = new Date();
+
+      const createdSensor = new this.sensorModel(createSensorModelDto);
+
+      try {
+        return await createdSensor.save();
+      } catch (error) {
+        throw new Error(`Failed to create sensor: ${error.message}`);
+      }
+
       // Check if sensor exists in database
       try {
         if (this.sensorService.getSensorBySensorId(data.id_sensor)) {
