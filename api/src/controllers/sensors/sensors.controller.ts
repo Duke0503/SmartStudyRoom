@@ -12,9 +12,9 @@ export class SensorsController {
   getSensorBySensorId(@Param('sensor_id') sensor_id: string): Promise<Sensor> {
     return this.sensorsService.getSensorBySensorId(sensor_id);
   }
-  @Get('getsensorbyIP/:user_id/:ip')
-  getSensorByIP(@Param('user_id') user_id: number, @Param('ip') ip: string): Promise<Sensor[]> {
-    return this.sensorsService.getSensorByIP(user_id, ip);
+  @Get('getsensorbyIP/:ip')
+  getSensorByIP(@Param('ip') ip: string): Promise<Sensor[]> {
+    return this.sensorsService.getSensorByIP(ip);
   }
   @Post('createnewsensor/:sensor_id')
   createNewSensor(@Body() createSensorDto: CreateSensorDto, @Param('sensor_id') sensor_id: string): Promise<String> {
