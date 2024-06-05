@@ -12,7 +12,7 @@ import { HomeModule } from './modules/home/home.module';
 import { DevicesModule} from './modules/devices/devices.module'
 import { MqttModule } from './modules/mqtt/mqtt.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
-
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [    
@@ -20,6 +20,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
       envFilePath: '.env',
       isGlobal: true,
     }),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     TypeOrmModule.forRootAsync(config),
     UsersModule,
     SensorsModule,

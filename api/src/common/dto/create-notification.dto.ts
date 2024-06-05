@@ -1,5 +1,3 @@
-import { User } from "src/entities/users.entity";
-
 export class CreateNotificationDto {
   title: string;
   

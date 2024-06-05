@@ -10,7 +10,6 @@ export class ExpoPushToken {
   @Column()
   ExpoPushToken: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "user_ID" })
+  @Column()
   userID: number; 
 }

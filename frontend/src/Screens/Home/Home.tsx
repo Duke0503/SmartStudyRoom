@@ -72,7 +72,7 @@ export const Home = (props: IHomeProps) => {
             <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, {user.name}</Title3>
             <VSRegular textStyles={{color: colors.neutral_500}}>Đây là hoạt động ngày hôm nay của bạn</VSRegular>
           </View>
-          <Pressable>
+          <Pressable onPress={() => onNavigate(RootScreens.NOTIFICATION)} >
             <Ionicons name="notifications" size={24} color={"#52B6DF"}/>
           </Pressable>
         </View>
