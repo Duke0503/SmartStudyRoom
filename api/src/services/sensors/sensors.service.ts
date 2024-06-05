@@ -31,13 +31,8 @@ export class SensorsService {
   //     throw new NotFoundException(`Can not get sensor`)
   //   }
   // }
-  async getSensorByIP(user_id: number, ip: string): Promise<Sensor[]> {
+  async getSensorByIP(ip: string): Promise<Sensor[]> {
     const sensors = await this.sensorsRepository.find({ where: { ip_address: ip } });
-    const user = await this.userService.findUserbyId(user_id)
-    for (const sensor of sensors) {
-      sensor.user = user;
-      await this.sensorsRepository.save(sensor);
-    }
     if (sensors && sensors.length > 0) {
       return sensors;
     } else {
