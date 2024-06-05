@@ -5,13 +5,18 @@ import { Repository } from 'typeorm';
 import { Sensor } from 'src/entities/sensors.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from '../users/users.service';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Sensors, SensorDocument } from 'src/models/sensors.models';
 
 @Injectable()
 export class SensorsService {
   constructor(
     @InjectRepository(Sensor)
     private readonly sensorsRepository: Repository<Sensor>,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    @InjectModel(Sensors.name)
+    private readonly sensorsModel: Model<SensorDocument>,
   ){}
 
   async getSensorBySensorId(sensor_ID: string): Promise<Sensor> {
@@ -91,4 +96,51 @@ export class SensorsService {
       throw new NotFoundException(`Can not delete sensor`);
     }
   }
+
+  // Calculate Average Data
+  async calculateAverages(sensorID: string, startTime: Date, endTime: Date): Promise<{ 
+    averageLight: number, 
+    averageSound: number, 
+    averageTemp: number 
+  }> {
+    const sensors = await this.sensorsModel.find({
+      id_sensor: sensorID,
+      time: { $gte: startTime, $lte: endTime }
+    }).exec();
+
+    if (sensors.length === 0) {
+      return {
+        averageLight: 0,
+        averageSound: 0,
+        averageTemp: 0
+      };
+    }
+
+    const totalLight = sensors.reduce((acc, sensor) => acc + sensor.light_data, 0);
+    const totalSound = sensors.reduce((acc, sensor) => acc + sensor.sound_data, 0);
+    const totalTemp = sensors.reduce((acc, sensor) => acc + sensor.temp_data, 0);
+
+    const averageLight = totalLight / sensors.length;
+    const averageSound = totalSound / sensors.length;
+    const averageTemp = totalTemp / sensors.length;
+
+    return {
+      averageLight,
+      averageSound,
+      averageTemp,
+    };
+  }
+  // End Calculate Average Data
+
+  // Get Sensor Data In MongoDB
+  async getSensorData(sensorID: string, startTime: Date, endTime: Date): Promise<Sensors[]> {
+    return this.sensorsModel.find({
+      id_sensor: sensorID,
+      time: {
+        $gte: startTime,
+        $lte: endTime,
+      },
+    }).exec();
+  }
+  // End Get Sensor Data In MongoDB
 }
