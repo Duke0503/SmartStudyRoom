@@ -70,7 +70,7 @@ export const Session = (props: ISessionProps) => {
           <Title3 textStyles={{color: colors.neutral_900}}>{currentSchedule.title}</Title3>
         </View>
         <View style={styles.body}>
-          <VStack h={"80%"} space="lg">
+          <VStack h="100%" space="lg">
             <VStack space="md">
               {moment(new Date()).unix() > moment(currentSchedule.finish_time).unix()?
               <Heading>Thời gian đã học: Đã xong</Heading>:
@@ -83,9 +83,9 @@ export const Session = (props: ISessionProps) => {
               </Progress>
               <Text size="md">Thời gian kết thúc: {moment(currentSchedule.finish_time).format("ddd, DD/MM/YYYY, HH:mm")}</Text>
             </VStack>
-            <VStack space="md">
+            <VStack h="50%" space="md">
               <Heading>Thông số môi trường học tập:</Heading>
-              <VStack h="75%">
+              <VStack h="100%">
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="40%" h="70%" style={styles.sensorDataBox}>
                     <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
@@ -108,9 +108,11 @@ export const Session = (props: ISessionProps) => {
                 </HStack>
               </VStack>
             </VStack>
-            <LRegular>Chỉnh sửa</LRegular>
-            <Pressable onPress={() => handleDelete(currentSchedule.ID)}>
-              <LRegular>Xóa</LRegular>
+            <Pressable style={styles.changeButton}>
+              <LRegular textStyles={{color: "#FFFFFF"}}>Chỉnh sửa</LRegular>
+            </Pressable>
+            <Pressable style={styles.deleteButton} onPress={() => handleDelete(currentSchedule.ID)}>
+              <LRegular textStyles={{color: "#FFFFFF"}}>Xóa</LRegular>
             </Pressable>
           </VStack>
         </View>
@@ -201,5 +203,23 @@ const styles = StyleSheet.create({
     borderColor: colors.neutral_300,
     borderRadius: 15,
     padding: "5%"
+  },
+
+  changeButton: {
+    backgroundColor: colors.success_500,
+    width: "100%",
+    height: "8%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15
+  },
+
+  deleteButton: {
+    backgroundColor: colors.error_500,
+    width: "100%",
+    height: "8%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15
   }
 });

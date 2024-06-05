@@ -22,6 +22,9 @@ export class Schedule {
   @Column({ nullable: true })
   break_time: number;
 
+  @Column({ nullable: true })
+  sensor_ID: number;
+
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: "user_ID" })
   user: User;

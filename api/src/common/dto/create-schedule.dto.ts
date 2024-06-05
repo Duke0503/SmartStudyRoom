@@ -9,5 +9,7 @@ export class CreateScheduleDto {
 
   break_time: number;
 
+  sensor_ID: number;
+
   user_ID: number;
 }

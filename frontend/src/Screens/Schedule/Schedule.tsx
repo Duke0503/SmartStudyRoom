@@ -10,7 +10,7 @@ import { Calendar, NativeDateService, I18nConfig } from '@ui-kitten/components';
 import VSRegular from "@/Components/texts/VSRegular";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, Button, ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from '@gluestack-ui/themed';
+import { Text, Button, ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box, Alert, AlertIcon, AlertText, InfoIcon } from '@gluestack-ui/themed';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -46,6 +46,7 @@ export const Schedule = (props: IScheduleProps) => {
   const { onNavigate } = props;
   const [date, setDate] = useState(new Date());
   const [addCalendar, setAddCalendar] = useState(false);
+  const [displayAlert, setDisplayAlert] = useState(false);
 
   const dispatch = useDispatch();
   const user = useSelector((state:any) => state.profile);
@@ -80,6 +81,12 @@ export const Schedule = (props: IScheduleProps) => {
   };
 
   const handleCreateSchedule = async () => {
+    if (moment(finishTime).unix() <= moment(startTime).unix()) {
+      setDisplayAlert(true);
+      // setTimeout(() => {setDisplayAlert(false)}, 3000);     
+      return;
+    }
+
     try {
       setAddCalendar(false);
 
@@ -114,6 +121,7 @@ export const Schedule = (props: IScheduleProps) => {
     dispatch(updateCurrentSchedule(schedule_ID));
     onNavigate(RootScreens.SESSION);
   } 
+  
   return (
     <SafeAreaView>
       <StatusBar></StatusBar>
@@ -192,7 +200,7 @@ export const Schedule = (props: IScheduleProps) => {
                               <Pressable onPress={() => setShowFinishDate(true)}>
                                 <Text>{finishTime.toLocaleDateString()}</Text>
                               </Pressable>
-                              <Pressable onPress={() => setShowFinishTime(true)}>
+                              <Pressable onPress={() => {setShowFinishTime(true); setDisplayAlert(false)}}>
                                 <Text>{finishTime.toLocaleTimeString()}</Text>
                               </Pressable>
                             {showFinishDate && 
@@ -214,6 +222,8 @@ export const Schedule = (props: IScheduleProps) => {
                               onChange={changeFinishTime}
                             />}
                           </HStack>
+                          {displayAlert &&
+                          <Text color="red">Giờ kết thúc phải lớn hơn giờ bắt đầu</Text>}
                       </VStack>
                       <VStack space="md">
                         <Text>Thời gian giải lao</Text>
