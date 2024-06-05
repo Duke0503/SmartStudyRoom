@@ -157,11 +157,11 @@ const styles = StyleSheet.create({
     },
     inner: {
         flex: 1,
-        alignItems: "center",
+        // alignItems: "center",
         backgroundColor: "white",
         borderRadius: 10,
         justifyContent: "space-evenly",
-        paddingRight: "40%"
+        paddingLeft: 16
     },
     customizeCircle: {
         width: 200,

@@ -30,7 +30,6 @@ export const TempDevice = (props: TempDeviceProps) => {
     const [updateTempDevice] = useUpdateTempDeviceMutation()
     const dispatch = useDispatch();
     useEffect(() => {
-        console.log("check sensor: ", sensorsData)
         if (deviceData) {
             const deviceTemp = deviceData.find(device => device.type == "Temp")
             if (deviceTemp) {
@@ -192,11 +191,11 @@ const styles = StyleSheet.create({
     },
     inner: {
         flex: 1,
-        alignItems: "center",
+        // alignItems: "center",
         backgroundColor: "white",
         borderRadius: 10,
         justifyContent: "space-evenly",
-        paddingRight: "40%"
+        paddingLeft: 16
     },
     customizeCircle: {
         width: 200,

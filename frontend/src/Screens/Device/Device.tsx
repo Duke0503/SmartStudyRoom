@@ -72,19 +72,26 @@ export const Device = (props: IDeviceProps) => {
   const handleNagivateToNoiseDevice = () => {
     onNavigate(RootScreens.NOISEDEVICE)
   };
-  const handleToggleConnect = async () => {
-    console.log(data)
+  const handleToggleConnect = async (action) => {
     dispatch(deleteCurrentDevice({}))
     deviceData && deviceData.map((item, index) => {
       dispatch(addDevice(item))
     })
-    setShowSensor(true)
-    setConnectedDevices(!connectedDevices);
+    if (action == "Connect") {
+      setShowSensor(true)
+      setConnectedDevices(true)
+      setSelectedSensor(false)
+    } else {
+      setShowSensor(false)
+      setConnectedDevices(false)
+      setSelectedSensor(false)
+    }
   }
   const handleSelectSensor = (sensor) => {
     dispatch(deleteCurrentSensor({}))
     dispatch(addSensor(sensor))
     setSelectedSensor(true)
+    setShowSensor(false)
   }
   const ContentBody = () => {
     return (
@@ -183,7 +190,7 @@ export const Device = (props: IDeviceProps) => {
             <Button
               title="Ngắt kết nối"
               color="red"
-              onPress={handleToggleConnect}
+              onPress={() => handleToggleConnect("Disconnect")}
             />
           </View>
         </View>
@@ -198,7 +205,7 @@ export const Device = (props: IDeviceProps) => {
           <Button
             title="Connect"
             color=""
-            onPress={handleToggleConnect} />
+            onPress={() => handleToggleConnect("Connect")} />
           <Modal
               isOpen={showSensor}
               onClose={() => {
