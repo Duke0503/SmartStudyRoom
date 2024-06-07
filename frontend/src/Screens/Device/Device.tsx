@@ -25,12 +25,13 @@ export interface IDeviceProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-export const Device = (props: IDeviceProps) => {
+export const Device = async (props: IDeviceProps) => {
   const [connectedDevices, setConnectedDevices] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState(false);
   const [showSensor, setShowSensor] = useState(false)
   const profile = useSelector((state: any) => state.profile);
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,9 +44,12 @@ export const Device = (props: IDeviceProps) => {
 
     fetchData();
   }, []);
+
   const dispatch = useDispatch();
+
   const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}, { refetchOnMountOrArgChange: true }).currentData
   const devicename = deviceData && deviceData.map(device => device.name)
+
   const { onNavigate } = props;
   const DATA = [
     {
@@ -60,6 +64,7 @@ export const Device = (props: IDeviceProps) => {
     isActive: item.is_active,
     sensor: item
   })) : [];
+
   const handleNagivateToLightDevice = () => {
     onNavigate(RootScreens.LIGHTDEVICE)
   };

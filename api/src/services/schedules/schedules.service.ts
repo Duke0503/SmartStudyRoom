@@ -50,12 +50,12 @@ export class SchedulesService {
         }
     }
 
-    async updateSchedule(updateScheduleDto: UpdateScheduleDto, schedule_id: number): Promise<String> {
+    async updateSchedule(updateScheduleDto: UpdateScheduleDto, schedule_id: number): Promise<IResponse> {
         try {
             const schedule = await this.schedulesRepository.findOne({ where: { ID: schedule_id } });
             Object.assign(schedule, updateScheduleDto);
             await this.schedulesRepository.save(schedule);
-            return "Update schedule successfully"
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_UPDATE_SUCCESSFULLY");
         }
         catch (error) {
             throw new NotFoundException('Cannot update schedule')

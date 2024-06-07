@@ -19,6 +19,9 @@ export class Schedule {
   @Column()
   finish_time: Date;
 
+  @Column()
+  session_time: number;
+
   @Column({ nullable: true })
   break_time: number;
 
