@@ -19,8 +19,14 @@ export class Schedule {
   @Column()
   finish_time: Date;
 
+  @Column()
+  session_time: number;
+
   @Column({ nullable: true })
   break_time: number;
+
+  @Column({ nullable: true })
+  sensor_ID: number;
 
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: "user_ID" })

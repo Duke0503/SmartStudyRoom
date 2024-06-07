@@ -7,7 +7,11 @@ export class CreateScheduleDto {
 
   finish_time: Date;
 
+  session_time: number;
+
   break_time: number;
+
+  sensor_ID: number;
 
   user_ID: number;
 }
