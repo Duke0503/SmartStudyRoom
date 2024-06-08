@@ -8,7 +8,9 @@ const sensorsSlice = createSlice({
   },
   reducers: {
     addSensor: (state, action) => {
+      console.log("before: ", state.sensorsList)
       state.sensorsList.push(action.payload);
+      console.log(state.sensorsList)
     },
     updateLightSensorRedux: (state, action) => {
       state.sensorsList = state.sensorsList.map(sensor => 
