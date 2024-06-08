@@ -106,10 +106,12 @@ export const Schedule = (props: IScheduleProps) => {
       setBreakTime(0);
     }
 
+    const sensor_ID = Object.keys(sensors.sensor).length? sensors.sensor.ID: null;
+
     try {
       setAddCalendar(false);
 
-      const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, session_time: sessionTime, break_time: breakTime, user_ID: user.id, sensor_ID: 1}).unwrap();
+      const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, session_time: sessionTime, break_time: breakTime, user_ID: user.id, sensor_ID: sensor_ID}).unwrap();
 
       if (response.success) {
         const params = {
@@ -120,7 +122,7 @@ export const Schedule = (props: IScheduleProps) => {
           finish_time: finishTime,
           session_time: sessionTime,
           break_time: breakTime,
-          sensor_ID: 1
+          sensor_ID: sensor_ID
         }
 
         const beforeSession = await createNotification({
