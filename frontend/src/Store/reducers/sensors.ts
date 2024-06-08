@@ -3,14 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const sensorsSlice = createSlice({
   name: "sensors",
   initialState: { 
-    sensorsList: [],
-    currentSensor: {},
+    sensor: {}
   },
   reducers: {
     addSensor: (state, action) => {
-      console.log("before: ", state.sensorsList)
-      state.sensorsList.push(action.payload);
-      console.log(state.sensorsList)
+      state.sensor = action.payload;
     },
     updateLightSensorRedux: (state, action) => {
       state.sensorsList = state.sensorsList.map(sensor => 
@@ -22,11 +19,11 @@ const sensorsSlice = createSlice({
         sensor.id_sensor == action.payload.ID ? { ...sensor, temp_data: action.payload.temp_data } : sensor
       );
     },
-    deleteCurrentSensor: (state, action) => {
-      state.sensorsList = [];
-    },
+    deleteSensor: (state, action) => {
+      state.sensor = {};
+    }
   },
 });
 
-export const {addSensor, deleteCurrentSensor, updateLightSensorRedux, updateTempSensorRedux } = sensorsSlice.actions;
+export const { addSensor, deleteSensor, updateLightSensorRedux, updateTempSensorRedux } = sensorsSlice.actions;
 export const sensorsReducers = sensorsSlice.reducer;

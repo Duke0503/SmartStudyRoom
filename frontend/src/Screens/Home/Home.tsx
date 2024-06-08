@@ -15,7 +15,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import { useLazyGetScheduleQuery } from "@/Services/schedules";
-import { fetchSchedule } from "@/Store/reducers";
+import { fetchSchedule, updateCurrentSchedule } from "@/Store/reducers";
+import { Box, HStack, Heading, VStack } from "@gluestack-ui/themed";
+import LRegular from "@/Components/texts/LRegular";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -40,10 +42,14 @@ export const Home = (props: IHomeProps) => {
 
   let isScheduleToday: boolean = false;
 
-  // console.log("schedule list in home screen: ", schedules.scheduelesList);
   // const sensorList = useSelector((state: any) => state.sensors.sensorsList);
 
   // console.log("sensorList: ",sensorList.name);
+
+  const handleNavigateSession = (schedule_ID: Number) => {
+    dispatch(updateCurrentSchedule(schedule_ID));
+    onNavigate(RootScreens.SESSION);
+  } 
 
   const handleFetch = async () => {
     await fetchOne(user.id);
@@ -80,7 +86,7 @@ export const Home = (props: IHomeProps) => {
                   if(moment(schedule.start_time).format("DD-MM-YYYY") === moment(new Date()).format("DD-MM-YYYY")) isScheduleToday = true;
                   return (moment(schedule.start_time).format("DD-MM-YYYY") !== moment(new Date()).format("DD-MM-YYYY")? 
                     <></> :
-                    <Pressable style={styles.session} onPress={() => onNavigate(RootScreens.SESSION)}>
+                    <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
                       <SRegular>{schedule.title}</SRegular>
                     </Pressable>)
                 })}
@@ -94,27 +100,31 @@ export const Home = (props: IHomeProps) => {
                 </Block>}
               </ScrollView>}
           </View>
-          <View style={styles.statistic}>
-            <LSemiBold>Thông số môi trường học tập</LSemiBold>
-            <View style={styles.statisticSensor}>
-              <Block style = {styles.lightSensor}>
-                <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Độ sáng </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Nhiệt độ </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Âm lượng </Text>
-              </Block>
-              <Block style = {styles.lightSensor}>
-                <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
-                <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Camera </Text>
-              </Block>
-            </View>
-          </View>
+          <VStack h="50%" space="md">
+              <Heading>Thông số môi trường học tập:</Heading>
+              <VStack h="100%">
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
+                    <LRegular>Độ sáng:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <FontAwesome5 name="temperature-low" size={50} color={"red"} />
+                    <LRegular>Nhiệt độ:</LRegular>
+                  </Box>
+                </HStack>
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Âm thanh:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Camera</LRegular>
+                  </Box>
+                </HStack>
+              </VStack>
+            </VStack>
         </View>
       </View>
     </SafeAreaView>
@@ -241,5 +251,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "#CBD5E1",
     borderWidth: 1,
+  },
+
+  sensorDataBox: {
+    justifyContent: "space-evenly",
+    borderWidth: 1,
+    borderColor: colors.neutral_300,
+    borderRadius: 15,
+    padding: "5%"
   }
 });
