@@ -13,10 +13,8 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import { schedulesReducers } from "./reducers";
-import { profileReducers } from "./reducers/profile";
-import { sensorsReducers } from "./reducers/sensors";
-import { devicesReducers } from "./reducers/devices";
+import { schedulesReducers, profileReducers, sensorsReducers, devicesReducers } from "./reducers";
+
 const reducers = combineReducers({
   profile: profileReducers,
   schedules: schedulesReducers,
