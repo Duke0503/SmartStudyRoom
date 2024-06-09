@@ -38,7 +38,6 @@ export const Device = (props: IDeviceProps) => {
     const fetchData = async () => {
       try {
         const ip = await Network.getIpAddressAsync();
-        console.log(ip)
         await fetchOne({ip: ip});
       } catch (error) {
         console.log(error)
@@ -96,8 +95,7 @@ export const Device = (props: IDeviceProps) => {
       setSelectedSensor(false)
     }
   }
-
-
+  
   const handleDisconnect = () => {
     dispatch(deleteSensor({}));
     dispatch(deleteCurrentDevice({}));
