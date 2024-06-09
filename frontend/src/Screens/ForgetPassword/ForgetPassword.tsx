@@ -12,7 +12,7 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { useLoginUserMutation } from "@/Services";
+import { useLazyForgetPasswordUserQuery, useLoginUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"
@@ -33,11 +33,11 @@ Notifications.setNotificationHandler({
 });
 
 // End Set Up Notification
-export interface ILoginProps {
+export interface IForgetPasswordProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-export const Login = (props: ILoginProps) => {
+export const ForgetPassword = (props: IForgetPasswordProps) => {
   const { onNavigate } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +50,7 @@ export const Login = (props: ILoginProps) => {
   const [createExpoPushToken, { data, isSuccess }] = useCreateExpoPushTokenMutation();
 
   // End Handle Update ExpoPushToken
-  const [login, loginResult] = useLoginUserMutation();
+  const [fetchOne, result] = useLazyForgetPasswordUserQuery();
 
   const handleRegistrationError = (errorMessage: string) => {
     alert(errorMessage);
@@ -106,12 +106,11 @@ export const Login = (props: ILoginProps) => {
     }
   }
 
-  const handleLogin = async () => {
+  const handleForgetPassword = async () => {
     try {
       const response = await login({ email, password }).unwrap();
 
       if (response.success) {
-        await AsyncStorage.setItem('token', response.data.token);
         dispatch(addUser({
           token: response.data.token, 
           name: response.data.name, 
@@ -149,7 +148,10 @@ export const Login = (props: ILoginProps) => {
       <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
-            <Title3>Đăng nhập</Title3>
+            <Pressable style={{paddingRight: 15}} onPress={() => onNavigate(RootScreens.LOGIN)}>
+                <Ionicons name="arrow-back-outline" size={24} color={colors.neutral_900}></Ionicons>
+            </Pressable>
+            <Title3 textStyles={{paddingLeft: "20%"}}>Quên mật khẩu</Title3>
         </View>
         <View style={styles.body}>
             <View style={styles.inputGroup}>
@@ -161,25 +163,8 @@ export const Login = (props: ILoginProps) => {
                     placeholder="Email của bạn"
                 ></TextInput>
             </View>
-            <View style={styles.inputGroup}>
-                <SRegular>Mật khẩu</SRegular>
-                <TextInput 
-                    style={styles.input}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder="Mật khẩu của bạn"
-                    secureTextEntry={true}
-                ></TextInput>
-            </View>
-            <Pressable onPress={() => onNavigate(RootScreens.FORGETPASSWORD)}>
-              <SRegular textStyles={{color: colors.primary_500, marginTop: "3%"}}>Quên mật khẩu?</SRegular>
-            </Pressable>
-            <Pressable style={styles.registerButton} onPress={handleLogin}>
-              <SSemiBold textStyles={{color: "white"}}>Đăng nhập</SSemiBold>
-            </Pressable>
-            <Pressable style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}} onPress={() => onNavigate(RootScreens.REGISTER)}>
-              <SRegular>Chưa có tài khoản?</SRegular>
-              <SRegular textStyles={{color: colors.primary_500}}> Đăng ký</SRegular>
+            <Pressable style={styles.registerButton} onPress={handleForgetPassword}>
+              <SSemiBold textStyles={{color: "white"}}>Xác nhận</SSemiBold>
             </Pressable>
         </View>
       </View>
@@ -201,7 +186,8 @@ const styles = StyleSheet.create({
   title: {
     width: "100%",
     height: "7%",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center"
   },
 

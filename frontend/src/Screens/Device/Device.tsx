@@ -95,8 +95,7 @@ export const Device = (props: IDeviceProps) => {
       setSelectedSensor(false)
     }
   }
-
-
+  
   const handleDisconnect = () => {
     dispatch(deleteSensor({}));
     dispatch(deleteCurrentDevice({}));
