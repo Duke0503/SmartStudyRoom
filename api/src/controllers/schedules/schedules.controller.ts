@@ -25,12 +25,12 @@ export class SchedulesController {
     }
 
     @Patch('updateschedule/:schedule_id')
-    updateSchedule(@Body() updateScheduleDto: UpdateScheduleDto, @Param('schedule_id') schedule_id: number): Promise<String> {
+    updateSchedule(@Body() updateScheduleDto: UpdateScheduleDto, @Param('schedule_id') schedule_id: number): Promise<IResponse> {
         return this.schedulesService.updateSchedule(updateScheduleDto, schedule_id)
     }
 
     @Delete('deleteschedule/:schedule_id')
-    deleteSchedule(@Param('schedule_id') schedule_id: number): Promise<String> {
+    deleteSchedule(@Param('schedule_id') schedule_id: number): Promise<IResponse> {
         return this.schedulesService.deleteSchedule(schedule_id)
     }
 

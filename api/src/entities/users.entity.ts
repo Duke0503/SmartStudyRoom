@@ -6,10 +6,11 @@ import {
   BeforeInsert, 
   BeforeUpdate,
   CreateDateColumn,
-  ManyToOne,
+  OneToOne,
   JoinColumn
 } from "typeorm";
 import * as bcrypt from 'bcrypt'
+import { Sensor } from "./sensors.entity";
 
 @Entity('Users') 
 
@@ -48,7 +49,7 @@ export class User {
 
   @Column({ nullable: true })
   gender: string;
-  
+
   @Column()
   @CreateDateColumn()
   timestamp: Date;

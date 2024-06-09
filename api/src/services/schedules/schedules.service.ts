@@ -7,13 +7,22 @@ import { UsersService } from '../users/users.service';
 import { UpdateScheduleDto } from 'src/common/dto/update-schedule.dto';
 import { ResponseSuccess } from 'src/common/dto/response.dto';
 import { IResponse } from 'src/common/interfaces/response.interface';
+import { Notification } from 'src/entities/notifications.entity';
+import { ListScheduleNotificationsDto } from 'src/common/dto/list-schedule-notifications.dto';
+import { createScheduledNotifications } from 'src/common/utils/createScheduledNotifications';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class SchedulesService {
     constructor(
         @InjectRepository(Schedule)
         private readonly schedulesRepository: Repository<Schedule>,
-        private readonly usersService: UsersService
+
+        @InjectRepository(Notification)
+        private readonly notificationsRepository: Repository<Notification>,
+
+        private readonly usersService: UsersService,
+        private readonly notificationsService: NotificationsService,
     ) { }
 
     async getAllSchedules(): Promise<Schedule[]> {
@@ -45,23 +54,63 @@ export class SchedulesService {
         }
     }
 
-    async updateSchedule(updateScheduleDto: UpdateScheduleDto, schedule_id: number): Promise<String> {
+    async updateSchedule(updateScheduleDto: UpdateScheduleDto, schedule_id: number): Promise<IResponse> {
         try {
             const schedule = await this.schedulesRepository.findOne({ where: { ID: schedule_id } });
+
+            const notifications = await this.notificationsRepository.find({
+                where: {
+                    scheduleID: schedule_id
+                }
+            });
+
+            for (let notification of notifications) {
+                await this.notificationsRepository.remove(notification);
+            };
+
+            const listScheduleNotificationsDto = new ListScheduleNotificationsDto();
+            listScheduleNotificationsDto.title = updateScheduleDto.title;
+            listScheduleNotificationsDto.isReady = false;
+            listScheduleNotificationsDto.isSent = false;
+            listScheduleNotificationsDto.scheduleID = schedule_id;
+            listScheduleNotificationsDto.userID = updateScheduleDto.user_ID;
+            listScheduleNotificationsDto.startTime = updateScheduleDto.start_time;
+            listScheduleNotificationsDto.finishTime = updateScheduleDto.finish_time;
+            listScheduleNotificationsDto.sessionTime = updateScheduleDto.session_time;
+            listScheduleNotificationsDto.breakTime = updateScheduleDto.break_time;
+            const listNotifications = createScheduledNotifications(listScheduleNotificationsDto);
+
+            for (let notification of listNotifications) {
+                await this.notificationsService.createNotification(notification);
+            }
+
             Object.assign(schedule, updateScheduleDto);
             await this.schedulesRepository.save(schedule);
-            return "Update schedule successfully"
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_UPDATE_SUCCESSFULLY");
         }
         catch (error) {
             throw new NotFoundException('Cannot update schedule')
         }
     }
 
-    async deleteSchedule(schedule_id: number): Promise<String> {
+    async deleteSchedule(schedule_id: number): Promise<IResponse> {
         try {
+            
+            const notifications = await this.notificationsRepository.find({
+                where: {
+                    scheduleID: schedule_id
+                }
+            });
+
+            for (let notification of notifications) {
+                await this.notificationsRepository.remove(notification);
+            };
+
             const schedule = await this.schedulesRepository.findOne({ where: { ID: schedule_id } });
+
             await this.schedulesRepository.remove(schedule);
-            return "Delete schedule successfully"
+
+            return new ResponseSuccess("SCHEDULE.SCHEDULE_CREATE_SUCCESSFULLY");
         }
         catch (error) {
             throw new NotFoundException('Cannot delete schedule')

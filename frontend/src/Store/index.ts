@@ -13,15 +13,14 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import { schedulesReducers } from "./reducers";
-import { profileReducers } from "./reducers/profile";
-import { userListReducers } from "./reducers/userlist";
-
+import { schedulesReducers, profileReducers, sensorsReducers, userListReducers, devicesReducers } from "./reducers";
 
 const reducers = combineReducers({
   profile: profileReducers,
   schedules: schedulesReducers,
   listOfUsers: userListReducers,
+  sensors: sensorsReducers,
+  devices: devicesReducers,
   [API.reducerPath]: API.reducer
 });
 

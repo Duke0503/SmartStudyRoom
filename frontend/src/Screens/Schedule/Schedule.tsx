@@ -10,12 +10,17 @@ import { Calendar, NativeDateService, I18nConfig } from '@ui-kitten/components';
 import VSRegular from "@/Components/texts/VSRegular";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, Button, ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from '@gluestack-ui/themed';
+import { Text, Button, ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box, Alert, AlertIcon, AlertText, InfoIcon } from '@gluestack-ui/themed';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
+<<<<<<< HEAD
 import { addSchedule, deleteCurrentSchedule, resetSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
+=======
+import { useCreateScheduledNotificationMutation } from "@/Services/notifications";
+import { addSchedule, deleteCurrentSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -46,20 +51,26 @@ export const Schedule = (props: IScheduleProps) => {
   const { onNavigate } = props;
   const [date, setDate] = useState(new Date());
   const [addCalendar, setAddCalendar] = useState(false);
+  const [displayTitleAlert, setDisplayTitleAlert] = useState(false);
+  const [displayFinishTimeAlert, setDisplayFinishTimeAlert] = useState(false);
+  const [displaySessionTimeAlert, setDisplaySessionTimeAlert] = useState(false);
 
   const dispatch = useDispatch();
   const user = useSelector((state:any) => state.profile);
+  const sensors = useSelector((state: any) => state.sensors);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
 
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
+  const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation();
   
   const handleAddCalendar = () => {
     setAddCalendar(true);
   }
 
   const [title, setTitle] = useState("");
-  const [breakTime, setBreakTime] = useState(1);
+  const [sessionTime, setSessionTime] = useState(NaN);
+  const [breakTime, setBreakTime] = useState(NaN);
 
   const [showStartTime, setShowStartTime] = useState(false);
   const [showStartDate, setShowStartDate] = useState(false);
@@ -81,10 +92,33 @@ export const Schedule = (props: IScheduleProps) => {
   };
 
   const handleCreateSchedule = async () => {
+    
+    if (title === "") {
+      setDisplayTitleAlert(true);
+      return;
+    }
+    
+    if (moment(finishTime).unix() <= moment(startTime).unix()) {
+      setDisplayFinishTimeAlert(true);
+      return;
+    }
+    
+    if (Number.isNaN(sessionTime)) {
+      setDisplaySessionTimeAlert(true);
+      return;
+    }
+
+    if (Number.isNaN(breakTime)) {
+      setBreakTime(0);
+    }
+
+    const sensor_ID = Object.keys(sensors.sensor).length? sensors.sensor.ID: null;
+
     try {
+    
       setAddCalendar(false);
 
-      const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, break_time: breakTime, user_ID: user.id}).unwrap();
+      const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, session_time: sessionTime, break_time: breakTime, user_ID: user.id, sensor_ID: sensor_ID}).unwrap();
 
       if (response.success) {
         const params = {
@@ -93,15 +127,33 @@ export const Schedule = (props: IScheduleProps) => {
           status: "Chưa bắt đầu",
           start_time: startTime,
           finish_time: finishTime,
-          break_time: breakTime
+          session_time: sessionTime,
+          break_time: breakTime,
+          sensor_ID: sensor_ID
         }
+        
+
+        const listNotifications = await createNotification({
+          body: {
+            title: title,
+            userID: user.id,
+            scheduleID: response.data,
+            startTime: startTime,
+            finishTime: finishTime,
+            sessionTime: sessionTime,
+            breakTime: breakTime,
+            isReady: false,
+            isSent: false,
+          }
+        }).unwrap();
 
         dispatch(addSchedule(params));
 
         setTitle("");
         setStartTime(new Date());
         setFinishTime(new Date());
-        setBreakTime(1);
+        setSessionTime(NaN);
+        setBreakTime(NaN);
       } else {
         console.log("Create Schedule Failed");
       }
@@ -162,6 +214,8 @@ export const Schedule = (props: IScheduleProps) => {
                         >
                           <InputField placeholder="Nhập tên" onChangeText={title => setTitle(title)} defaultValue={title} />
                         </Input>
+                        {displayTitleAlert &&
+                          <Text color="red">Tên buổi học không được để trống</Text>}
                       </VStack>
                       <VStack space="md">
                         <Text>Giờ bắt đầu</Text>
@@ -170,7 +224,7 @@ export const Schedule = (props: IScheduleProps) => {
                               <Text>{startTime.toLocaleDateString()}</Text>
                             </Pressable>
                             <Pressable onPress={() => setShowStartTime(true)}>
-                              <Text>{startTime.toLocaleTimeString()}</Text>
+                              <Text>{startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
                             </Pressable>
                             {showStartDate && 
                             <DateTimePicker
@@ -198,8 +252,8 @@ export const Schedule = (props: IScheduleProps) => {
                               <Pressable onPress={() => setShowFinishDate(true)}>
                                 <Text>{finishTime.toLocaleDateString()}</Text>
                               </Pressable>
-                              <Pressable onPress={() => setShowFinishTime(true)}>
-                                <Text>{finishTime.toLocaleTimeString()}</Text>
+                              <Pressable onPress={() => {setShowFinishTime(true); setDisplayFinishTimeAlert(false)}}>
+                                <Text>{finishTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
                               </Pressable>
                             {showFinishDate && 
                             <DateTimePicker
@@ -220,6 +274,19 @@ export const Schedule = (props: IScheduleProps) => {
                               onChange={changeFinishTime}
                             />}
                           </HStack>
+                          {displayFinishTimeAlert &&
+                          <Text color="red">Giờ kết thúc phải lớn hơn giờ bắt đầu</Text>}
+                      </VStack>
+                      <VStack space="md">
+                        <Text>Thời gian một phiên học</Text>
+                        <Input
+                          variant="rounded"
+                          size="lg"
+                        >
+                          <InputField keyboardType="numeric" placeholder="Số phút học" onFocus={() => setDisplaySessionTimeAlert(false)} onChangeText={sessionTime => setSessionTime(parseInt(sessionTime))} />
+                        </Input>
+                        {displaySessionTimeAlert &&
+                          <Text color="red">Thời gian một phiên học không được để trống</Text>}
                       </VStack>
                       <VStack space="md">
                         <Text>Thời gian giải lao</Text>
@@ -243,7 +310,8 @@ export const Schedule = (props: IScheduleProps) => {
                       setTitle("");
                       setStartTime(new Date());
                       setFinishTime(new Date());
-                      setBreakTime(1);
+                      setSessionTime(NaN);
+                      setBreakTime(NaN);
                     }}
                   >
                     <ButtonText>Hủy</ButtonText>
@@ -269,7 +337,7 @@ export const Schedule = (props: IScheduleProps) => {
             <ScrollView style={styles.schedule}>
               {schedulesList.map((schedule: any) => {
                 let count = 0;
-                if (moment(schedule.date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
+                if (moment(schedule.start_time).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                   count++;
                   return (
                     <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>

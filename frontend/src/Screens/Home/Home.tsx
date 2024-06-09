@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 import React, { useEffect } from "react";
+=======
+import React, { useEffect, useState } from "react";
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
-import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
+import { FontAwesome5, Entypo, Ionicons} from "@expo/vector-icons";
 import { RootScreens } from "..";
 import { StatusBar } from "expo-status-bar";
 import Title3 from "@/Components/texts/Title3";
@@ -8,13 +12,24 @@ import VSRegular from "@/Components/texts/VSRegular";
 import SRegular from "@/Components/texts/SRegular";
 import { colors } from "@/Components/colors";
 import LSemiBold from "@/Components/texts/LSemiBold";
+<<<<<<< HEAD
 import SSemiBold from "@/Components/texts/SSemiBold";
 import { Platform, ViewStyle } from 'react-native';
+=======
+import SRegular from "@/Components/texts/SRegular";
+import { Platform, ViewStyle } from 'react-native';
+import Constants from 'expo-constants';
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateCurrentSchedule } from "@/Store/reducers/schedules";
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
+import { fetchSchedule, updateCurrentSchedule } from "@/Store/reducers";
+import { Box, HStack, Heading, VStack } from "@gluestack-ui/themed";
+import LRegular from "@/Components/texts/LRegular";
+
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -32,6 +47,7 @@ export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
   const dispatch = useDispatch();
+<<<<<<< HEAD
 
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
@@ -47,11 +63,34 @@ export const Home = (props: IHomeProps) => {
   // console.log("warning list view in home screen");
   // console.log("schedule list in home screen: ", schedules.scheduelesList);
 
+=======
+  const [fetchOne, result] = useLazyGetScheduleQuery();
+  const user = useSelector((state: any) => state.profile);
+  const schedules = useSelector((state: any) => state.schedules);
 
-  // const dispatch = useDispatch();
+  let isScheduleToday: boolean = false;
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
+
   // const sensorList = useSelector((state: any) => state.sensors.sensorsList);
 
   // console.log("sensorList: ",sensorList.name);
+
+  const handleNavigateSession = (schedule_ID: Number) => {
+    dispatch(updateCurrentSchedule(schedule_ID));
+    onNavigate(RootScreens.SESSION);
+  } 
+
+  const handleFetch = async () => {
+    await fetchOne(user.id);
+  }
+
+  useEffect(() => {
+    handleFetch();
+
+    if (result.isSuccess) {
+      dispatch(fetchSchedule(result.data));
+    }
+  }, [result.isSuccess])
 
   return (
     <SafeAreaView>
@@ -62,7 +101,7 @@ export const Home = (props: IHomeProps) => {
             <Title3 textStyles={{color: colors.neutral_900}}>Xin chào, {user.name}</Title3>
             <VSRegular textStyles={{color: colors.neutral_500}}>Đây là hoạt động ngày hôm nay của bạn</VSRegular>
           </View>
-          <Pressable>
+          <Pressable onPress={() => onNavigate(RootScreens.NOTIFICATION)} >
             <Ionicons name="notifications" size={24} color={"#52B6DF"}/>
           </Pressable>
         </View>
@@ -75,6 +114,7 @@ export const Home = (props: IHomeProps) => {
                 {schedules.scheduelesList.map((schedule: any) => {
                   if(moment(schedule.start_time).format("DD-MM-YYYY") === moment(new Date()).format("DD-MM-YYYY")) isScheduleToday = true;
                   return (moment(schedule.start_time).format("DD-MM-YYYY") !== moment(new Date()).format("DD-MM-YYYY")? 
+<<<<<<< HEAD
                     null :
                     <Pressable key={schedule.id} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
                       <View style={styles.topSession}>
@@ -91,6 +131,11 @@ export const Home = (props: IHomeProps) => {
                           Kết thúc lúc: {moment(schedule.finish_time).utcOffset("+0700").format('HH:mm')}
                         </VSRegular>
                       </View>
+=======
+                    <></> :
+                    <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
+                      <SRegular>{schedule.title}</SRegular>
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
                     </Pressable>)
                 })}
                 {isScheduleToday? null:
@@ -103,6 +148,7 @@ export const Home = (props: IHomeProps) => {
                 </Block>}
               </ScrollView>}
           </View>
+<<<<<<< HEAD
           <View style={styles.statistic}>
             <LSemiBold>Thông số môi trường học tập</LSemiBold>
             <View style={styles.statisticSensor}>
@@ -129,9 +175,35 @@ export const Home = (props: IHomeProps) => {
             </View>
           </View>
 
+=======
+          <VStack h="50%" space="md">
+              <Heading>Thông số môi trường học tập:</Heading>
+              <VStack h="100%">
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
+                    <LRegular>Độ sáng:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <FontAwesome5 name="temperature-low" size={50} color={"red"} />
+                    <LRegular>Nhiệt độ:</LRegular>
+                  </Box>
+                </HStack>
+                <HStack h="50%" justifyContent="space-between">
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Âm thanh:</LRegular>
+                  </Box>
+                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                    <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
+                    <LRegular>Camera</LRegular>
+                  </Box>
+                </HStack>
+              </VStack>
+            </VStack>
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
         </View>
       </View>
-
     </SafeAreaView>
   );
 }
@@ -261,5 +333,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "#CBD5E1",
     borderWidth: 1,
+  },
+
+  sensorDataBox: {
+    justifyContent: "space-evenly",
+    borderWidth: 1,
+    borderColor: colors.neutral_300,
+    borderRadius: 15,
+    padding: "5%"
   }
 });

@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./users.entity";
+import { Schedule } from "./schedules.entity";
 
 @Entity('Notifications')
 
@@ -8,24 +9,23 @@ export class Notification {
   ID: number;
 
   @Column()
-  name: string;
-
-  @Column()
-  code: string;
-
-  @Column()
-  content: string;
-
-  @Column()
   title: string;
 
-  @Column()
-  isRead: boolean;
+  @Column({})
+  content: string;
+
+  @Column({ default: false })
+  isReady: boolean;
+
+  @Column({ default: false })
+  isSent: boolean;
 
   @Column()
   date: Date;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "user_ID" })
-  user: User;  
+  @Column({nullable: true})
+  userID: number; 
+
+  @Column({nullable: true})
+  scheduleID: number; 
 }

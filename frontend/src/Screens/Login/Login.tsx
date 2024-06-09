@@ -1,6 +1,11 @@
 import { i18n, LocalizationKey } from "@/Localization";
+<<<<<<< HEAD
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
+=======
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Platform } from "react-native";
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -15,9 +20,28 @@ import SSemiBold from "@/Components/texts/SSemiBold";
 import { useLoginUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
+import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+<<<<<<< HEAD
 import { AuthContext } from "@/Context/AuthProvider";
+=======
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
+import Constants from "expo-constants";
+import { useLazyGetScheduleQuery } from "@/Services/schedules";
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
+// Set Up Notification
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+// End Set Up Notification
 export interface ILoginProps {
   onNavigate: (string: RootScreens) => void;
 }
@@ -31,7 +55,66 @@ export const Login = (props: ILoginProps) => {
   const user = useSelector((state: any) => state.profile);
   const {updateAuthState} = useContext(AuthContext);
 
+  // Handle Update ExpoPushToken
+  const [userID, setUserID] = useState<number>();
+  const [createExpoPushToken, { data, isSuccess }] = useCreateExpoPushTokenMutation();
+
+  // End Handle Update ExpoPushToken
   const [login, loginResult] = useLoginUserMutation();
+
+  const handleRegistrationError = (errorMessage: string) => {
+    alert(errorMessage);
+    throw new Error(errorMessage);
+  };
+  
+  const registerForPushNotificationsAsync = async () => {
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        handleRegistrationError('Permission not granted to get push token for push notification!');
+        return;
+      }
+      const projectId =
+        Constants?.expoConfig?.extra?.eas?.projectId ??
+        Constants?.easConfig?.projectId;
+      if (!projectId) {
+        handleRegistrationError('Project ID not found');
+      }
+      try {
+      const pushTokenString = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId,
+          })
+        ).data;
+        console.log(userID);
+        if (userID) {
+          
+          console.log(await createExpoPushToken({ body: { token: pushTokenString, userID: userID } }).unwrap());
+        }
+        console.log(pushTokenString);
+        return pushTokenString;
+      } catch (e: unknown) {
+        handleRegistrationError(`${e}`);
+      }
+    } else {
+      handleRegistrationError('Must use physical device for push notifications');
+    }
+  }
 
   const handleLogin = async () => {
     try {
@@ -51,6 +134,7 @@ export const Login = (props: ILoginProps) => {
           phone_number: response.data.phone_number,
           gender: response.data.gender,
           roles: response.data.roles,
+<<<<<<< HEAD
           supervisorID: response.data.supervisorID,
         }));
         
@@ -58,6 +142,16 @@ export const Login = (props: ILoginProps) => {
           onNavigate(RootScreens.HOMEADMIN)
         } 
         else onNavigate(RootScreens.HOME);
+=======
+          supervisor: response.data.supervisor,
+         
+        }));
+
+        setUserID(response.data.id);
+        registerForPushNotificationsAsync();
+        
+        onNavigate(RootScreens.HOME);
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
       } else {
         console.error('Login failed');
       }
@@ -81,7 +175,7 @@ export const Login = (props: ILoginProps) => {
 
   return (
     <SafeAreaView>
-      <StatusBar style="auto" backgroundColor="#000000"></StatusBar>
+      <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
             <Title3>Đăng nhập</Title3>
@@ -106,17 +200,22 @@ export const Login = (props: ILoginProps) => {
                     secureTextEntry={true}
                 ></TextInput>
             </View>
-            <Pressable onPress={() => onNavigate(RootScreens.REGISTER)}>
-              <SRegular>Chưa có tài khoản? Đăng ký</SRegular>
+            <Pressable onPress={() => onNavigate(RootScreens.FORGETPASSWORD)}>
+              <SRegular textStyles={{color: colors.primary_500, marginTop: "3%"}}>Quên mật khẩu?</SRegular>
             </Pressable>
             <Pressable style={styles.registerButton} onPress={handleLogin}>
               <SSemiBold textStyles={{color: "white"}}>Đăng nhập</SSemiBold>
+            </Pressable>
+            <Pressable style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}} onPress={() => onNavigate(RootScreens.REGISTER)}>
+              <SRegular>Chưa có tài khoản?</SRegular>
+              <SRegular textStyles={{color: colors.primary_500}}> Đăng ký</SRegular>
             </Pressable>
         </View>
       </View>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

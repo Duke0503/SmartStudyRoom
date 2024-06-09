@@ -1,17 +1,20 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView, Image } from "react-native";
+=======
+import React, { useEffect } from "react";
+import { View, StyleSheet, Pressable, ScrollView, Image } from "react-native";
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { RootScreens } from "..";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "@/Store/reducers";
-import { useLazyGetProfileQuery } from "@/Services/users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "@/Components/colors";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
-import SSemiBold from "@/Components/texts/SSemiBold";
 import LRegular from "@/Components/texts/LRegular";
 import { AuthContext } from "@/Context/AuthProvider";
 
@@ -23,6 +26,7 @@ export const Account = (props: IAccountProps) => {
   const { onNavigate } = props;
   const profile = useSelector((state: any) => state.profile);
   const dispatch = useDispatch();
+<<<<<<< HEAD
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetProfileQuery();
 
   const {updateAuthState} = useContext(AuthContext);
@@ -34,6 +38,8 @@ export const Account = (props: IAccountProps) => {
   const handleFetch = async () => {
     await fetchOne();
   };
+=======
+>>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
   const handleLogout = async () => {
     
@@ -93,7 +99,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "95%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    padding: 20,
   },
 
   header: {
@@ -103,6 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
+    backgroundColor: '#fff',
   },
 
   logo: {

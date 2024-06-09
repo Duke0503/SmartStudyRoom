@@ -1,5 +1,5 @@
 import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Notification } from 'src/entities/home.entity';
+import { Notification } from 'src/entities/notifications.entity';
 import { Schedule } from 'src/entities/schedules.entity';
 import { Repository, getRepository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
