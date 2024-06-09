@@ -8,10 +8,11 @@ import { HomeController } from 'src/controllers/home/home.controller';
 import { HomeService } from 'src/services/home/home.service';
 import { SchedulesService } from 'src/services/schedules/schedules.service';
 import { UsersModule } from '../users/users.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Notification, Schedule, Sensor]), UsersModule],
+    imports: [TypeOrmModule.forFeature([Notification, Schedule, Sensor]), UsersModule, NotificationsModule],
     controllers: [HomeController],
     providers: [HomeService, SchedulesService], 
   })
