@@ -11,7 +11,7 @@ import * as Network from "expo-network";
 import { useGetSensorQuery } from "@/Services/sensors";
 import { useUpdateDeviceMutation, useUpdateTempDeviceMutation} from "@/Services/devices";
 import { updateDeviceRedux, updateTempDeviceRedux } from "@/Store/reducers/devices";
-import { updateTempSensorRedux } from "@/Store/reducers";
+// import { updateTempSensorRedux } from "@/Store/reducers";
 export interface TempDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
@@ -24,12 +24,13 @@ export const TempDevice = (props: TempDeviceProps) => {
     const [tempdata, setTempdata] = useState(0)
     const [tempDevice, setTempDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const sensorsData = useSelector((state: any) => state.sensors.sensor);
     const deviceData = useSelector((state: any) => state.devices.devicessList);
     const [updateTempSensor] = useUpdateTempSensorMutation()
     const [updateTempDevice] = useUpdateTempDeviceMutation()
     const dispatch = useDispatch();
     useEffect(() => {
+       
         if (deviceData) {
             const deviceTemp = deviceData.find(device => device.type == "Temp")
             if (deviceTemp) {
@@ -41,7 +42,7 @@ export const TempDevice = (props: TempDeviceProps) => {
             } 
         }
         
-      }, []);
+      }, [sensorsData]);
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
     const handleUpdateDevice = async (action) => {

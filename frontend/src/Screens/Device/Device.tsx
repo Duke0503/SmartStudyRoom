@@ -45,7 +45,7 @@ export const Device = (props: IDeviceProps) => {
     };
 
     fetchData();
-  }, []);
+  }, [connectedDevices]);
 
   const dispatch = useDispatch();
 
@@ -95,7 +95,7 @@ export const Device = (props: IDeviceProps) => {
       setSelectedSensor(false)
     }
   }
-
+  
   const handleDisconnect = () => {
     dispatch(deleteSensor({}));
     dispatch(deleteCurrentDevice({}));
