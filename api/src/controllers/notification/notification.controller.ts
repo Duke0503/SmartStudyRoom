@@ -35,7 +35,7 @@ export class NotificationsController {
     try {
       const listNotification = createScheduledNotifications(listScheduleNotificationsDto);
       for (let notification of listNotification) {
-        this.notificationsService.createNotification(notification);
+        await this.notificationsService.createNotification(notification);
       }
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
