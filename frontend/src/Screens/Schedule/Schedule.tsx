@@ -87,16 +87,17 @@ export const Schedule = (props: IScheduleProps) => {
   };
 
   const handleCreateSchedule = async () => {
+    
     if (title === "") {
       setDisplayTitleAlert(true);
       return;
     }
-
+    
     if (moment(finishTime).unix() <= moment(startTime).unix()) {
       setDisplayFinishTimeAlert(true);
       return;
     }
-
+    
     if (Number.isNaN(sessionTime)) {
       setDisplaySessionTimeAlert(true);
       return;
@@ -109,6 +110,7 @@ export const Schedule = (props: IScheduleProps) => {
     const sensor_ID = Object.keys(sensors.sensor).length? sensors.sensor.ID: null;
 
     try {
+    
       setAddCalendar(false);
 
       const response = await createSchedule({title: title, status: "Chưa bắt đầu", start_time: startTime, finish_time: finishTime, session_time: sessionTime, break_time: breakTime, user_ID: user.id, sensor_ID: sensor_ID}).unwrap();
@@ -124,38 +126,17 @@ export const Schedule = (props: IScheduleProps) => {
           break_time: breakTime,
           sensor_ID: sensor_ID
         }
+        
 
-        const beforeSession = await createNotification({
+        const listNotifications = await createNotification({
           body: {
-            title: "Phiên học",
-            content: `Phiên học ${title} sắp bắt đầu`,
+            title: title,
             userID: user.id,
             scheduleID: response.data,
-            date: new Date(new Date(startTime).getTime() - 5 * 60 * 1000),
-            isReady: false,
-            isSent: false,
-          }
-        }).unwrap();
-
-        const startSession = await createNotification({
-          body: {
-            title: "Phiên học",
-            content: `Phiên học ${title} bắt đầu`,
-            userID: user.id,
-            scheduleID: response.data,
-            date: startTime,
-            isReady: false,
-            isSent: false,
-          }
-        }).unwrap();
-
-        const endSession = await createNotification({
-          body: {
-            title: "Phiên học",
-            content: `Phiên học ${title} kết thúc`,
-            userID: user.id,
-            scheduleID: response.data,
-            date: finishTime,
+            startTime: startTime,
+            finishTime: finishTime,
+            sessionTime: sessionTime,
+            breakTime: breakTime,
             isReady: false,
             isSent: false,
           }

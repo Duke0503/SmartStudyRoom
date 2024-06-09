@@ -96,7 +96,7 @@ export const Login = (props: ILoginProps) => {
           
           console.log(await createExpoPushToken({ body: { token: pushTokenString, userID: userID } }).unwrap());
         }
-
+        console.log(pushTokenString);
         return pushTokenString;
       } catch (e: unknown) {
         handleRegistrationError(`${e}`);
