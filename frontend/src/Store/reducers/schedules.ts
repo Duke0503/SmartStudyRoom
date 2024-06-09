@@ -18,12 +18,15 @@ const schedulesSlice = createSlice({
     deleteCurrentSchedule: (state, action) => {
       state.currentSchedule = {};
     },
-    reset: () => {
+    updateScheduleOfUserID: (state, action) => {      
+      state.scheduelesList = action.payload;
+    },
+    resetSchedule: () => {
       return initialState
     }
 
   },
 });
 
-export const { addSchedule, updateCurrentSchedule, deleteCurrentSchedule, reset } = schedulesSlice.actions;
+export const { addSchedule, updateCurrentSchedule, deleteCurrentSchedule, updateScheduleOfUserID, resetSchedule } = schedulesSlice.actions;
 export const schedulesReducers = schedulesSlice.reducer;

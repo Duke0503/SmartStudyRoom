@@ -49,14 +49,15 @@ export const Register = (props: IRegisterProps) => {
   useEffect(() => {
     if (user.token !== undefined && user.token !== "") {
       if(user.roles === 'supervisor'){
-        updateAuthState({loggedIn: true, profile: user, busy: false});
+        updateAuthState({loggedIn: true, profile: user});
         onNavigate(RootScreens.HOMEADMIN);
       }
       else{
-        updateAuthState({loggedIn: true, profile: user, busy: false});
-        onNavigate(RootScreens.HOME);
+        updateAuthState({loggedIn: true, profile: user});
+        // onNavigate(RootScreens.HOME);
       }
     }
+    else updateAuthState({loggedIn: false, profile: null});
     }, []
   );
 

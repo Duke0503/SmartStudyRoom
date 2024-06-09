@@ -39,7 +39,7 @@ export const Account = (props: IAccountProps) => {
     
     await AsyncStorage.removeItem('token');
     dispatch(deleteUser(profile));
-    updateAuthState({loggedIn: false, profile: null, busy: false});
+    updateAuthState({loggedIn: false, profile: null});
     onNavigate(RootScreens.LOGIN);
   };
 

@@ -39,7 +39,7 @@ export const Login = (props: ILoginProps) => {
 
       if (response.success) {
         // console.log(response.data);
-        updateAuthState({loggedIn: true, profile: response.data, busy: false});
+        updateAuthState({loggedIn: true, profile: response.data});
 
         await AsyncStorage.setItem('token', response.data.token);
         dispatch(addUser({
@@ -51,7 +51,7 @@ export const Login = (props: ILoginProps) => {
           phone_number: response.data.phone_number,
           gender: response.data.gender,
           roles: response.data.roles,
-          supervisor: response.data.supervisor,
+          supervisorID: response.data.supervisorID,
         }));
         
         if(response.data.roles === 'supervisor'){
@@ -69,14 +69,13 @@ export const Login = (props: ILoginProps) => {
   useEffect(() => {
     if (user.token !== undefined && user.token !== "") {
       if(user.roles === 'supervisor') {
-        updateAuthState({loggedIn: true, profile: user, busy: false});
-        onNavigate(RootScreens.HOMEADMIN);
+        updateAuthState({loggedIn: true, profile: user});
       }
       else{
-        updateAuthState({loggedIn: true, profile: user, busy: false});
-        onNavigate(RootScreens.HOME);
+        updateAuthState({loggedIn: true, profile: user});
       }
     }
+    else updateAuthState({loggedIn: false, profile: null});
     }, []
   );
 

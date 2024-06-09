@@ -29,9 +29,10 @@ export class User {
   @Column()
   roles: string
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: "supervisor_ID" })
-  supervisor: Number;
+  // @ManyToOne(() => User, { nullable: true })
+  // @JoinColumn({ name: "supervisorID" })
+  @Column({ nullable: true })
+  supervisorID: Number;
 
   @Column({ default: false, nullable: true })
   isVerified: boolean;

@@ -253,7 +253,7 @@ export class AuthService {
       phone_number: user.phone_number,
       gender: user.gender,
       roles: user.roles,
-      supervisor: user.supervisor,
+      supervisorID: user.supervisorID,
     };
   }
   // End Validate Login

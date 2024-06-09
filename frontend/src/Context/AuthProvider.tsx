@@ -1,4 +1,3 @@
-import { Login } from "@/Screens/Login/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FC, createContext, useEffect, useState } from "react";
 
@@ -17,7 +16,6 @@ type profile = {
 interface AuthState {
   loggedIn: boolean;
   profile: profile | null;
-  busy? : boolean;
 }
 
 interface Prop {
@@ -38,7 +36,6 @@ const AuthProvider: FC<Prop> = ({children}) => {
   const [authState, setAuthState] = useState<AuthState>({
     loggedIn: false,
     profile: null,
-    busy: true,
   });
 
   const updateAuthState = (state: AuthState) => {
@@ -48,8 +45,18 @@ const AuthProvider: FC<Prop> = ({children}) => {
 
   const getAuthState = async () => {
     const token = await AsyncStorage.getItem("token");
-    if(!token) return updateAuthState({...authState, busy: false});
+    if(!token) return updateAuthState({loggedIn: false, profile: null});
+    updateAuthState({...authState});
+
+    // const apiRes = await updateProfile({ body: {
+    //   name: name,
+    //   birthday: birthday,
+    //   phone_number: phone_number,
+    //   gender: gender
+    //   } }).unwrap();
+    // dispatch(updateUser({ name, birthday, phone_number, gender }));
   }
+
   useEffect( () => {
     getAuthState();
   }, []);

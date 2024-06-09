@@ -1,4 +1,4 @@
-import { HomeAdmin } from "./HomeAdmin";
+import { UserDetail } from "./UserDetail";
 import React from "react";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -6,12 +6,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootScreens } from "..";
 import { AdminTabParamList } from "@/Navigation/AdminNavigator";
 
-export type HomeAdminScreenNavigatorProps = NativeStackScreenProps<
+
+export type UserDetailScreenNavigatorProps = NativeStackScreenProps<
   AdminTabParamList,
-  RootScreens.HOMEADMIN
+  RootScreens.USERDETAIL
   >;
 
-const HomeAdminContainer = ({navigation}:HomeAdminScreenNavigatorProps) => {
+const UserDetailContainer = ({navigation}:UserDetailScreenNavigatorProps) => {
   const onNavigate = (screen: 
     RootScreens.HOMEADMIN | 
     RootScreens.ACCOUNT |
@@ -19,12 +20,13 @@ const HomeAdminContainer = ({navigation}:HomeAdminScreenNavigatorProps) => {
     RootScreens.SETTING |
     RootScreens.UPDATE |
     RootScreens.ABOUTUS |
-    RootScreens.USERDETAIL
+    RootScreens.USERDETAIL |
+    RootScreens.SESSION 
   ) => {
     navigation.navigate(screen);
   };
  
-  return <HomeAdmin onNavigate={onNavigate} />;
+  return <UserDetail onNavigate={onNavigate} />;
 };
 
-export default HomeAdminContainer;
+export default UserDetailContainer;

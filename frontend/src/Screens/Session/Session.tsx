@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +17,7 @@ import { VStack, Heading, Progress, ProgressFilledTrack, Text } from "@gluestack
 
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
+import { AuthContext } from "@/Context/AuthProvider";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -33,17 +34,28 @@ export const Session = (props: ISessionProps) => {
   const { onNavigate } = props;
 
   const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
   const currentSchedule = schedules.currentSchedule;
 
   const studyTime = (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) > 0? 
   (moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / (moment(currentSchedule.finish_time).unix() - moment(currentSchedule.start_time).unix()) * 100 : 0;
 
+  const {updateAuthState} = useContext(AuthContext);
+
   console.log(studyTime)
 
   const handleReturn = () => {
     dispatch(deleteCurrentSchedule({}));
-    onNavigate(RootScreens.SCHEDULE);
+    if(user.roles === "user"){
+      updateAuthState({loggedIn: true, profile: user});
+      onNavigate(RootScreens.SCHEDULE);
+    }
+    else if(user.roles === "supervisor"){
+      updateAuthState({loggedIn: true, profile: user});
+      onNavigate(RootScreens.USERDETAIL);
+    }
+    
   }
 
   return (

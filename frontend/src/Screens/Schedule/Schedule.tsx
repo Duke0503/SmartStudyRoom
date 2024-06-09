@@ -15,7 +15,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
-import { addSchedule, deleteCurrentSchedule, reset, updateCurrentSchedule } from "@/Store/reducers/schedules";
+import { addSchedule, deleteCurrentSchedule, resetSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -117,7 +117,7 @@ export const Schedule = (props: IScheduleProps) => {
   }
 
   const handleReset = () => {
-    dispatch(reset());
+    dispatch(resetSchedule());
   }
 
   return (

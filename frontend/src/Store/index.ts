@@ -15,11 +15,13 @@ import {
 
 import { schedulesReducers } from "./reducers";
 import { profileReducers } from "./reducers/profile";
+import { userListReducers } from "./reducers/userlist";
 
 
 const reducers = combineReducers({
   profile: profileReducers,
   schedules: schedulesReducers,
+  listOfUsers: userListReducers,
   [API.reducerPath]: API.reducer
 });
 
