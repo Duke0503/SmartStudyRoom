@@ -9,6 +9,7 @@ import { ExpoPushToken } from 'src/entities/ExpoPushToken.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([User, Notification, ExpoPushToken])],
   providers: [NotificationsService],
-  controllers: [NotificationsController]
+  controllers: [NotificationsController],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

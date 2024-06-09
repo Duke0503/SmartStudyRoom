@@ -7,10 +7,12 @@ export interface ExpoPushToken {
 
 export interface Notification {
   title: string,
-  content: string,
   userID: number,
   scheduleID: number,
-  date: Date,
+  startTime: Date,
+  sessionTime: number,
+  breakTime: number,
+  finishTime: Date,
   isReady: boolean,
   isSent: boolean,
 }
@@ -27,12 +29,12 @@ const userApi = API.injectEndpoints({
 
     createScheduledNotification: build.mutation<void, { body: Notification}> ({
       query: ({ body}) => ({
-        url: 'notifications/create',
+        url: 'notifications/createlist',
         method: 'POST',
         body
       })
     }),
-
+    
     deleteScheduledNotification: build.mutation<void, {id: number}> ({
       query: ({ id }) => ({
         url: `notifications/delete/${id}`,

@@ -19,7 +19,7 @@ export const NoiseDevice = (props: NoiseDeviceProps) => {
     const [noisedata, setNoisedata] = useState(0)
     const [noiseDevice, setNoiseDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const sensorsData = useSelector((state: any) => state.sensors.sensor);
     const deviceData = useSelector((state: any) => state.devices.devicessList);
     const [updateNoiseDevice] = useUpdateDeviceMutation()
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const NoiseDevice = (props: NoiseDeviceProps) => {
                
         } 
         
-      }, []);
+      }, [sensorsData]);
     // const handleDisconnect = async () => {
     //     try {
     //         await updateNoiseDevice({device_id: noiseDevice.ID, status: "Disable"})

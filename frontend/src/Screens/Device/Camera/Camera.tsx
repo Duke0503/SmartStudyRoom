@@ -19,7 +19,7 @@ export const Camera = (props: CameraProps) => {
     const [cameradata, setCameradata] = useState(0)
     const [cameraDevice, setCameraDevice] = useState({})
     const profile = useSelector((state: any) => state.profile);
-    const sensorsData = useSelector((state: any) => state.sensors.sensorsList[0]);
+    const sensorsData = useSelector((state: any) => state.sensors.sensor);
     const deviceData = useSelector((state: any) => state.devices.devicessList);
     const [updateCameraDevice] = useUpdateDeviceMutation()
     const dispatch = useDispatch();
@@ -28,7 +28,7 @@ export const Camera = (props: CameraProps) => {
             setCamerasensor(sensorsData)
             setCameradata(sensorsData.camera_data)
         }
-      }, []);
+      }, [sensorsData]);
     //   const handleDisconnect = async () => {
     //     try {
     //         await updateCameraDevice({device_id: cameraDevice.ID, status: "Disable"})
