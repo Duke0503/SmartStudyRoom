@@ -24,9 +24,12 @@ const authApi = API.injectEndpoints({
         },
       }),
     }),
+    forgetPasswordUser: build.query({
+      query: (email) => `/auth/email/forgot-password/${email}`,
+    }),
   }),
   overrideExisting: true,
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useForgetPasswordUserQuery, useLazyForgetPasswordUserQuery } = authApi;

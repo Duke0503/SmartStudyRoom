@@ -96,8 +96,6 @@ export const Device = (props: IDeviceProps) => {
     }
   }
 
-  console.log(sensors);
-
   const handleDisconnect = () => {
     dispatch(deleteSensor({}));
     dispatch(deleteCurrentDevice({}));
@@ -113,8 +111,6 @@ export const Device = (props: IDeviceProps) => {
     setSelectedSensor(true)
     setShowSensor(false)
   }
-
-  // console.log(sensors);
 
   const ContentBody = () => {
     return (
