@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/Navigation";
-import { DeviceScreenNavigatorProps, RootScreens } from "..";
-import { TabParamList } from "@/Navigation/BottomNav";
+import { RootScreens } from "../..";
+import { TabParamList } from "@/Navigation/UserNavigator";
 
 export type DeviceScreenNavigatorProps = NativeStackScreenProps<
     TabParamList,
-    RootScreens.DEVICE
+    RootScreens.TEMPDEVICE
 >;
 
 const TempDeviceContainer = ({ navigation }: DeviceScreenNavigatorProps) => {

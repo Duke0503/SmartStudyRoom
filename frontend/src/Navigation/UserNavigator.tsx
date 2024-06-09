@@ -9,15 +9,17 @@ import HomeContainer from "@/Screens/Home/HomeContainer";
 import ScheduleContainer from "@/Screens/Schedule/ScheduleContainer";
 import SessionContainer from "@/Screens/Session/SessionContainer";
 import DeviceContainer from "@/Screens/Device/DeviceContainer";
-import RegisterContainer from "@/Screens/Register/RegisterContainer";
-import LoginContainer from "@/Screens/Login/LoginContainer";
 import AccountContainer from "@/Screens/Account/AccountContainer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileContainer from "@/Screens/Account/Profile/ProfileContainer";
 import PasswordContainer from "@/Screens/Account/Password/PasswordContainer";
 import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
-import HomeAdminContainer from "@/Screens/HomeAdmin/HomeAdminContainer";
+import LightDeviceContainer from "@/Screens/Device/LightDevice/LightDeviceContainer";
+import CameraContainer from "@/Screens/Device/Camera/CameraContainer";
+import TempDeviceContainer from "@/Screens/Device/TempDevice/TempDeviceContainer";
+import NoiseDeviceContainer from "@/Screens/Device/NoiseDevice/NoiseDeviceContainer";
+import NotificationContainer from "@/Screens/Notification/NotificationContainer";
 
 export type TabParamList = {
   [RootScreens.HOME]: undefined;
@@ -29,6 +31,11 @@ export type TabParamList = {
   [RootScreens.UPDATE]: undefined;
   [RootScreens.ABOUTUS]: undefined;
   [RootScreens.SETTING]: undefined;
+  [RootScreens.LIGHTDEVICE]: undefined;
+  [RootScreens.CAMERA]: undefined;
+  [RootScreens.TEMPDEVICE]: undefined;
+  [RootScreens.NOISEDEVICE]: undefined;
+  [RootScreens.NOTIFICATION]: undefined;
 }
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -122,6 +129,53 @@ const UserNavigator = () => {
             tabBarButton: () => null,
           }}
       />
+      <Tab.Screen
+          name={RootScreens.LIGHTDEVICE}
+          component={LightDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.CAMERA}
+          component={CameraContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.TEMPDEVICE}
+          component={TempDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.NOISEDEVICE}
+          component={NoiseDeviceContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+            name={RootScreens.NOTIFICATION}
+            component={NotificationContainer}
+            options={{
+              tabBarButton: () => null,
+            }}
+        />
     </Tab.Navigator>
   );
 };

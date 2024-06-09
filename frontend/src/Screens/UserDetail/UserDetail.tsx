@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Button, ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from "@gluestack-ui/themed";
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
-import { updateCurrentSchedule } from "@/Store/reducers";
+import { resetSchedule, updateCurrentSchedule } from "@/Store/reducers";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -59,9 +59,18 @@ export const UserDetail = (props: IHomeProps) => {
   //   console.log("realTimeSchedule: ", realTimeSchedule);
   // }
 
+  const historySchedule = schedules.scheduelesList.filter((schedule: any) => (
+    moment(schedule.finish_time).format("YYYY-MM-DD-HH:mm:ss") < moment(new Date()).format("YYYY-MM-DD-HH:mm:ss")
+  ));
+  // console.log("historySchedule: ", historySchedule);
+
   const handleNavigateSession = (schedule_ID: Number) => {
     dispatch(updateCurrentSchedule(schedule_ID));
     onNavigate(RootScreens.SESSION);
+  }
+
+  const handleResetSchedule = () => {
+    dispatch(resetSchedule());
   }
 
   return (
@@ -75,7 +84,9 @@ export const UserDetail = (props: IHomeProps) => {
             <VSRegular textStyles={{ color: colors.neutral_500 }}>Email: {user.email}</VSRegular>
           </View>
         </View>
-
+        {/* <Pressable onPress={handleResetSchedule}>
+          <VSRegular>Reset</VSRegular>
+        </Pressable> */}
         <View style={styles.body}>
           <View style={styles.schedule}>
             <View style={styles.realTimeSession}>
@@ -135,10 +146,11 @@ export const UserDetail = (props: IHomeProps) => {
           </View>
           <View style={styles.statistic}>
             <LSemiBold>Lịch sử các buổi học</LSemiBold>
-            {schedules.scheduelesList.length == 0 ?
+            {!historySchedule ?
               <SRegular>Không có lịch học nào</SRegular> :
+              // null
               <ScrollView style={styles.sessionList}>
-                {schedules.scheduelesList.map((schedule: any) => {
+                {historySchedule.map((schedule: any) => {
                   return (
                     <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
                       <View style={styles.topSession}>
@@ -157,11 +169,8 @@ export const UserDetail = (props: IHomeProps) => {
                       </View>
                     </Pressable>)
                 })}
-                {isScheduleToday ? null :
-                  <Block style={styles.block}>
-                    <SRegular textStyles={{ color: "red" }}>{user.name} không có lịch học hôm nay!</SRegular>
-                  </Block>}
-              </ScrollView>}
+              </ScrollView>
+              }
           </View>
         </View>
       </View>

@@ -18,10 +18,12 @@ import PasswordContainer from "@/Screens/Account/Password/PasswordContainer";
 import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
 import HomeAdminContainer from "@/Screens/HomeAdmin/HomeAdminContainer";
+import ForgetPasswordContainer from "@/Screens/ForgetPassword/ForgetPasswordContainer";
 
 export type AuthTabParamList = {
   [RootScreens.REGISTER]: undefined;
   [RootScreens.LOGIN]: undefined;
+  [RootScreens.FORGETPASSWORD] : undefined;
 }
 
 const AuthTab = createBottomTabNavigator<AuthTabParamList>();
@@ -53,6 +55,16 @@ const AuthNavigator = () => {
           tabBarButton: () => null,
         }}
       />
+      <AuthTab.Screen
+          name={RootScreens.FORGETPASSWORD}
+          component={ForgetPasswordContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
     </AuthTab.Navigator>
   );
 };

@@ -11,6 +11,7 @@ import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
 import HomeAdminContainer from "@/Screens/HomeAdmin/HomeAdminContainer";
 import UserDetailContainer from "@/Screens/UserDetail/UserDetailContainer";
 import SessionContainer from "@/Screens/Session/SessionContainer";
+import NotificationContainer from "@/Screens/Notification/NotificationContainer";
 
 
 export type AdminTabParamList = {
@@ -22,6 +23,7 @@ export type AdminTabParamList = {
   [RootScreens.HOMEADMIN]: undefined;
   [RootScreens.USERDETAIL]: undefined;
   [RootScreens.SESSION]: undefined;
+  [RootScreens.NOTIFICATION]: undefined;
 }
 
 const AdminTab = createBottomTabNavigator<AdminTabParamList>();
@@ -111,17 +113,15 @@ const AdminNavigator = () =>{
             tabBarButton: () => null,
           }}
       />
+      <AdminTab.Screen
+            name={RootScreens.NOTIFICATION}
+            component={NotificationContainer}
+            options={{
+              tabBarButton: () => null,
+            }}
+        />
     </AdminTab.Navigator>
   );
-  // return (
-  //   <Stack.Navigator>
-  //     <Stack.Screen
-  //       name={RootScreens.HOMEADMIN}
-  //       component={HomeAdminContainer}
-        
-  //     />
-  //   </Stack.Navigator>
-  // );
 };
 
 export { AdminNavigator };
