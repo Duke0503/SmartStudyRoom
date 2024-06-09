@@ -1,7 +1,8 @@
 import { Controller, Post, Body, HttpException, HttpStatus, Delete, Param, Get } from '@nestjs/common';
 import { CreateNotificationDto } from 'src/common/dto/create-notification.dto';
 import { NotificationsService } from 'src/services/notifications/notifications.service';
-
+import { ListScheduleNotificationsDto } from 'src/common/dto/list-schedule-notifications.dto';
+import { createScheduledNotifications } from 'src/common/utils/createScheduledNotifications';
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
@@ -24,6 +25,18 @@ export class NotificationsController {
       
       const notification = await this.notificationsService.createNotification(createNotificationDto);
       return { success: true, notification};
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('createlist')
+  async createListScheduledNotification(@Body() listScheduleNotificationsDto: ListScheduleNotificationsDto) {
+    try {
+      const listNotification = createScheduledNotifications(listScheduleNotificationsDto);
+      for (let notification of listNotification) {
+        this.notificationsService.createNotification(notification);
+      }
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
