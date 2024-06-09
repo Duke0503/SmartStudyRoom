@@ -1,4 +1,6 @@
 export const colors = {
+    error_500: "#E03C4C",
+    success_500: "#46BE83",
     neutral_900: "#0F172A",
     neutral_500: "#64748B",
     neutral_300: "#CBD5E1",

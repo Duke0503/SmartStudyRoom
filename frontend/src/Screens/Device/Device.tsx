@@ -18,9 +18,10 @@ import * as Network from "expo-network";
 import { useDispatch, useSelector } from "react-redux";
 import { useLazyGetSensorQuery } from "@/Services/sensors";
 import { useGetDeviceQuery } from "@/Services/devices";
-import { addSensor, deleteCurrentSensor} from "@/Store/reducers/sensors";
+import { addSensor, deleteSensor} from "@/Store/reducers/sensors";
 import { addDevice, deleteCurrentDevice } from "@/Store/reducers/devices";
 import { ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from '@gluestack-ui/themed';
+
 export interface IDeviceProps {
   onNavigate: (string: RootScreens) => void;
 }
@@ -30,7 +31,9 @@ export const Device = (props: IDeviceProps) => {
   const [selectedSensor, setSelectedSensor] = useState(false);
   const [showSensor, setShowSensor] = useState(false)
   const profile = useSelector((state: any) => state.profile);
+  const sensors = useSelector((state: any) => state.sensors);
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,57 +45,74 @@ export const Device = (props: IDeviceProps) => {
     };
 
     fetchData();
-  }, []);
+  }, [connectedDevices]);
+
   const dispatch = useDispatch();
-  const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}, { refetchOnMountOrArgChange: true }).currentData
-  const devicename = deviceData && deviceData.map(device => device.name)
+
+  const deviceData = useGetDeviceQuery({user_id: profile.id, type: "All"}, { refetchOnMountOrArgChange: true }).currentData;
+  const devicename = deviceData && deviceData.map(device => device.name);
+
   const { onNavigate } = props;
+
   const DATA = [
     {
       title: 'Thiết bị đã kết nối',
       data: devicename,
     },
-
   ];
+
   const listSensor = data ? data.map((item, index) => ({
     id: item.id_sensor,
     title: "Sensor " + item.id_sensor,
     isActive: item.is_active,
     sensor: item
   })) : [];
+
   const handleNagivateToLightDevice = () => {
     onNavigate(RootScreens.LIGHTDEVICE)
   };
+
   const handleNagivateToCamera = () => {
     onNavigate(RootScreens.CAMERA)
   };
+
   const handleNagivateToTempDevice = () => {
     onNavigate(RootScreens.TEMPDEVICE)
   };
+
   const handleNagivateToNoiseDevice = () => {
     onNavigate(RootScreens.NOISEDEVICE)
   };
-  const handleToggleConnect = async (action) => {
-    dispatch(deleteCurrentDevice({}))
+
+  const handleToggleConnect = (action: any) => {
     deviceData && deviceData.map((item, index) => {
       dispatch(addDevice(item))
     })
+
     if (action == "Connect") {
       setShowSensor(true)
       setConnectedDevices(true)
       setSelectedSensor(false)
-    } else {
-      setShowSensor(false)
-      setConnectedDevices(false)
-      setSelectedSensor(false)
     }
   }
-  const handleSelectSensor = (sensor) => {
-    dispatch(deleteCurrentSensor({}))
-    dispatch(addSensor(sensor))
+
+
+  const handleDisconnect = () => {
+    dispatch(deleteSensor({}));
+    dispatch(deleteCurrentDevice({}));
+
+    setShowSensor(false);
+    setConnectedDevices(false);
+    setSelectedSensor(false);
+  }
+
+  const handleSelectSensor = (sensor: any) => {
+    dispatch(addSensor(sensor));
+
     setSelectedSensor(true)
     setShowSensor(false)
   }
+
   const ContentBody = () => {
     return (
       <View>
@@ -190,7 +210,7 @@ export const Device = (props: IDeviceProps) => {
             <Button
               title="Ngắt kết nối"
               color="red"
-              onPress={() => handleToggleConnect("Disconnect")}
+              onPress={() => handleDisconnect()}
             />
           </View>
         </View>
@@ -200,7 +220,7 @@ export const Device = (props: IDeviceProps) => {
 
   return (
     <SafeAreaView>
-      {connectedDevices && selectedSensor ? <ContentBody /> :
+      {connectedDevices && selectedSensor? <ContentBody /> :
         <View style={styles.openContainer}>
           <Button
             title="Connect"
@@ -234,7 +254,6 @@ export const Device = (props: IDeviceProps) => {
               </ModalContent>
             </Modal>
         </View>
-        
       }
     </SafeAreaView>
   );
@@ -245,7 +264,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    marginTop: "50%"
+    marginTop: "50%",
   },
   container: {
     width: "100%",
