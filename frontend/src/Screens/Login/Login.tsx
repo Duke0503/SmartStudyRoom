@@ -1,11 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
-<<<<<<< HEAD
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
-=======
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Platform } from "react-native";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
+import { View, Text, StyleSheet, Pressable, TextInput, Platform } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -22,15 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
-<<<<<<< HEAD
 import { AuthContext } from "@/Context/AuthProvider";
-=======
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
 import Constants from "expo-constants";
 import { useLazyGetScheduleQuery } from "@/Services/schedules";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
 // Set Up Notification
 Notifications.setNotificationHandler({
@@ -134,24 +126,17 @@ export const Login = (props: ILoginProps) => {
           phone_number: response.data.phone_number,
           gender: response.data.gender,
           roles: response.data.roles,
-<<<<<<< HEAD
           supervisorID: response.data.supervisorID,
         }));
         
+        setUserID(response.data.id);
+        registerForPushNotificationsAsync();
+
         if(response.data.roles === 'supervisor'){
           onNavigate(RootScreens.HOMEADMIN)
         } 
         else onNavigate(RootScreens.HOME);
-=======
-          supervisor: response.data.supervisor,
-         
-        }));
-
-        setUserID(response.data.id);
-        registerForPushNotificationsAsync();
         
-        onNavigate(RootScreens.HOME);
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
       } else {
         console.error('Login failed');
       }

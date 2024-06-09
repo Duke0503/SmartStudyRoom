@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, Image } from "react-native";
-=======
-import React, { useEffect } from "react";
 import { View, StyleSheet, Pressable, ScrollView, Image } from "react-native";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -26,20 +21,8 @@ export const Account = (props: IAccountProps) => {
   const { onNavigate } = props;
   const profile = useSelector((state: any) => state.profile);
   const dispatch = useDispatch();
-<<<<<<< HEAD
-  const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetProfileQuery();
 
   const {updateAuthState} = useContext(AuthContext);
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
-
-  const handleFetch = async () => {
-    await fetchOne();
-  };
-=======
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
   const handleLogout = async () => {
     

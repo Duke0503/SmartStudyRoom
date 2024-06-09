@@ -1,9 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-<<<<<<< HEAD
-import React, { useContext } from "react";
-=======
-import React, { useState } from "react";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
+import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,13 +17,10 @@ import { VStack, Heading, Progress, ProgressFilledTrack, Text, HStack, Box, Moda
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
-<<<<<<< HEAD
 import { AuthContext } from "@/Context/AuthProvider";
-=======
 import LRegular from "@/Components/texts/LRegular";
 import { useDeleteScheduleMutation, useUpdateScheduleMutation } from "@/Services/schedules";
 import session from "redux-persist/lib/storage/session";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -75,23 +68,8 @@ export const Session = (props: ISessionProps) => {
     setFinishTime(finishTime);
   };
 
-<<<<<<< HEAD
   const {updateAuthState} = useContext(AuthContext);
 
-  console.log(studyTime)
-
-  const handleReturn = () => {
-    dispatch(deleteCurrentSchedule({}));
-    if(user.roles === "user"){
-      updateAuthState({loggedIn: true, profile: user});
-      onNavigate(RootScreens.SCHEDULE);
-    }
-    else if(user.roles === "supervisor"){
-      updateAuthState({loggedIn: true, profile: user});
-      onNavigate(RootScreens.USERDETAIL);
-    }
-    
-=======
   let studyTime;
 
   if ((moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) > 0) {
@@ -105,9 +83,15 @@ export const Session = (props: ISessionProps) => {
   }
 
   const handleReturn = () => {
-    // dispatch(deleteCurrentSchedule({}));
-    onNavigate(RootScreens.SCHEDULE);
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
+    dispatch(deleteCurrentSchedule({}));
+    if(user.roles === "user"){
+      updateAuthState({loggedIn: true, profile: user});
+      onNavigate(RootScreens.SCHEDULE);
+    }
+    else if(user.roles === "supervisor"){
+      updateAuthState({loggedIn: true, profile: user});
+      onNavigate(RootScreens.USERDETAIL);
+    }
   }
 
   console.log(currentSchedule)

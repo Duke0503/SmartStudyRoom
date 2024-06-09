@@ -1,28 +1,18 @@
-<<<<<<< HEAD
-import React, { useEffect } from "react";
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { View, Text, StyleSheet, Pressable, ScrollView, ViewProps } from "react-native";
 import { FontAwesome5, Entypo, Ionicons} from "@expo/vector-icons";
 import { RootScreens } from "..";
 import { StatusBar } from "expo-status-bar";
 import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
-import SRegular from "@/Components/texts/SRegular";
 import { colors } from "@/Components/colors";
 import LSemiBold from "@/Components/texts/LSemiBold";
-<<<<<<< HEAD
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { Platform, ViewStyle } from 'react-native';
-=======
 import SRegular from "@/Components/texts/SRegular";
 import { Platform, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { updateCurrentSchedule } from "@/Store/reducers/schedules";
 import moment from 'moment-timezone';
 import 'moment/locale/vi';
 import { useLazyGetScheduleQuery } from "@/Services/schedules";
@@ -47,29 +37,11 @@ export const Home = (props: IHomeProps) => {
   const { onNavigate } = props;
 
   const dispatch = useDispatch();
-<<<<<<< HEAD
-
-  const user = useSelector((state: any) => state.profile);
-  const schedules = useSelector((state: any) => state.schedules);
-
-  const handleNavigateSession = (schedule_ID: Number) => {
-    dispatch(updateCurrentSchedule(schedule_ID));
-    onNavigate(RootScreens.SESSION);
-  }
-  // console.log("state: ", state);
-  
-
-  let isScheduleToday:boolean = false;
-  // console.log("warning list view in home screen");
-  // console.log("schedule list in home screen: ", schedules.scheduelesList);
-
-=======
   const [fetchOne, result] = useLazyGetScheduleQuery();
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
 
   let isScheduleToday: boolean = false;
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
 
   // const sensorList = useSelector((state: any) => state.sensors.sensorsList);
 
@@ -108,15 +80,14 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-            {schedules.scheduelesList.length == 0? 
+            {schedules.scheduelesList.length == 0 ? 
               <SRegular>Không có lịch học nào</SRegular>: 
               <ScrollView style={styles.sessionList}>
                 {schedules.scheduelesList.map((schedule: any) => {
                   if(moment(schedule.start_time).format("DD-MM-YYYY") === moment(new Date()).format("DD-MM-YYYY")) isScheduleToday = true;
                   return (moment(schedule.start_time).format("DD-MM-YYYY") !== moment(new Date()).format("DD-MM-YYYY")? 
-<<<<<<< HEAD
                     null :
-                    <Pressable key={schedule.id} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
+                    <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
                       <View style={styles.topSession}>
                         <SSemiBold>
                           {schedule.title}
@@ -131,12 +102,8 @@ export const Home = (props: IHomeProps) => {
                           Kết thúc lúc: {moment(schedule.finish_time).utcOffset("+0700").format('HH:mm')}
                         </VSRegular>
                       </View>
-=======
-                    <></> :
-                    <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
-                      <SRegular>{schedule.title}</SRegular>
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
-                    </Pressable>)
+                    </Pressable>
+                    )
                 })}
                 {isScheduleToday? null:
                 <Block style = {styles.block}>
@@ -148,34 +115,6 @@ export const Home = (props: IHomeProps) => {
                 </Block>}
               </ScrollView>}
           </View>
-<<<<<<< HEAD
-          <View style={styles.statistic}>
-            <LSemiBold>Thông số môi trường học tập</LSemiBold>
-            <View style={styles.statisticSensor}>
-              <View style={styles.statisticRow}>
-                <Block style = {styles.lightSensor}>
-                  <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Độ sáng </Text>
-                </Block>
-                <Block style = {styles.lightSensor}>
-                  <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Nhiệt độ </Text>
-                </Block>
-              </View>
-              <View style={styles.statisticRow}>
-                <Block style = {styles.lightSensor}>
-                  <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Âm lượng </Text>
-                </Block>
-                <Block style = {styles.lightSensor}>
-                  <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
-                  <Text style={{fontSize: 20, color: "#4178D4", marginTop: 15}}> Camera </Text>
-                </Block>
-              </View>
-            </View>
-          </View>
-
-=======
           <VStack h="50%" space="md">
               <Heading>Thông số môi trường học tập:</Heading>
               <VStack h="100%">
@@ -201,7 +140,6 @@ export const Home = (props: IHomeProps) => {
                 </HStack>
               </VStack>
             </VStack>
->>>>>>> 36229ad14f2f638af467806d8e75a29886556f34
         </View>
       </View>
     </SafeAreaView>
