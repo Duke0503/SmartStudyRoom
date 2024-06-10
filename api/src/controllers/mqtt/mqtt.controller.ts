@@ -7,7 +7,7 @@ export class MqttController {
   constructor(private readonly mqttService: MqttService) {}
 
   @Cron('*/30 * * * * *')
-  publish() {
+  async publish() {
     this.mqttService.publish("DADN/iot/lamp/id1", "53");
   }
 }
