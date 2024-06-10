@@ -24,12 +24,26 @@ const authApi = API.injectEndpoints({
         },
       }),
     }),
-    forgetPasswordUser: build.query({
-      query: (email) => `/auth/email/forgot-password/${email}`,
+    forgetPasswordUser: build.mutation({
+      query: ({email}) => `/auth/email/forgot-password/${email}`,
     }),
+    OTPUser: build.mutation({
+      query: ({token}) => `/auth/email/reset-password/${token}`,
+    }),
+    resetPasswordUser: build.mutation({
+      query: ({email, newPassword, newPasswordToken}) => ({
+        url: '/auth/email/reset-password',
+        method: 'POST',
+        body: {
+          "email": email, 
+          "newPassword": newPassword,
+          "newPasswordToken": newPasswordToken
+        },
+      }),
+    })
   }),
   overrideExisting: true,
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useForgetPasswordUserQuery, useLazyForgetPasswordUserQuery } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useForgetPasswordUserMutation, useOTPUserMutation, useResetPasswordUserMutation } = authApi;

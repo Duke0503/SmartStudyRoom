@@ -12,9 +12,9 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { useForgetPasswordUserMutation, useLazyForgetPasswordUserQuery, useLoginUserMutation } from "@/Services";
+import { useForgetPasswordUserMutation, useLoginUserMutation, useOTPUserMutation, useResetPasswordUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, addEmail, deleteEmail } from "@/Store/reducers/profile";
+import { addUser, deleteEmail } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
@@ -22,30 +22,36 @@ import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
 import Constants from "expo-constants";
 
-// End Set Up Notification
-export interface IForgetPasswordProps {
+export interface INewPasswordProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-export const ForgetPassword = (props: IForgetPasswordProps) => {
+export const NewPassword = (props: INewPasswordProps) => {
   const { onNavigate } = props;
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
 
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.profile);
 
-  const [forgetPassword, forgetPasswordResult] = useForgetPasswordUserMutation();
+  const [resetPassword, resetPasswordResult] = useResetPasswordUserMutation();
 
-  const handleForgetPassword = async () => {
+  console.log(user)
+
+  const handleNewPassword = async () => {
+    if (password !== rePassword) {
+      console.log("Failed");
+      return;
+    }
+
     try {
-      const response = await forgetPassword({email: email}).unwrap();
+      const response = await resetPassword({email: user.email, newPassword: password, newPasswordToken: user.OTP}).unwrap();
+
+      console.log(response);
 
       if (response.success) {
-        dispatch(addEmail(email));
-        onNavigate(RootScreens.OTP);
-      } else {
-        console.log("Failed")
+        dispatch(deleteEmail({}));
+        onNavigate(RootScreens.LOGIN);
       }
     } catch (err) {
       console.error('An error occurred:', err);
@@ -64,26 +70,32 @@ export const ForgetPassword = (props: IForgetPasswordProps) => {
       <StatusBar style="auto"></StatusBar>
       <View style={styles.container}>
         <View style={styles.title}>
-            <Pressable style={{paddingRight: 15}} onPress={() => {onNavigate(RootScreens.LOGIN); dispatch(deleteEmail({}))}}>
-                <Ionicons name="arrow-back-outline" size={24} color={colors.neutral_900}></Ionicons>
-            </Pressable>
-            <Title3 textStyles={{paddingLeft: "20%"}}>Quên mật khẩu</Title3>
+            <Title3>Mật khẩu mới</Title3>
         </View>
         <View style={styles.body}>
-            <View style={styles.inputGroup}>
-                <SRegular>Email</SRegular>
+        <View style={styles.inputGroup}>
+                <SRegular>Mật khẩu</SRegular>
                 <TextInput 
                     style={styles.input}
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder="Email của bạn"
+                    onChangeText={setPassword}
+                    value={password}
+                    placeholder="Mật khẩu của bạn"
+                    secureTextEntry={true}
                 ></TextInput>
             </View>
-            <Pressable style={styles.registerButton} onPress={handleForgetPassword}>
+            <View style={styles.inputGroup}>
+                <SRegular>Nhập lại mật khẩu</SRegular>
+                <TextInput 
+                    style={styles.input}
+                    onChangeText={setRePassword}
+                    value={rePassword}
+                    placeholder="Nhập lại mật khẩu của bạn"
+                    secureTextEntry={true}
+                ></TextInput>
+            </View>
+            <Pressable style={styles.registerButton} onPress={handleNewPassword}>
               <SSemiBold textStyles={{color: "white"}}>Xác nhận</SSemiBold>
             </Pressable>
-
-            <Pressable onPress={() => onNavigate(RootScreens.OTP)}><SRegular>To OTP</SRegular></Pressable>
         </View>
       </View>
     </SafeAreaView>
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "7%",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center"
   },
 

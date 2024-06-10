@@ -24,11 +24,15 @@ import NoiseDeviceContainer from "@/Screens/Device/NoiseDevice/NoiseDeviceContai
 // import * as Network from "expo-network";
 import NotificationContainer from "@/Screens/Notification/NotificationContainer";
 import ForgetPasswordContainer from "@/Screens/ForgetPassword/ForgetPasswordContainer";
+import OTPContainer from "@/Screens/OTP/OTPContainer";
+import NewPasswordContainer from "@/Screens/NewPassword/NewPasswordContainer";
 
 export type TabParamList = {
   [RootScreens.REGISTER]: undefined;
   [RootScreens.LOGIN]: undefined;
   [RootScreens.FORGETPASSWORD]: undefined;
+  [RootScreens.OTP]: undefined;
+  [RootScreens.NEWPASSWORD]: undefined;
   [RootScreens.HOME]: undefined;
   [RootScreens.SCHEDULE]: undefined;
   [RootScreens.SESSION]: undefined;
@@ -79,6 +83,26 @@ const BottomNavigator = () => {
         <Tab.Screen
           name={RootScreens.FORGETPASSWORD}
           component={ForgetPasswordContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.OTP}
+          component={OTPContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tab.Screen
+          name={RootScreens.NEWPASSWORD}
+          component={NewPasswordContainer}
           options={{
             tabBarStyle: {
               display: "none",

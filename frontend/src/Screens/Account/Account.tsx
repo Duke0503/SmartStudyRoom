@@ -32,7 +32,7 @@ export const Account = (props: IAccountProps) => {
       <StatusBar style="auto" />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.logo} />
+          <Image source={require('@/../../assets/images/Logo1.png')} style={styles.logo} />
           <LSemiBold textStyles={{marginLeft: "3%"}}>I - Learn</LSemiBold>
         </View>
         <View style={styles.profileContainer}>
@@ -66,6 +66,7 @@ export const Account = (props: IAccountProps) => {
             <SRegular textStyles={{marginLeft: "3%", flex: 1}}>Về chúng tôi</SRegular>
             <Entypo name="chevron-right" size={24} color={colors.neutral_500} />
           </Pressable>
+          <Image source={{ uri: 'https://vn4u.vn/wp-content/uploads/2023/09/logo-co-tinh-nhat-quan-2.png' }} />
         </View>
       </View>
     </SafeAreaView>
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
   },
 
   logo: {

@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 export const getExpiry = () => {
   const createdAt = new Date();
-  const expiresAt = moment(createdAt).add(5, 'minutes').toDate();
+  const expiresAt = moment(createdAt).add(1, 'minutes').toDate();
   return expiresAt;
 };
 
