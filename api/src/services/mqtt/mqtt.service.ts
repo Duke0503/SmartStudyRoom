@@ -65,7 +65,7 @@ export class MqttService implements OnModuleInit {
       const createdSensor = new this.sensorModel(createSensorModelDto);
 
       try {
-        return await createdSensor.save();
+        await createdSensor.save();
       } catch (error) {
         throw new Error(`Failed to create sensor: ${error.message}`);
       }
@@ -77,10 +77,10 @@ export class MqttService implements OnModuleInit {
           const updateSensorDto = new UpdateSensorDto();
           updateSensorDto.ip_address = data.ip_address;
           updateSensorDto.is_active = true;
-          updateSensorDto.light_data = data.light;
-          updateSensorDto.temp_data = data.temp;
-          updateSensorDto.sound_data = data.sound;
-          updateSensorDto.camera_data = data.camera;
+          updateSensorDto.light_data = data.light_data;
+          updateSensorDto.temp_data = data.temp_data;
+          updateSensorDto.sound_data = data.sound_data;
+          updateSensorDto.camera_data = data.camera_data;
 
           await this.sensorService.updateSensor(updateSensorDto, data.id_sensor);
           console.log("Updated sensor:", data.id_sensor);
@@ -89,10 +89,10 @@ export class MqttService implements OnModuleInit {
           const createSensorDto = new CreateSensorDto();
           createSensorDto.ip_address = data.ip_address;
           createSensorDto.is_active = true;
-          createSensorDto.light_data = data.light;
-          createSensorDto.temp_data = data.temp;
-          createSensorDto.sound_data = data.sound;
-          createSensorDto.camera_data = data.camera;
+          createSensorDto.light_data = data.light_data;
+          createSensorDto.temp_data = data.temp_data;
+          createSensorDto.sound_data = data.sound_data;
+          createSensorDto.camera_data = data.camera_data;
 
           await this.sensorService.createNewSensor(createSensorDto, data.id_sensor);
           console.log("Created new sensor:", data.id_sensor);
