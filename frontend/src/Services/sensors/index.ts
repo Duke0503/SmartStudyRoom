@@ -7,9 +7,9 @@ const sensorsAPI = API.injectEndpoints({
         const {ip} = arg;
         return `sensors/getsensorbyIP/${ip}`;
       },
-      // onQueryStarted: async (apiRequest, { dispatch, getState }) => {
-      //   console.log('getSensor request started:', apiRequest);
-      // },
+      onQueryStarted: async (apiRequest, { dispatch, getState }) => {
+        console.log('getSensor request started:', apiRequest);
+      },
     }),
     updateLightSensor: build.mutation(
       {
