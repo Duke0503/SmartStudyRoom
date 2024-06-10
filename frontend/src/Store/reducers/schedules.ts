@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = { 
   scheduelesList: [],
   currentSchedule: {},
+  averagesData: {},
 }
 const schedulesSlice = createSlice({
   name: "schedules",
@@ -28,10 +29,16 @@ const schedulesSlice = createSlice({
     },
     updateCurrentSchedule: (state, action) => {
       // state.currentSchedule = action.payload;
-      state.currentSchedule = state.scheduelesList.filter(schedule => schedule.ID === action.payload)[0]
+      state.currentSchedule = state.scheduelesList.filter(schedule => schedule.ID === action.payload)[0];
+    },
+    updateAveragesData: (state, action) => {
+      state.averagesData = action.payload;
     },
     deleteCurrentSchedule: (state, action) => {
       state.currentSchedule = {};
+    },
+    deleteAveragesData: (state, action) => {
+      state.averagesData = {};
     },
     updateScheduleOfUserID: (state, action) => {      
       state.scheduelesList = action.payload;
@@ -39,9 +46,8 @@ const schedulesSlice = createSlice({
     resetSchedule: () => {
       return initialState
     }
-
   },
 });
 
-export const { fetchSchedule, addSchedule, updateSchedule, deleteSchedule, updateCurrentSchedule, deleteCurrentSchedule, updateScheduleOfUserID, resetSchedule } = schedulesSlice.actions;
+export const { fetchSchedule, addSchedule, updateSchedule, deleteSchedule, updateCurrentSchedule, deleteCurrentSchedule, updateScheduleOfUserID, resetSchedule, updateAveragesData, deleteAveragesData } = schedulesSlice.actions;
 export const schedulesReducers = schedulesSlice.reducer;

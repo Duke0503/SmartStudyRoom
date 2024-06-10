@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FC, createContext, useEffect, useState } from "react";
 
-
 type profile = {
   name: String, 
   email: String, 

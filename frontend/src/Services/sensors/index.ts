@@ -32,10 +32,23 @@ const sensorsAPI = API.injectEndpoints({
               }
           })
       }
+    ),
+    getAverages: build.mutation(
+        {
+            query: ({sensor_id, start, end}) => ({
+              url: `sensors/averages/${sensor_id}`,
+              method: "GET",
+              params: {
+                "sensor_id": sensor_id,
+                "start": start,
+                "end": end
+              }
+            })
+        }
     )
   }),
   overrideExisting: true,
 });
 
 // Export hooks for the new endpoints
-export const { useGetSensorQuery, useLazyGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation} = sensorsAPI;
+export const { useGetSensorQuery, useLazyGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation, useGetAveragesMutation } = sensorsAPI;

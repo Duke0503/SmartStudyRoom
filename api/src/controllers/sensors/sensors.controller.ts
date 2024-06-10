@@ -3,6 +3,7 @@ import { SensorsService } from 'src/services/sensors/sensors.service';
 import { CreateSensorDto } from 'src/common/dto/create-sensor.dto';
 import { UpdateSensorDto } from 'src/common/dto/update-sensor.dto';
 import { Sensor } from 'src/entities/sensors.entity';
+import { IResponse } from 'src/common/interfaces/response.interface';
 
 @Controller('sensors')
 export class SensorsController {
@@ -35,7 +36,7 @@ export class SensorsController {
     @Param('sensor_id') sensor_id: string, 
     @Query('start') start: string,
     @Query('end') end: string
-  ) {
+  ): Promise<IResponse>  {
     const startTime = new Date(start);
     const endTime = new Date(end);
     
