@@ -12,7 +12,7 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { useForgetPasswordUserMutation, useLazyForgetPasswordUserQuery, useLoginUserMutation } from "@/Services";
+import { useForgetPasswordUserMutation, useLoginUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, addEmail, deleteEmail } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"

@@ -19,11 +19,15 @@ import SettingContainer from "@/Screens/Account/Setting/SettingContainer";
 import AboutUsContainer from "@/Screens/Account/AbousUs/AboutUsContainer";
 import HomeAdminContainer from "@/Screens/HomeAdmin/HomeAdminContainer";
 import ForgetPasswordContainer from "@/Screens/ForgetPassword/ForgetPasswordContainer";
+import OTPContainer from "@/Screens/OTP/OTPContainer";
+import NewPasswordContainer from "@/Screens/NewPassword/NewPasswordContainer";
 
 export type AuthTabParamList = {
   [RootScreens.REGISTER]: undefined;
   [RootScreens.LOGIN]: undefined;
   [RootScreens.FORGETPASSWORD] : undefined;
+  [RootScreens.OTP]: undefined;
+  [RootScreens.NEWPASSWORD]: undefined;
 }
 
 const AuthTab = createBottomTabNavigator<AuthTabParamList>();
@@ -58,6 +62,26 @@ const AuthNavigator = () => {
       <AuthTab.Screen
           name={RootScreens.FORGETPASSWORD}
           component={ForgetPasswordContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <AuthTab.Screen
+          name={RootScreens.OTP}
+          component={OTPContainer}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          }}
+        />
+        <AuthTab.Screen
+          name={RootScreens.NEWPASSWORD}
+          component={NewPasswordContainer}
           options={{
             tabBarStyle: {
               display: "none",
