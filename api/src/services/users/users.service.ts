@@ -84,4 +84,20 @@ export class UsersService {
   async findUserbyId(ID: number) {
     return await this.usersRepository.findOne({ where: {ID: ID}})
   }
+  async addSensor(userID: number, sensor_id: number) {
+    const user = await this.findUserbyId(userID);
+
+    if (!user) {
+      throw new NotFoundException();
+    };
+    if (sensor_id == 0) {
+      user.sensor_id = null
+    } else {
+      user.sensor_id = sensor_id
+    }
+    
+
+    const userEdit =  await this.usersRepository.save(user);
+    return userEdit;
+  }
 }

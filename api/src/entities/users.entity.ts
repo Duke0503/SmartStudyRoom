@@ -61,5 +61,7 @@ export class User {
   @Column()
   @UpdateDateColumn()
   updateAt: Date;
-  
+
+  @Column({ nullable: true })
+  sensor_id: number;
 }
