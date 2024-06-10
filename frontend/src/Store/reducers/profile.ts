@@ -10,6 +10,8 @@ const profileSlice = createSlice({
     birthday: "",
     phone_number: "",
     gender: "",
+    roles: "",
+    supervisorID: "",
     ipaddress: "",
   },
   reducers: {
@@ -21,6 +23,8 @@ const profileSlice = createSlice({
       state.birthday = action.payload.birthday;
       state.phone_number = action.payload.phone_number;
       state.gender = action.payload.gender;
+      state.roles = action.payload.roles;
+      state.supervisorID = action.payload.supervisorID;
       // state = action.payload;
     },
     updateUser: (state, action) => {
@@ -38,6 +42,8 @@ const profileSlice = createSlice({
       state.birthday = "";
       state.phone_number = "";
       state.gender = "";
+      state.roles = "";
+      state.supervisorID = "";
       // state = action.payload;
     },
 

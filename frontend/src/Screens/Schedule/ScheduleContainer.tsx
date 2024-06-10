@@ -2,8 +2,8 @@ import { Schedule } from "./Schedule";
 import React, { useState, useEffect } from "react";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TabParamList } from "@/Navigation";
 import { RootScreens } from "..";
+import { TabParamList } from "@/Navigation/UserNavigator";
 
 export type ScheduleScreenNavigatorProps = NativeStackScreenProps<
   TabParamList,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Pressable, TextInput } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +11,7 @@ import SSemiBold from "@/Components/texts/SSemiBold";
 import { useRegisterUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectTrigger, SelectInput, SelectIcon, ChevronDownIcon, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, Select, Icon, SelectItem } from "@gluestack-ui/themed";
+import { AuthContext } from "@/Context/AuthProvider";
 
 export interface IRegisterProps {
   onNavigate: (string: RootScreens) => void;
@@ -20,7 +21,7 @@ export const Register = (props: IRegisterProps) => {
   const { onNavigate } = props;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [roles, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
 
@@ -29,9 +30,11 @@ export const Register = (props: IRegisterProps) => {
 
   const [signup, signUpResult] = useRegisterUserMutation();
 
+  const {updateAuthState} = useContext(AuthContext);
+
   const handleSignUp = async () => {
     try {
-      const response = await signup({ name, email, password }).unwrap();
+      const response = await signup({ name, email, password, roles }).unwrap();
       
       if (response.success) {
         onNavigate(RootScreens.LOGIN);
@@ -45,12 +48,18 @@ export const Register = (props: IRegisterProps) => {
 
   useEffect(() => {
     if (user.token !== undefined && user.token !== "") {
-      onNavigate(RootScreens.HOME);
+      if(user.roles === 'supervisor'){
+        updateAuthState({loggedIn: true, profile: user});
+        onNavigate(RootScreens.HOMEADMIN);
+      }
+      else{
+        updateAuthState({loggedIn: true, profile: user});
+        // onNavigate(RootScreens.HOME);
+      }
     }
+    else updateAuthState({loggedIn: false, profile: null});
     }, []
   );
-
-  console.log(role);
 
   return (
     <SafeAreaView>
@@ -80,7 +89,7 @@ export const Register = (props: IRegisterProps) => {
             </View>
             <View style={styles.inputGroup}>
                 <SRegular>Vai trò*</SRegular>
-                <Select>
+                <Select onValueChange={setRole} selectedValue={roles}>
                   <SelectTrigger variant="outline" size="md" >
                     <SelectInput placeholder="Select option" />
                     <SelectIcon mr="$3">
@@ -89,25 +98,13 @@ export const Register = (props: IRegisterProps) => {
                   </SelectTrigger>
                   <SelectPortal>
                     <SelectBackdrop/>
-                    <SelectContent>
+                    <SelectContent >
                       <SelectDragIndicatorWrapper>
                         <SelectDragIndicator />
                       </SelectDragIndicatorWrapper>
-                      <SelectItem label="UX Research" value="ux" />
-                      <SelectItem label="Web Development" value="web" />
-                      <SelectItem
-                        label="Cross Platform Development Process"
-                        value="cross-platform"
-                      />
-                      <SelectItem
-                        label="UI Designing"
-                        value="ui"
-                        isDisabled={true}
-                      />
-                      <SelectItem
-                        label="Backend Development"
-                        value="backend"
-                      />
+                      <SelectItem label="Học sinh" value="user" />
+                      <SelectItem label="Phụ huynh" value="supervisor" />
+                      
                     </SelectContent>
                   </SelectPortal>
                 </Select>

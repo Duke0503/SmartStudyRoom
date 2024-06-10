@@ -27,11 +27,13 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column()
   roles: string
 
+  // @ManyToOne(() => User, { nullable: true })
+  // @JoinColumn({ name: "supervisorID" })
   @Column({ nullable: true })
-  supervisor: string;
+  supervisorID: Number;
 
   @Column({ default: false, nullable: true })
   isVerified: boolean;

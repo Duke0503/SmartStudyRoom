@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 // import { useLazyGetUserQuery } from "@/Services";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/Navigation";
 import { RootScreens } from "..";
+import { AuthTabParamList } from "@/Navigation/AuthNavigator";
 
 export type LoginScreenNavigatorProps = NativeStackScreenProps<
-  RootStackParamList,
+  AuthTabParamList,
   RootScreens.LOGIN
   >;
 

@@ -2,11 +2,11 @@ import { ForgetPassword } from "./ForgetPassword";
 import React, { useState, useEffect } from "react";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TabParamList } from "@/Navigation";
+import { AuthTabParamList } from "@/Navigation/AuthNavigator";
 import { RootScreens } from "..";
 
 export type ForgetPasswordScreenNavigatorProps = NativeStackScreenProps<
-  TabParamList,
+  AuthTabParamList,
   RootScreens.FORGETPASSWORD
   >;
 

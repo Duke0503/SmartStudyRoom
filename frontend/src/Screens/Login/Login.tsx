@@ -1,6 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Platform } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, Pressable, TextInput, Platform } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "@/Context/AuthProvider";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
@@ -44,6 +45,7 @@ export const Login = (props: ILoginProps) => {
 
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.profile);
+  const {updateAuthState} = useContext(AuthContext);
 
   // Handle Update ExpoPushToken
   const [userID, setUserID] = useState<number>();
@@ -111,6 +113,9 @@ export const Login = (props: ILoginProps) => {
       const response = await login({ email, password }).unwrap();
 
       if (response.success) {
+        // console.log(response.data);
+        updateAuthState({loggedIn: true, profile: response.data});
+
         await AsyncStorage.setItem('token', response.data.token);
         dispatch(addUser({
           token: response.data.token, 
@@ -121,14 +126,17 @@ export const Login = (props: ILoginProps) => {
           phone_number: response.data.phone_number,
           gender: response.data.gender,
           roles: response.data.roles,
-          supervisor: response.data.supervisor,
-         
+          supervisorID: response.data.supervisorID,
         }));
-
+        
         setUserID(response.data.id);
         registerForPushNotificationsAsync();
+
+        if(response.data.roles === 'supervisor'){
+          onNavigate(RootScreens.HOMEADMIN)
+        } 
+        else onNavigate(RootScreens.HOME);
         
-        onNavigate(RootScreens.HOME);
       } else {
         console.error('Login failed');
       }
@@ -139,8 +147,14 @@ export const Login = (props: ILoginProps) => {
 
   useEffect(() => {
     if (user.token !== undefined && user.token !== "") {
-      onNavigate(RootScreens.HOMENAVIGATOR);
+      if(user.roles === 'supervisor') {
+        updateAuthState({loggedIn: true, profile: user});
+      }
+      else{
+        updateAuthState({loggedIn: true, profile: user});
+      }
     }
+    else updateAuthState({loggedIn: false, profile: null});
     }, []
   );
 
