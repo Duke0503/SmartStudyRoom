@@ -78,56 +78,56 @@ export class MqttService implements OnModuleInit {
         throw new Error(`Failed to create sensor: ${error.message}`);
       }
     
-        const users = this.usersRepository.find({
-          where: {
-            sensor_id: data.id_sensor,
-          }
-        })
+      //   const users = this.usersRepository.find({
+      //     where: {
+      //       sensor_id: data.id_sensor,
+      //     }
+      //   })
 
-      // Message to Notification Environment Condition
-      const messageEnv = envNotifications(parseFloat(data.temp_data), parseInt(data.light_data), parseInt(data.sound_data));
-      if (messageEnv !== '') {
+      // // Message to Notification Environment Condition
+      // const messageEnv = envNotifications(parseFloat(data.temp_data), parseInt(data.light_data), parseInt(data.sound_data));
+      // if (messageEnv !== '') {
 
-        if (users) {
-          for (let user in users) {
-            this.notificationsService.sendAutomaticNotification(
-              user.ID, 
-              `Thông số môi trường`,
-              messageEnv
-            );
-          };
-        }
-      } 
-      // End Message to Notification Environment Condition
+      //   if (users) {
+      //     for (let user in users) {
+      //       this.notificationsService.sendAutomaticNotification(
+      //         user.ID, 
+      //         `Thông số môi trường`,
+      //         messageEnv
+      //       );
+      //     };
+      //   }
+      // } 
+      // // End Message to Notification Environment Condition
 
-      // AI Notification 
-      const response = await axios.get(`http://127.0.0.1:5000/?url=${data.camera_data}`); // Replace /endpoint with your actual endpoint
-      if (response.data == "No detect") {
-        if (users) {
-          for (let user in users) {
-            if (user.supervisorID) {
-              this.notificationsService.sendAutomaticNotification(
-                user.supervisorID, 
-                `Thông báo vắng học`,
-                `Học sinh ${user.name} không có mặt!!!`
-              );
-            };
-          };
-        } 
-      } else {
-        if (response.data == "Bad") {
-          if (users) {
-            for (let user in users) {    
-              this.notificationsService.sendAutomaticNotification(
-                user.ID, 
-                `Thông báo tư thế ngồi học`,
-                `Bạn đang ngồi không đúng tư thế!!!`
-              );    
-            };
-          };   
-        }
-      }
-      // End AI Notification 
+      // // AI Notification 
+      // const response = await axios.get(`http://127.0.0.1:5000/?url=${data.camera_data}`); // Replace /endpoint with your actual endpoint
+      // if (response.data == "No detect") {
+      //   if (users) {
+      //     for (let user in users) {
+      //       if (user.supervisorID) {
+      //         this.notificationsService.sendAutomaticNotification(
+      //           user.supervisorID, 
+      //           `Thông báo vắng học`,
+      //           `Học sinh ${user.name} không có mặt!!!`
+      //         );
+      //       };
+      //     };
+      //   } 
+      // } else {
+      //   if (response.data == "Bad") {
+      //     if (users) {
+      //       for (let user in users) {    
+      //         this.notificationsService.sendAutomaticNotification(
+      //           user.ID, 
+      //           `Thông báo tư thế ngồi học`,
+      //           `Bạn đang ngồi không đúng tư thế!!!`
+      //         );    
+      //       };
+      //     };   
+      //   }
+      // }
+      // // End AI Notification 
 
       // Check if sensor exists in database
       try {
