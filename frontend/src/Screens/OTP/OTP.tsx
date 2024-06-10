@@ -12,9 +12,9 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import SSemiBold from "@/Components/texts/SSemiBold";
-import { useForgetPasswordUserMutation, useLazyForgetPasswordUserQuery, useLoginUserMutation } from "@/Services";
+import { useForgetPasswordUserMutation, useLoginUserMutation, useOTPUserMutation } from "@/Services";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, addEmail, deleteEmail } from "@/Store/reducers/profile";
+import { addOTP, addUser, deleteEmail } from "@/Store/reducers/profile";
 import { fetchSchedule } from "@/Store/reducers/schedules"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
@@ -22,30 +22,28 @@ import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
 import Constants from "expo-constants";
 
-// End Set Up Notification
-export interface IForgetPasswordProps {
+export interface IOTPProps {
   onNavigate: (string: RootScreens) => void;
 }
 
-export const ForgetPassword = (props: IForgetPasswordProps) => {
+export const OTP = (props: IOTPProps) => {
   const { onNavigate } = props;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
 
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.profile);
 
-  const [forgetPassword, forgetPasswordResult] = useForgetPasswordUserMutation();
+  const [OTP, OTPResult] = useOTPUserMutation();
 
-  const handleForgetPassword = async () => {
+  const handleOTP = async () => {
     try {
-      const response = await forgetPassword({email: email}).unwrap();
+      const response = await OTP({token: token}).unwrap();
+
+      console.log(response);
 
       if (response.success) {
-        dispatch(addEmail(email));
-        onNavigate(RootScreens.OTP);
-      } else {
-        console.log("Failed")
+        dispatch(addOTP(token));
+        onNavigate(RootScreens.NEWPASSWORD);
       }
     } catch (err) {
       console.error('An error occurred:', err);
@@ -67,23 +65,22 @@ export const ForgetPassword = (props: IForgetPasswordProps) => {
             <Pressable style={{paddingRight: 15}} onPress={() => {onNavigate(RootScreens.LOGIN); dispatch(deleteEmail({}))}}>
                 <Ionicons name="arrow-back-outline" size={24} color={colors.neutral_900}></Ionicons>
             </Pressable>
-            <Title3 textStyles={{paddingLeft: "20%"}}>Quên mật khẩu</Title3>
+            <Title3 textStyles={{marginLeft: "33%"}}>OTP</Title3>
         </View>
         <View style={styles.body}>
             <View style={styles.inputGroup}>
-                <SRegular>Email</SRegular>
+                <SRegular>OTP</SRegular>
                 <TextInput 
                     style={styles.input}
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder="Email của bạn"
+                    onChangeText={setToken}
+                    value={token}
+                    placeholder="Nhập OTP"
                 ></TextInput>
             </View>
-            <Pressable style={styles.registerButton} onPress={handleForgetPassword}>
+            <Pressable style={styles.registerButton} onPress={handleOTP}>
               <SSemiBold textStyles={{color: "white"}}>Xác nhận</SSemiBold>
             </Pressable>
-
-            <Pressable onPress={() => onNavigate(RootScreens.OTP)}><SRegular>To OTP</SRegular></Pressable>
+            <Pressable onPress={() => onNavigate(RootScreens.NEWPASSWORD)}><SRegular>To NewPassword</SRegular></Pressable>
         </View>
       </View>
     </SafeAreaView>

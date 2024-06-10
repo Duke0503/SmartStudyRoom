@@ -8,6 +8,8 @@ import { UsersService } from '../users/users.service';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Sensors, SensorDocument } from 'src/models/sensors.models';
+import { ResponseSuccess } from 'src/common/dto/response.dto';
+import { IResponse } from 'src/common/interfaces/response.interface';
 
 @Injectable()
 export class SensorsService {
@@ -93,22 +95,14 @@ export class SensorsService {
   }
 
   // Calculate Average Data
-  async calculateAverages(sensorID: string, startTime: Date, endTime: Date): Promise<{ 
-    averageLight: number, 
-    averageSound: number, 
-    averageTemp: number 
-  }> {
+  async calculateAverages(sensorID: string, startTime: Date, endTime: Date): Promise<IResponse> {
     const sensors = await this.sensorsModel.find({
       id_sensor: sensorID,
       time: { $gte: startTime, $lte: endTime }
     }).exec();
 
     if (sensors.length === 0) {
-      return {
-        averageLight: 0,
-        averageSound: 0,
-        averageTemp: 0
-      };
+      return new ResponseSuccess("SENSORS.GET_AVERAGES_SUCCESSFULLY", { averageLight: 0, averageSound: 0, averageTemp: 0 });
     }
 
     const totalLight = sensors.reduce((acc, sensor) => acc + sensor.light_data, 0);
@@ -119,11 +113,7 @@ export class SensorsService {
     const averageSound = totalSound / sensors.length;
     const averageTemp = totalTemp / sensors.length;
 
-    return {
-      averageLight,
-      averageSound,
-      averageTemp,
-    };
+    return new ResponseSuccess("SENSORS.GET_AVERAGES_SUCCESSFULLY", { averageLight, averageSound, averageTemp });
   }
   // End Calculate Average Data
 

@@ -13,6 +13,7 @@ const profileSlice = createSlice({
     roles: "",
     supervisorID: "",
     ipaddress: "",
+    OTP: "",
   },
   reducers: {
     addUser: (state, action) => {
@@ -46,10 +47,19 @@ const profileSlice = createSlice({
       state.supervisorID = "";
       // state = action.payload;
     },
-
+    addEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    addOTP: (state, action) => {
+      state.OTP = action.payload;
+    },
+    deleteEmail: (state, action) => {
+      state.email = "";
+      state.OTP = "";
+    }
   },
 });
 
-export const { addUser, deleteUser, updateUser } = profileSlice.actions;
+export const { addUser, deleteUser, updateUser, addEmail, addOTP, deleteEmail } = profileSlice.actions;
 
 export const profileReducers = profileSlice.reducer;

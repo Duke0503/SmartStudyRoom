@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,7 +12,7 @@ import VSSemiBold from "@/Components/texts/VSSemiBold";
 import LSemiBold from "@/Components/texts/LSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCurrentSchedule, deleteSchedule, resetSchedule, updateSchedule } from "@/Store/reducers";
+import { deleteAveragesData, deleteCurrentSchedule, deleteSchedule, resetSchedule, updateSchedule } from "@/Store/reducers";
 import { VStack, Heading, Progress, ProgressFilledTrack, Text, HStack, Box, Modal, ButtonText, CloseIcon, Icon, Input, InputField, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Button } from "@gluestack-ui/themed";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment-timezone';
@@ -21,6 +21,7 @@ import { AuthContext } from "@/Context/AuthProvider";
 import LRegular from "@/Components/texts/LRegular";
 import { useDeleteScheduleMutation, useUpdateScheduleMutation } from "@/Services/schedules";
 import session from "redux-persist/lib/storage/session";
+import { useGetAveragesMutation } from "@/Services/sensors";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -40,6 +41,7 @@ export const Session = (props: ISessionProps) => {
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
   const currentSchedule = schedules.currentSchedule;
+  const averagesData = schedules.averagesData;
   const [updateScheduleDatabase, updateScheduleDatabaseResult] = useUpdateScheduleMutation();
   const [deleteScheduleDatabase, deleteScheduleDatabaseResult] = useDeleteScheduleMutation();
 
@@ -85,6 +87,8 @@ export const Session = (props: ISessionProps) => {
   }
 
   const handleReturn = () => {
+    dispatch(deleteAveragesData({}));
+
     if (!isSuperVisor) {
       updateAuthState({ loggedIn: true, profile: user });
       onNavigate(RootScreens.SCHEDULE);
@@ -133,6 +137,8 @@ export const Session = (props: ISessionProps) => {
     }
   }
 
+  console.log(averagesData);
+
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
@@ -146,7 +152,7 @@ export const Session = (props: ISessionProps) => {
         <View style={styles.body}>
           <VStack h="100%" space="lg">
             <VStack space="md">
-              {moment(new Date()).unix() > moment(currentSchedule.finish_time).unix() ?
+              {moment(new Date()).unix() > moment(currentSchedule.finish_time).unix()?
                 <Heading>Thời gian đã học: Đã xong</Heading> :
                 <Heading>Thời gian đã học: {Math.round((moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / 60)} phút</Heading>
               }
@@ -161,21 +167,21 @@ export const Session = (props: ISessionProps) => {
               <Heading>Thông số môi trường học tập:</Heading>
               <VStack h="100%">
                 <HStack h="50%" justifyContent="space-between">
-                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                  <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                    <LRegular>Độ sáng:</LRegular>
+                    <LRegular>Độ sáng: {parseInt(averagesData.averageLight)}</LRegular>
                   </Box>
-                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                  <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                    <LRegular>Nhiệt độ:</LRegular>
+                    <LRegular>Nhiệt độ: {parseInt(averagesData.averageTemp)}°C</LRegular>
                   </Box>
                 </HStack>
                 <HStack h="50%" justifyContent="space-between">
-                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                  <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                    <LRegular>Âm thanh:</LRegular>
+                    <LRegular>Âm thanh: {parseInt(averagesData.averageSound)} dB</LRegular>
                   </Box>
-                  <Box w="40%" h="70%" style={styles.sensorDataBox}>
+                  <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
                     <LRegular>Camera</LRegular>
                   </Box>
@@ -229,7 +235,6 @@ export const Session = (props: ISessionProps) => {
                             value={startTime}
                             mode={"date"}
                             display={"default"}
-                            minimumDate={new Date()}
                             is24Hour={true}
                             onChange={changeStartTime}
                           />}

@@ -16,7 +16,8 @@ import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
 import { useCreateScheduledNotificationMutation } from "@/Services/notifications";
-import { addSchedule, deleteCurrentSchedule, updateCurrentSchedule } from "@/Store/reducers/schedules";
+import { addSchedule, deleteCurrentSchedule, updateAveragesData, updateCurrentSchedule } from "@/Store/reducers/schedules";
+import { useGetAveragesMutation } from "@/Services/sensors";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -50,15 +51,18 @@ export const Schedule = (props: IScheduleProps) => {
   const [displayTitleAlert, setDisplayTitleAlert] = useState(false);
   const [displayFinishTimeAlert, setDisplayFinishTimeAlert] = useState(false);
   const [displaySessionTimeAlert, setDisplaySessionTimeAlert] = useState(false);
+  const [displayBreakTimeAlert, setDisplayBreakTimeAlert] = useState(false);
 
   const dispatch = useDispatch();
   const user = useSelector((state:any) => state.profile);
   const sensors = useSelector((state: any) => state.sensors);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
+  const currentSchedule = useSelector((state: any) => state.schedules.currentSchedule);
 
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
   const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation();
+  const [getAverages, getAveragesResult] = useGetAveragesMutation();
   
   const handleAddCalendar = () => {
     setAddCalendar(true);
@@ -99,14 +103,18 @@ export const Schedule = (props: IScheduleProps) => {
       return;
     }
     
-    if (Number.isNaN(sessionTime)) {
-      setDisplaySessionTimeAlert(true);
-      return;
-    }
-
-    if (Number.isNaN(breakTime)) {
-      setBreakTime(0);
-    }
+    // if (Number.isNaN(sessionTime) && !Number.isNaN(breakTime)) {
+    //   setDisplaySessionTimeAlert(true);
+    //   return;
+    // } else if (!Number.isNaN(sessionTime) && Number.isNaN(breakTime)) {
+    //   setDisplayBreakTimeAlert(true);
+    //   return;
+    // } 
+    
+    // if (Number.isNaN(sessionTime) && Number.isNaN(breakTime)) {
+    //   setSessionTime(0);
+    //   setBreakTime(0);
+    // }
 
     const sensor_ID = Object.keys(sensors.sensor).length? sensors.sensor.ID: null;
 
@@ -127,7 +135,6 @@ export const Schedule = (props: IScheduleProps) => {
           break_time: breakTime,
           sensor_ID: sensor_ID
         }
-        
 
         const listNotifications = await createNotification({
           body: {
@@ -159,9 +166,22 @@ export const Schedule = (props: IScheduleProps) => {
     }
   };
 
-  const handleNavigateSession = (schedule_ID: Number) => {
-    dispatch(updateCurrentSchedule(schedule_ID));
-    onNavigate(RootScreens.SESSION);
+  const handleNavigateSession = async (schedule_ID: Number) => {
+    dispatch(deleteCurrentSchedule({}));
+    
+    if (moment(new Date()).unix() > moment(currentSchedule.finish_time).unix()) {
+      dispatch(updateCurrentSchedule(schedule_ID));
+
+      const response = await getAverages({sensor_id: currentSchedule.sensor_ID, start: currentSchedule.start_time, end: currentSchedule.finish_time}).unwrap();
+
+      if (response.success) {
+        dispatch(updateAveragesData(response.data));
+        onNavigate(RootScreens.SESSION);
+      }
+    } else {
+      dispatch(updateCurrentSchedule(schedule_ID));
+      onNavigate(RootScreens.SESSION);
+    }
   }
 
   return (
@@ -223,7 +243,6 @@ export const Schedule = (props: IScheduleProps) => {
                               value={startTime}
                               mode={"date"}
                               display={"default"}
-                              minimumDate={new Date()}
                               is24Hour={true}
                               onChange={changeStartTime}
                             />}
@@ -286,8 +305,10 @@ export const Schedule = (props: IScheduleProps) => {
                           variant="rounded"
                           size="lg"
                         >
-                          <InputField keyboardType="numeric" placeholder="Số phút giải lao" onChangeText={breakTime => setBreakTime(parseInt(breakTime))} />
+                          <InputField keyboardType="numeric" placeholder="Số phút giải lao" onFocus={() => setDisplayBreakTimeAlert(false)} onChangeText={breakTime => setBreakTime(parseInt(breakTime))} />
                         </Input>
+                        {displayBreakTimeAlert &&
+                          <Text color="red">Thời gian nghỉ không được để trống</Text>}
                       </VStack>
                     </VStack>
                 </ModalBody>

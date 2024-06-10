@@ -15,6 +15,8 @@ export enum RootScreens {
     REGISTER = "Register",
     LOGIN = "Login",
     FORGETPASSWORD = "ForgetPassword",
+    OTP = "OTP",
+    NEWPASSWORD = "NewPassword",
 
     ACCOUNTNAVIGATOR = "AccountNavigator",
     ACCOUNT = "Account",

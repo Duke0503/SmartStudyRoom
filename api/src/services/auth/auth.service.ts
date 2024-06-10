@@ -94,7 +94,7 @@ export class AuthService {
         to: email,
         subject: 'Forgotten Password',
         text: 'Forgotten Password',
-        html: 'Hi! <br><br> If you requested to reset your password<br><br>' + '<a href=http://'+ this.configService.get('HOST')+ ':' + this.configService.get('PORT') +'/auth/email/reset-password/'+ token.emailToken + '>Click here</a>' 
+        html: 'Hi! <br><br> If you requested to reset your password<br><br>' + token.emailToken
       };
 
       var sent = await new Promise<boolean>(async function(resolve, reject) {
@@ -147,7 +147,7 @@ export class AuthService {
   // End Get Forgotten Password Model
 
   // Verify Reset Email
-  async verifyResetEmail(token: string): Promise<boolean> {
+  async verifyResetEmail(token: string): Promise<Boolean> {
     var user = await this.usersRepository.findOne({
       where: {
         emailToken: token,

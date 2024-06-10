@@ -2,7 +2,7 @@ import { AuthContext } from "@/Context/AuthProvider";
 import { UserNavigator } from "./UserNavigator";
 import { useContext } from "react";
 import { AdminNavigator } from "./AdminNavigator";
-import { AuthNavigator } from "./AuthNavigator";
+import AuthNavigator from "./AuthNavigator";
 
 
 const BottomNavigator = () => {
