@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API } from "../base";
 import { getIpAddress } from "react-native-device-info";
+import { addSensor } from "@/Store/reducers";
 
 export interface User {
   id: number;
@@ -36,10 +37,16 @@ const userApi = API.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-    })
+    }),
+    addSensor: build.mutation({
+      query: ({ user_id, sensor_id }) => ({
+        url: `users/edit/addsensor/${user_id}/${sensor_id}`,
+        method: 'PATCH',
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
 // Export hooks for the new endpoints
-export const { useLazyGetProfileQuery, useUpdateProfileMutation, useUpdatePasswordMutation } = userApi;
+export const { useLazyGetProfileQuery, useUpdateProfileMutation, useUpdatePasswordMutation, useAddSensorMutation } = userApi;

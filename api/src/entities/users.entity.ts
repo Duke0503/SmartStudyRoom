@@ -62,7 +62,6 @@ export class User {
   @UpdateDateColumn()
   updateAt: Date;
 
-  @OneToOne(() => Sensor, { nullable: true })
-  @JoinColumn({ name: "sensor_id" })
-  sensor: Sensor;
+  @Column({ nullable: true })
+  sensor_id: number;
 }

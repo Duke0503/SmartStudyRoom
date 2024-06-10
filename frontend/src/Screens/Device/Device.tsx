@@ -23,6 +23,7 @@ import { addDevice, deleteCurrentDevice } from "@/Store/reducers/devices";
 import { ButtonText, CloseIcon, Heading, Icon, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Input, InputField, InputIcon, InputSlot, HStack, VStack, Box } from '@gluestack-ui/themed';
 import LRegular from "@/Components/texts/LRegular";
 import { TouchableOpacity } from 'react-native';
+import { useAddSensorMutation } from "@/Services/users";
 export interface IDeviceProps {
   onNavigate: (string: RootScreens) => void;
 }
@@ -34,7 +35,7 @@ export const Device = (props: IDeviceProps) => {
   const profile = useSelector((state: any) => state.profile);
   const sensors = useSelector((state: any) => state.sensors.sensor);
   const [fetchOne, { data, isSuccess, isLoading, error }] = useLazyGetSensorQuery();
-
+  const [addSensorIntoUser] = useAddSensorMutation() 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,18 +99,18 @@ export const Device = (props: IDeviceProps) => {
     }
   }
   
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     dispatch(deleteSensor({}));
     dispatch(deleteCurrentDevice({}));
-
+    await addSensorIntoUser({user_id: profile.id, sensor_id: 0})
     setShowSensor(false);
     setConnectedDevices(false);
     setSelectedSensor(false);
   }
 
-  const handleSelectSensor = (sensor: any) => {
+  const handleSelectSensor = async (sensor: any) => {
     dispatch(addSensor(sensor));
-
+    await addSensorIntoUser({user_id: profile.id, sensor_id: sensor.id_sensor})
     setSelectedSensor(true)
     setShowSensor(false)
   }
@@ -123,7 +124,7 @@ export const Device = (props: IDeviceProps) => {
             <Title3 textStyles={{ color: colors.neutral_900 }}>Danh sách thiết bị</Title3>
           </View>
           <View style={styles.body}>
-          <VStack h="70%">
+          {/* <VStack h="70%">
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="40%" h="70%" style={styles.sensorDataBox} onPress={handleNagivateToLightDevice}>
                     <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
@@ -144,15 +145,15 @@ export const Device = (props: IDeviceProps) => {
                     <LRegular>Camera</LRegular>
                   </Box>
                 </HStack>
-              </VStack>
-            {/* <ScrollView style={{}}>
+              </VStack> */}
+            <ScrollView style={{}}>
 
               <View style={styles.schedule}>
                 <View style={styles.sessionList}>
                   <Pressable style={styles.session} onPress={handleNagivateToLightDevice}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", width: "90%" }}>
                       <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
+                        <Entypo name="light-bulb" size={40} color={"#FFDA19"} />
                         <SRegular>Độ sáng: {sensors.light_data ? sensors.light_data : "Không có kết nối"}</SRegular>
                   
                       </View>
@@ -202,7 +203,7 @@ export const Device = (props: IDeviceProps) => {
                   </Pressable>
                 </View>
               </View>
-            </ScrollView> */}
+            </ScrollView>
             {/* <SectionList
               sections={DATA}
               keyExtractor={(item, index) => item + index}
