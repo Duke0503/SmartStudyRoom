@@ -22,7 +22,7 @@ export default class TypeOrmConfig {
 
         database: configService.get('DB_NAME'),
 
-        ssl: true,
+        // ssl: true,
 
         entities: [
           User, 

@@ -42,15 +42,82 @@ export class AuthController {
   }
 
   @Get('email/verify/:token')
-  public async verifyEmail(@Param() params): Promise<IResponse> {
+  public async verifyEmail(@Param() params): Promise<string> {
     try {
       var isEmailVerified = await this.authService.verifyEmail(params.token);
-      return new ResponseSuccess("LOGIN.EMAIL_VERIFIED", isEmailVerified);
+      if (isEmailVerified) {
+        return `          
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Verified</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+            h1 { color: #4CAF50; }
+            p { font-size: 16px; }
+            a { color: #4CAF50; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Email Verification Successful</h1>
+            <p>Your email has been verified successfully. You can now login</a>.</p>
+          </div>
+        </body>
+        </html>`;
+      } else {
+        return `          
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Verification Failed</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+            h1 { color: #f44336; }
+            p { font-size: 16px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Email Verification Failed</h1>
+            <p>Invalid or expired token. Please try again.</p>
+          </div>
+        </body>
+        </html>`;
+      }
+
     } catch(error) {
-      return new ResponseError("LOGIN.ERROR", error);
+      return `        
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Verification Failed</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+          .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+          h1 { color: #f44336; }
+          p { font-size: 16px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Email Verification Failed</h1>
+          <p>Invalid or expired token. Please try again.</p>
+        </div>
+      </body>
+      </html>`
     }
   }
-
+  
   @Get('email/resend-verification/:email')
   public async sendEmailVerification(@Param() params): Promise<IResponse> {
     try {
