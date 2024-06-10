@@ -33,7 +33,7 @@ export class User {
   // @ManyToOne(() => User, { nullable: true })
   // @JoinColumn({ name: "supervisorID" })
   @Column({ nullable: true })
-  supervisorID: Number;
+  supervisorID: number;
 
   @Column({ default: false, nullable: true })
   isVerified: boolean;
