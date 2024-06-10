@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Inject } from "@nestjs/common";
 import { MqttClient, connect } from "mqtt";
-import { debug, error, info } from "ps-logger";
+import { error, info } from "ps-logger";
 import { SensorsService } from "../sensors/sensors.service";
 import { CreateSensorDto } from "src/common/dto/create-sensor.dto";
 import { UpdateSensorDto } from "src/common/dto/update-sensor.dto";
@@ -8,7 +8,12 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Sensors } from "src/models/sensors.models";
 import { CreateSensorModelDto } from "src/common/dto/create-sensor-model.dto";
-import { now } from "moment";
+import { envNotifications } from "src/common/utils/createEnvironmentNotification";
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/entities/users.entity";
+import { Repository } from "typeorm";
+import { NotificationsService } from "../notifications/notifications.service";
+import axios from 'axios';
 
 @Injectable()
 export class MqttService implements OnModuleInit {
@@ -18,6 +23,9 @@ export class MqttService implements OnModuleInit {
     private sensorService: SensorsService,
     @InjectModel(Sensors.name)
     private sensorModel: Model<Sensors>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   onModuleInit() {
@@ -69,6 +77,57 @@ export class MqttService implements OnModuleInit {
       } catch (error) {
         throw new Error(`Failed to create sensor: ${error.message}`);
       }
+    
+        const users = this.usersRepository.find({
+          where: {
+            sensor_id: data.id_sensor,
+          }
+        })
+
+      // Message to Notification Environment Condition
+      const messageEnv = envNotifications(parseFloat(data.temp_data), parseInt(data.light_data), parseInt(data.sound_data));
+      if (messageEnv !== '') {
+
+        if (users) {
+          for (let user in users) {
+            this.notificationsService.sendAutomaticNotification(
+              user.ID, 
+              `Thông số môi trường`,
+              messageEnv
+            );
+          };
+        }
+      } 
+      // End Message to Notification Environment Condition
+
+      // AI Notification 
+      const response = await axios.get(`http://127.0.0.1:5000/?url=${data.camera_data}`); // Replace /endpoint with your actual endpoint
+      if (response.data == "No detect") {
+        if (users) {
+          for (let user in users) {
+            if (user.supervisorID) {
+              this.notificationsService.sendAutomaticNotification(
+                user.supervisorID, 
+                `Thông báo vắng học`,
+                `Học sinh ${user.name} không có mặt!!!`
+              );
+            };
+          };
+        } 
+      } else {
+        if (response.data == "Bad") {
+          if (users) {
+            for (let user in users) {    
+              this.notificationsService.sendAutomaticNotification(
+                user.ID, 
+                `Thông báo tư thế ngồi học`,
+                `Bạn đang ngồi không đúng tư thế!!!`
+              );    
+            };
+          };   
+        }
+      }
+      // End AI Notification 
 
       // Check if sensor exists in database
       try {
