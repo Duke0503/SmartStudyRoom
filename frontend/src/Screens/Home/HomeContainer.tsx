@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 // import { useLazyGetUserQuery } from "@/Services";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TabParamList } from "@/Navigation";
 import { RootScreens } from "..";
+import { TabParamList } from "@/Navigation/UserNavigator";
 
 export type HomeScreenNavigatorProps = NativeStackScreenProps<
   TabParamList,

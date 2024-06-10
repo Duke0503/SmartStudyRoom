@@ -56,6 +56,7 @@ export const Schedule = (props: IScheduleProps) => {
   const sensors = useSelector((state: any) => state.sensors);
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] = useLazyGetScheduleQuery();
   const schedulesList = useSelector((state: any) => state.schedules.scheduelesList);
+
   const [createSchedule, createScheduleResult] = useCreateScheduleMutation();
   const [createNotification, createNotificationScheduleResult] = useCreateScheduledNotificationMutation();
   
@@ -320,6 +321,7 @@ export const Schedule = (props: IScheduleProps) => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            
             {schedulesList.length == 0? 
             <View style={{padding: "5%", alignSelf: "center"}}>
               <SRegular>Không có dữ liệu</SRegular>
@@ -334,7 +336,7 @@ export const Schedule = (props: IScheduleProps) => {
                       <SRegular>{schedule.title}</SRegular>
                     </Pressable>)
                 }
-              })}
+              })} 
             </ScrollView>}
           </View>
         </View>

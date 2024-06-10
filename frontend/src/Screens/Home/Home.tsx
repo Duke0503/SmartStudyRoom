@@ -7,6 +7,7 @@ import Title3 from "@/Components/texts/Title3";
 import VSRegular from "@/Components/texts/VSRegular";
 import { colors } from "@/Components/colors";
 import LSemiBold from "@/Components/texts/LSemiBold";
+import SSemiBold from "@/Components/texts/SSemiBold";
 import SRegular from "@/Components/texts/SRegular";
 import { Platform, ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
@@ -79,16 +80,30 @@ export const Home = (props: IHomeProps) => {
         <View style={styles.body}>
           <View style={styles.schedule}>
             <LSemiBold>Lịch học ngày hôm nay</LSemiBold>
-            {schedules.scheduelesList.length == 0? 
+            {schedules.scheduelesList.length == 0 ? 
               <SRegular>Không có lịch học nào</SRegular>: 
               <ScrollView style={styles.sessionList}>
                 {schedules.scheduelesList.map((schedule: any) => {
                   if(moment(schedule.start_time).format("DD-MM-YYYY") === moment(new Date()).format("DD-MM-YYYY")) isScheduleToday = true;
                   return (moment(schedule.start_time).format("DD-MM-YYYY") !== moment(new Date()).format("DD-MM-YYYY")? 
-                    <></> :
+                    null :
                     <Pressable key={schedule.ID} style={styles.session} onPress={() => handleNavigateSession(schedule.ID)}>
-                      <SRegular>{schedule.title}</SRegular>
-                    </Pressable>)
+                      <View style={styles.topSession}>
+                        <SSemiBold>
+                          {schedule.title}
+                        </SSemiBold>
+                      </View>
+                      <Seperator/>
+                      <View style={styles.bottomSession}>
+                        <VSRegular>
+                          Bắt đầu lúc: {moment(schedule.start_time).utcOffset("+0700").format('HH:mm')}
+                        </VSRegular>
+                        <VSRegular>
+                          Kết thúc lúc: {moment(schedule.finish_time).utcOffset("+0700").format('HH:mm')}
+                        </VSRegular>
+                      </View>
+                    </Pressable>
+                    )
                 })}
                 {isScheduleToday? null:
                 <Block style = {styles.block}>
@@ -181,12 +196,12 @@ const styles = StyleSheet.create({
 
   session: {
     width: "100%",
-    height: 100,
+    height: 70,
     marginVertical: "2%",
     borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    borderColor: "#CBD5E1",
+    borderWidth: 1,
   },
 
   topSession: {
@@ -234,12 +249,17 @@ const styles = StyleSheet.create({
 
   statisticSensor: {
     marginTop: 20,
-    flex: 1,
+    // flex: 1,
+    flexWrap: "wrap",
+    rowGap: 20,
+    // backgroundColor: "lightblue",
+    
+  },
+
+  statisticRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-//     backgroundColor: "lightblue",
-    columnGap: 66,
-    rowGap: 30
+    justifyContent: 'space-between',
   },
 
   lightSensor: {
@@ -247,7 +267,7 @@ const styles = StyleSheet.create({
     color: "#4178D4",
     padding: 20,
     height: 140,
-    width: 152,
+    width: 160,
     borderRadius: 15,
     borderColor: "#CBD5E1",
     borderWidth: 1,
