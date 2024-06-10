@@ -4,13 +4,14 @@ import { API } from "../base";
 const authApi = API.injectEndpoints({
   endpoints: (build) => ({
     registerUser: build.mutation({
-      query: ({name, email, password}) => ({
+      query: ({name, email, password, roles}) => ({
         url: '/auth/register',
         method: 'POST',
         body: {
           "name": name,
           "email": email, 
           "password": password,
+          "roles": roles,
         },
       }),
     }),

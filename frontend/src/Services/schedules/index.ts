@@ -4,7 +4,7 @@ const schedulesAPI = API.injectEndpoints({
     endpoints: (build) => ({
         getSchedule: build.query(
             {
-                query: (user_ID) => `schedules/getschedule/${user_ID}`,
+                query: ({user_ID}) => `schedules/getschedule/${user_ID}`,
             }
         ),
         createSchedule: build.mutation(
