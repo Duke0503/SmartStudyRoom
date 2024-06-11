@@ -27,7 +27,8 @@ export interface IHomeProps {
     RootScreens.SETTING |
     RootScreens.UPDATE |
     RootScreens.ABOUTUS |
-    RootScreens.USERDETAIL
+    RootScreens.USERDETAIL |
+    RootScreens.NOTIFICATION
   ) => void;
 }
 
@@ -140,7 +141,7 @@ export const HomeAdmin = (props: IHomeProps) => {
           <View>
             <Title3 textStyles={{ color: colors.neutral_900 }}>Xin chào, {user.name}</Title3>
           </View>
-          <Pressable>
+          <Pressable onPress={() => onNavigate(RootScreens.NOTIFICATION)}>
             <Ionicons name="notifications" size={24} color={"#52B6DF"} />
           </Pressable>
         </View>

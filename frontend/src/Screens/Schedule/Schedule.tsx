@@ -16,7 +16,7 @@ import 'moment/locale/vi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useCreateScheduleMutation, useLazyGetScheduleQuery } from "@/Services/schedules";
 import { useCreateScheduledNotificationMutation } from "@/Services/notifications";
-import { addSchedule, deleteCurrentSchedule, updateAveragesData, updateCurrentSchedule } from "@/Store/reducers/schedules";
+import { addSchedule, deleteCurrentSchedule, resetSchedule, updateAveragesData, updateCurrentSchedule } from "@/Store/reducers/schedules";
 import { useGetAveragesMutation } from "@/Services/sensors";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
@@ -183,6 +183,10 @@ export const Schedule = (props: IScheduleProps) => {
       onNavigate(RootScreens.SESSION);
     }
   }
+
+  // const handleResetSchedule = () => {
+  //   dispatch(resetSchedule());
+  // }
 
   return (
     <SafeAreaView>
