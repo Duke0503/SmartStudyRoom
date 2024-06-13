@@ -8,6 +8,6 @@ export class MqttController {
 
   @Cron('*/30 * * * * *')
   async publish() {
-    this.mqttService.publish("DADN/iot/lamp/id1", "53");
+    this.mqttService.publish("DADN/iot/lamp/id1", "20");
   }
 }
