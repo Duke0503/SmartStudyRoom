@@ -80,7 +80,6 @@ export const OTP = (props: IOTPProps) => {
             <Pressable style={styles.registerButton} onPress={handleOTP}>
               <SSemiBold textStyles={{color: "white"}}>Xác nhận</SSemiBold>
             </Pressable>
-            <Pressable onPress={() => onNavigate(RootScreens.NEWPASSWORD)}><SRegular>To NewPassword</SRegular></Pressable>
         </View>
       </View>
     </SafeAreaView>

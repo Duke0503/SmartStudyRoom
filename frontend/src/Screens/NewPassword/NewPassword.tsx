@@ -58,13 +58,6 @@ export const NewPassword = (props: INewPasswordProps) => {
     }
   };
 
-  useEffect(() => {
-    if (user.token !== undefined && user.token !== "") {
-      onNavigate(RootScreens.HOMENAVIGATOR);
-    }
-    }, []
-  );
-
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>

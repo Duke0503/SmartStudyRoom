@@ -82,8 +82,6 @@ export const ForgetPassword = (props: IForgetPasswordProps) => {
             <Pressable style={styles.registerButton} onPress={handleForgetPassword}>
               <SSemiBold textStyles={{color: "white"}}>Xác nhận</SSemiBold>
             </Pressable>
-
-            <Pressable onPress={() => onNavigate(RootScreens.OTP)}><SRegular>To OTP</SRegular></Pressable>
         </View>
       </View>
     </SafeAreaView>

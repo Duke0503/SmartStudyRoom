@@ -101,32 +101,32 @@ export class MqttService implements OnModuleInit {
       // End Message to Notification Environment Condition
 
       // AI Notification 
-      const response = await axios.get(`http://127.0.0.1:5000/?url=${data.camera_data}`); // Replace /endpoint with your actual endpoint
-      if (response.data == "No detect") {
-        if (users) {
-          for (let user of users) {
-            if (user.supervisorID) {
-              await this.notificationsService.sendAutomaticNotification(
-                user.supervisorID, 
-                `Thông báo vắng học`,
-                `Học sinh ${user.name} không có mặt!!!`
-              );
-            };
-          };
-        } 
-      } else {
-        if (response.data == "Bad") {
-          if (users) {
-            for (let user of users) {    
-              await this.notificationsService.sendAutomaticNotification(
-                user.ID, 
-                `Thông báo tư thế ngồi học`,
-                `Bạn đang ngồi không đúng tư thế!!!`
-              );    
-            };
-          };   
-        }
-      }
+      // const response = await axios.get(`http://127.0.0.1:5000/?url=${data.camera_data}`); // Replace /endpoint with your actual endpoint
+      // if (response.data == "No detect") {
+      //   if (users) {
+      //     for (let user of users) {
+      //       if (user.supervisorID) {
+      //         await this.notificationsService.sendAutomaticNotification(
+      //           user.supervisorID, 
+      //           `Thông báo vắng học`,
+      //           `Học sinh ${user.name} không có mặt!!!`
+      //         );
+      //       };
+      //     };
+      //   } 
+      // } else {
+      //   if (response.data == "Bad") {
+      //     if (users) {
+      //       for (let user of users) {    
+      //         await this.notificationsService.sendAutomaticNotification(
+      //           user.ID, 
+      //           `Thông báo tư thế ngồi học`,
+      //           `Bạn đang ngồi không đúng tư thế!!!`
+      //         );    
+      //       };
+      //     };   
+      //   }
+      // }
       // End AI Notification 
 
       // Check if sensor exists in database
