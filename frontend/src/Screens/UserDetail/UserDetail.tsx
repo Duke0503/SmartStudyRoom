@@ -34,7 +34,8 @@ export interface IHomeProps {
     RootScreens.UPDATE |
     RootScreens.ABOUTUS |
     RootScreens.USERDETAIL |
-    RootScreens.SESSION
+    RootScreens.SESSION |
+    RootScreens.NOTIFICATION
   ) => void;
 }
 

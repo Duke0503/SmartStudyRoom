@@ -74,10 +74,10 @@ export class HomeService {
                 to: email,
                 subject: 'Verify Email',
                 text: 'Verify Email',
-                html: 'Hi! <br><br> You have request verify from supervisor account: '
+                html: 'Xin chào! <br><br> Bạn có 1 yêu cầu xác nhận email từ tài khoản phụ huynh: '
                     + supervisor.name
                     + ' &lt;Email: ' + supervisor.email + '&gt;'
-                    + '<br><br> <a href=http://' + this.configService.get('HOST') + ':' + this.configService.get('PORT') + '/homeadmin/email/verify/' + user.emailToken + '/' + supervisor_ID + '>Click here</a>'
+                    + '<br><br> <a href=http://' + this.configService.get('HOST') + ':' + this.configService.get('PORT') + '/homeadmin/email/verify/' + user.emailToken + '/' + supervisor_ID + '>Xác nhận</a>'
             }
 
             var sent = await new Promise<boolean>(async function (resolve, reject) {
@@ -139,6 +139,7 @@ export class HomeService {
         return users;
     }
 
+    // Remove SupervisorID Field of User
     async removeSupervisorIDField(user_id: number): Promise<void> {
         const user = await this.usersService.findUserbyId(user_id);
 

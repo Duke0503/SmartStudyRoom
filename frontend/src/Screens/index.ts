@@ -31,4 +31,7 @@ export enum RootScreens {
     USERDETAIL = "UserDetail",
     
     NOTIFICATION = "Notification",
+
+    WELCOME = "Welcome",
+    ONBOARD = "OnBoard",
 }

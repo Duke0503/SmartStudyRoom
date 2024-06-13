@@ -23,6 +23,7 @@ import * as Device from "expo-device";
 import { useCreateExpoPushTokenMutation } from "@/Services/notifications";
 import Constants from "expo-constants";
 import { useLazyGetScheduleQuery } from "@/Services/schedules";
+import { removeItem } from "@/util/asyncStorage";
 
 // Set Up Notification
 Notifications.setNotificationHandler({
@@ -157,6 +158,10 @@ export const Login = (props: ILoginProps) => {
     else updateAuthState({loggedIn: false, profile: null});
     }, []
   );
+
+  const handleResetOnboard = async () => {
+    await removeItem('onBoarded');
+  }
 
   return (
     <SafeAreaView>
