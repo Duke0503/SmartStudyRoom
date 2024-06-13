@@ -45,10 +45,15 @@ const sensorsAPI = API.injectEndpoints({
               }
             })
         }
+    ),
+    getSensorData: build.query(
+      {
+        query: ({sensor_id}) => `sensors/getsensorbysensorid/${sensor_id}`
+      }
     )
   }),
   overrideExisting: true,
 });
 
 // Export hooks for the new endpoints
-export const { useGetSensorQuery, useLazyGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation, useGetAveragesMutation } = sensorsAPI;
+export const { useGetSensorQuery, useLazyGetSensorQuery, useUpdateLightSensorMutation, useUpdateTempSensorMutation, useGetAveragesMutation, useLazyGetSensorDataQuery } = sensorsAPI;
