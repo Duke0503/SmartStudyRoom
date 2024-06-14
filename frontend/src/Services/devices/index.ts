@@ -24,8 +24,8 @@ const divicesAPI = API.injectEndpoints({
     ), 
     updateLightDevice: build.mutation(
       {
-          query: ({device_id, light_data}) => ({
-              url: `/devices/updatedevice/${device_id}`,
+          query: ({light_data}) => ({
+              url: `/mqtt/update/light`,
               method: "PATCH",
               body: {
                   "light_data": light_data

@@ -20,8 +20,8 @@ import 'moment/locale/vi';
 import { AuthContext } from "@/Context/AuthProvider";
 import LRegular from "@/Components/texts/LRegular";
 import { useDeleteScheduleMutation, useUpdateScheduleMutation } from "@/Services/schedules";
-import session from "redux-persist/lib/storage/session";
-import { useGetAveragesMutation } from "@/Services/sensors";
+import * as Network from "expo-network";
+import { useGetSensorQuery, useLazyGetSensorQuery } from "@/Services/sensors";
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
 moment.updateLocale('vi', {
@@ -44,6 +44,7 @@ export const Session = (props: ISessionProps) => {
   const averagesData = schedules.averagesData;
   const [updateScheduleDatabase, updateScheduleDatabaseResult] = useUpdateScheduleMutation();
   const [deleteScheduleDatabase, deleteScheduleDatabaseResult] = useDeleteScheduleMutation();
+  const fetchSensorResult = useGetSensorQuery({ip: "192.168.74.191"}, {refetchOnMountOrArgChange: true, pollingInterval: 5000});
 
   const [changeCalendar, setChangeCalendar] = useState(false);
 
@@ -99,8 +100,6 @@ export const Session = (props: ISessionProps) => {
     }
   }
 
-  console.log(currentSchedule)
-
   const handleChange = async (schedule_ID: Number) => {
     const response = await updateScheduleDatabase({ schedule_ID: currentSchedule.ID, title: title, status: currentSchedule.status, start_time: startTime, finish_time: finishTime, session_time: sessionTime, break_time: breakTime, user_ID: user.id, sensor_ID: 1 }).unwrap();
 
@@ -137,8 +136,6 @@ export const Session = (props: ISessionProps) => {
     }
   }
 
-  console.log(averagesData);
-
   return (
     <SafeAreaView>
       <StatusBar style="auto"></StatusBar>
@@ -154,7 +151,7 @@ export const Session = (props: ISessionProps) => {
             <VStack space="md">
               {moment(new Date()).unix() > moment(currentSchedule.finish_time).unix()?
                 <Heading>Thời gian đã học: Đã xong</Heading> :
-                <Heading>Thời gian đã học: {Math.round((moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / 60)} phút</Heading>
+                <Heading>Thời gian đã học: {moment(new Date()).unix() < moment(currentSchedule.start_time).unix()? "Chưa bắt đầu": Math.round((moment(new Date()).unix() - moment(currentSchedule.start_time).unix()) / 60) + " phút"}</Heading>
               }
 
               <Text size="md">Thời gian bắt đầu: {moment(currentSchedule.start_time).format("ddd, DD/MM/YYYY, HH:mm")}</Text>
@@ -169,17 +166,17 @@ export const Session = (props: ISessionProps) => {
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                    <LRegular>Độ sáng: {parseInt(averagesData.averageLight)}</LRegular>
+                    <LRegular>Độ sáng: {fetchSensorResult.isSuccess? fetchSensorResult.data[0].light_data: "NaN"}</LRegular>
                   </Box>
                   <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                    <LRegular>Nhiệt độ: {parseInt(averagesData.averageTemp)}°C</LRegular>
+                    <LRegular>Nhiệt độ: {fetchSensorResult.isSuccess? fetchSensorResult.data[0].temp_data: "NaN"}°C</LRegular>
                   </Box>
                 </HStack>
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                    <LRegular>Âm thanh: {parseInt(averagesData.averageSound)} dB</LRegular>
+                    <LRegular>Âm thanh: {fetchSensorResult.isSuccess? fetchSensorResult.data[0].sound_data: "NaN"} dB</LRegular>
                   </Box>
                   <Box w="45%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />

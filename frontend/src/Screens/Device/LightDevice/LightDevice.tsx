@@ -17,8 +17,6 @@ export interface LightDeviceProps {
     onNavigate: (screen: RootScreens) => void;
 }
 
-
-
 export const LightDevice = (props: LightDeviceProps) => {
     const [ipAddress, setIpAddress] = useState('undefined');
     const [lightSensor, setLightsensor] = useState({})
@@ -46,15 +44,17 @@ export const LightDevice = (props: LightDeviceProps) => {
     const { onNavigate } = props;
     const [value, setValue] = useState(0);
     const handleUpdateDevice = async (action) => {
-        const light_data = action == "Increase" ? lightdata + 1 : lightdata - 1
+        const light_data = action == "On" ? 20 : 0
         try {
-            await updateLightDevice({device_id: LightDevice.ID, light_data: light_data})
-            dispatch(updateLightDeviceRedux({ID: LightDevice.ID, light_data: light_data}))
+            console.log(light_data)
+            await updateLightDevice({light_data: light_data})
+            // dispatch(updateLightDeviceRedux({ID: LightDevice.ID, light_data: light_data}))
             setLightdata(light_data)
         } catch (error) {
             console.log(error)
         }
     }
+
     // const handleDisconnect = async () => {
     //     try {
     //         await updateLightDevice({device_id: LightDevice.ID, status: "Disable"})
@@ -64,6 +64,7 @@ export const LightDevice = (props: LightDeviceProps) => {
     //         console.log(error)
     //     }
     // }
+
     const Header = () => {
         return (
             <View style={styles.header}>
@@ -94,16 +95,16 @@ export const LightDevice = (props: LightDeviceProps) => {
                 </View>
                 <View style={styles.box4}>
                     <Button appearance='outline'
-                        onPress={() => handleUpdateDevice("Decrease")}
+                        onPress={() => handleUpdateDevice("Off")}
                         status='primary'
                         style={styles.button}>
-                        - Giảm sáng
+                        Tắt
                     </Button>
                     <Button appearance='outline'
-                        onPress={() => handleUpdateDevice("Increase")}
+                        onPress={() => handleUpdateDevice("On")}
                         status='primary'
                         style={styles.button}>
-                        + Tăng sáng
+                        Bật
                     </Button>
                 </View>
                 <View style={styles.box5}>
