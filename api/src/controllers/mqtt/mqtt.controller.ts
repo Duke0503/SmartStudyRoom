@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Controller, Get, Post, Body, Patch } from '@nestjs/common';
+// import { Cron } from '@nestjs/schedule';
 import { MqttService } from 'src/services/mqtt/mqtt.service';
 
-@Controller()
+@Controller('mqtt')
 export class MqttController {
   constructor(private readonly mqttService: MqttService) {}
 
-  @Cron('*/30 * * * * *')
-  async publish() {
-    this.mqttService.publish("DADN/iot/lamp/id1", "20");
+  // @Cron('*/30 * * * * *')
+  @Patch('update/light')
+  async publish(@Body() data: {light_data: number}) {
+    console.log(data.light_data)
+    this.mqttService.publish("DADN/iot/lamp/id1", `${data.light_data}`);
   }
 }

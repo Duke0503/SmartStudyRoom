@@ -41,7 +41,7 @@ export const Device = (props: IDeviceProps) => {
       try {
         const ip = await Network.getIpAddressAsync();
         console.log(ip)
-        await fetchOne({ip: ip});
+        await fetchOne({ip: "192.168.74.191"});
       } catch (error) {
         console.log(error)
       }

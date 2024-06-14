@@ -19,6 +19,8 @@ import { useLazyGetScheduleQuery } from "@/Services/schedules";
 import { fetchSchedule, updateCurrentSchedule } from "@/Store/reducers";
 import { Box, HStack, Heading, VStack } from "@gluestack-ui/themed";
 import LRegular from "@/Components/texts/LRegular";
+import { useGetSensorQuery, useLazyGetSensorQuery } from "@/Services/sensors";
+import * as Network from "expo-network";
 
 moment().tz("Asia/Ho_Chi_Minh").format();
 moment().locale('vi');
@@ -38,6 +40,7 @@ export const Home = (props: IHomeProps) => {
 
   const dispatch = useDispatch();
   const [fetchOne, result] = useLazyGetScheduleQuery();
+  const fetchSensorResult = useGetSensorQuery({ip: "192.168.74.191"}, {refetchOnMountOrArgChange: true, pollingInterval: 5000});
   const user = useSelector((state: any) => state.profile);
   const schedules = useSelector((state: any) => state.schedules);
 
@@ -62,7 +65,7 @@ export const Home = (props: IHomeProps) => {
     if (result.isSuccess) {
       dispatch(fetchSchedule(result.data));
     }
-  }, [result.isSuccess])
+  }, [result.isSuccess, fetchSensorResult.isSuccess])
 
   return (
     <SafeAreaView>
@@ -121,17 +124,17 @@ export const Home = (props: IHomeProps) => {
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="40%" h="70%" style={styles.sensorDataBox}>
                     <Entypo name="light-bulb" size={50} color={"#FFDA19"} />
-                    <LRegular>Độ sáng:</LRegular>
+                    <LRegular>Độ sáng:{fetchSensorResult.isSuccess? fetchSensorResult.data[0].light_data: "NaN"}</LRegular>
                   </Box>
                   <Box w="40%" h="70%" style={styles.sensorDataBox}>
                     <FontAwesome5 name="temperature-low" size={50} color={"red"} />
-                    <LRegular>Nhiệt độ:</LRegular>
+                    <LRegular>Nhiệt độ:{fetchSensorResult.isSuccess? fetchSensorResult.data[0].temp_data: "NaN"}°C</LRegular>
                   </Box>
                 </HStack>
                 <HStack h="50%" justifyContent="space-between">
                   <Box w="40%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="volume-medium-outline" size={50} color={"#20ABFA"} />
-                    <LRegular>Âm thanh:</LRegular>
+                    <LRegular>Âm thanh:{fetchSensorResult.isSuccess? fetchSensorResult.data[0].sound_data + "dB": "NaN"}</LRegular>
                   </Box>
                   <Box w="40%" h="70%" style={styles.sensorDataBox}>
                     <Ionicons name="videocam-outline" size={50} color={"#20ABFA"} />
