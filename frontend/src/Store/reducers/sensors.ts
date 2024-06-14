@@ -21,9 +21,12 @@ const sensorsSlice = createSlice({
     // },
     deleteSensor: (state, action) => {
       state.sensor = {};
-    }
-  },
-});
+    },
+    updateSensorData: (state, action) => {
+      state.sensor = { ...state.sensor, ...action.payload };
+    },
+    },
+  });
 
-export const { addSensor, deleteSensor } = sensorsSlice.actions;
+export const { addSensor, deleteSensor, updateSensorData } = sensorsSlice.actions;
 export const sensorsReducers = sensorsSlice.reducer;

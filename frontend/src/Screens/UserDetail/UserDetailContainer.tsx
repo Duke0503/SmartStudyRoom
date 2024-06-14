@@ -21,7 +21,8 @@ const UserDetailContainer = ({navigation}:UserDetailScreenNavigatorProps) => {
     RootScreens.UPDATE |
     RootScreens.ABOUTUS |
     RootScreens.USERDETAIL |
-    RootScreens.SESSION 
+    RootScreens.SESSION |
+    RootScreens.NOTIFICATION
   ) => {
     navigation.navigate(screen);
   };

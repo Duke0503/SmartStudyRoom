@@ -19,7 +19,8 @@ const HomeAdminContainer = ({navigation}:HomeAdminScreenNavigatorProps) => {
     RootScreens.SETTING |
     RootScreens.UPDATE |
     RootScreens.ABOUTUS |
-    RootScreens.USERDETAIL
+    RootScreens.USERDETAIL |
+    RootScreens.NOTIFICATION
   ) => {
     navigation.navigate(screen);
   };

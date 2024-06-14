@@ -37,19 +37,27 @@ export const Notification = (props: ILoginProps) => {
   const handleNavigateSession = (schedule_ID: Number) => {
     dispatch(updateCurrentSchedule(schedule_ID));
     onNavigate(RootScreens.SESSION);
-  } 
+  }
+
+  const handleReturn = () => {
+    if (profile.roles === "user") {
+      onNavigate(RootScreens.HOME);
+    }
+    else if (profile.roles === "supervisor") {
+      onNavigate(RootScreens.HOMEADMIN);
+    }
+  };
 
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Ionicons name="arrow-back" size={24} color="black" onPress={() => onNavigate(RootScreens.HOME)} />
+          <Ionicons name="arrow-back" size={24} color="black" onPress={() => handleReturn()} />
           <Text style={styles.headerText}>Thông báo</Text>
         </View>
         <View style={styles.content}>
-          
-          <ScrollView>
+          <ScrollView style={styles.listnotify}>
             {isLoading ? (
               <Text>Loading...</Text>
             ) : error ? (
@@ -61,7 +69,7 @@ export const Notification = (props: ILoginProps) => {
                     <Text style={styles.notificationTitle}>{notification.title}</Text>
                     <Text style={styles.notificationContent}>{notification.content}</Text>
                   </View>
-                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end'}}>
                     <Text style={styles.notificationDate}>
                       {new Intl.DateTimeFormat('vi-VN', {
                         year: 'numeric',
@@ -78,6 +86,7 @@ export const Notification = (props: ILoginProps) => {
             )}
           </ScrollView>
         </View>
+
       </View>
     </SafeAreaView>
   );
@@ -105,19 +114,16 @@ const styles = StyleSheet.create({
   },
   content: {
     width: "100%",
-    height: "100%",
+    height: "92%",
   },
-  contentItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: "5%",
-    borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
+  listnotify: {
+    width: "100%",
+    height: "20%",
   },
   notificationItem: {
     flexDirection: 'row',
     padding: 10,
-    height: "3%",
+    height: 90,
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
     backgroundColor: "#fff",

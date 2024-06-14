@@ -93,8 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15,
-    // backgroundColor: '#fff',
+    padding: 5,
   },
 
   logo: {
